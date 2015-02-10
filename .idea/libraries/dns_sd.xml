@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="dns_sd">
+    <CLASSES>
+      <root url="jar://C:/Dot-Server/lib/dns_sd.jar!/" />
+      <root url="jar://C:/Dot-Server/lib/tween-engine-api.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://C:/Dot-Server/lib/tween-engine-api-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
