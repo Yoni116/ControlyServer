@@ -7,6 +7,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="dns_sd" level="project" />
+    <orderEntry type="library" name="Resources" level="project" />
+    <orderEntry type="library" name="dns_sd " level="project" />
   </component>
 </module>
+
