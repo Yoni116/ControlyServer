@@ -50,15 +50,16 @@ public class CFKeysDatagramChannel implements Runnable{
              charBuff = coder.decode(buff);  
              String result = charBuff.toString().trim();
            	                               
-            // System.out.println("this is: " + result);
+             System.out.println("this is: " + result);
 
                 if(result!=null){
                     final String command = result.substring(2);
                     if(pressedKeys.containsKey(command)){
+                        System.out.println("extends "+ command);
                         pressedKeys.get(command).extendDeletion();
                     }else{
-                        KeyPress key = new KeyPress(command,pressedKeys);
-                        new Thread(key);
+                        KeyPress key = new KeyPress(command,pressedKeys, this);
+                        key.start();
                         pressedKeys.put(command,key);
                     }
 
@@ -104,8 +105,8 @@ public class CFKeysDatagramChannel implements Runnable{
             }
 
 
-        } catch( Exception exception) {
-            System.out.println("Error: " + exception);
+        } catch( Exception e) {
+            e.printStackTrace();
         }
     }
     

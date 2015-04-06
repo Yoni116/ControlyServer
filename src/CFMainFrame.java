@@ -4,10 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.io.IOException;
 
 
-public class CFMainFrame extends JFrame implements ActionListener{
+public class CFMainFrame extends JFrame implements ActionListener, FocusListener{
 
 	/**
 	 * 
@@ -150,6 +152,7 @@ public class CFMainFrame extends JFrame implements ActionListener{
 		exitButton.addActionListener(this);
 		contentPane.add(exitButton);
 
+
 		// for now no use for setting button
 /*	    settingButton = new JButton("");
 		settingButton.setIcon(new ImageIcon(CFMainFrame.class.getResource("/Resources/SettingButton.png")));
@@ -167,6 +170,7 @@ public class CFMainFrame extends JFrame implements ActionListener{
 		running = true;
 		info = new ConnectionFrame(x, y);
 		info.start();
+		setAlwaysOnTop(true);
 
 
 
@@ -330,8 +334,16 @@ public class CFMainFrame extends JFrame implements ActionListener{
 		}
         setVisible(false);
 	}
-	
-	
-	
+
+
+	@Override
+	public void focusGained(FocusEvent e) {
+			info.showFrame();
+	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+			info.hideFrame();
+	}
 }
 

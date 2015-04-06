@@ -58,25 +58,31 @@ public class ConnectionFrame extends Thread {
         //GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 
         frame.setLocation(x+210,y-50);
+        frame.setAlwaysOnTop(true);
+    }
+
+    public void showFrame(){
+        frame.setVisible(true);
+    }
 
 
-
-
-
-
+    public void hideFrame(){
+        frame.setVisible(false);
     }
 
     @Override
     public void run() {
         isRuning = true;
+        System.out.println("test works");
         while(isRuning) {
 
 
         synchronized (this) {
             try {
-                frame.setVisible(false);
+
+                hideFrame();
                 this.wait();
-                frame.setVisible(true);
+                showFrame();
                 this.wait();
 
             } catch (InterruptedException e) {
