@@ -43,11 +43,11 @@ public class ConnectionFrame extends Thread {
         mainLabel.setOpaque(true);
         mainLabel.setBounds(0, 0, 218, 133);
         mainLabel.setBackground(new Color(0, 0, 0, 0));
-        ipLabel.setBounds(95, 35, 100, 50);
+        ipLabel.setBounds(85, 20, 100, 50);
         ipLabel.setForeground(Color.WHITE);
         ipLabel.setFont(new Font("Serif", Font.BOLD, 14));
 
-        portLabel.setBounds(108, 75, 100, 50);
+        portLabel.setBounds(108, 60, 100, 50);
         portLabel.setForeground(Color.WHITE);
         portLabel.setFont(new Font("Serif", Font.BOLD, 14));
         mainLabel.add(ipLabel);
