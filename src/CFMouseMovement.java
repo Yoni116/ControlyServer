@@ -24,7 +24,7 @@ public class CFMouseMovement implements Runnable {
 	 try {
 		mouse = new Robot();
 	} catch (AWTException e) {
-		// TODO Auto-generated catch block
+
 		e.printStackTrace();
 	}
 	 

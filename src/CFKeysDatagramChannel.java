@@ -18,7 +18,7 @@ public class CFKeysDatagramChannel implements Runnable{
 	public CFKeysDatagramChannel(DatagramChannel c){
 		channel = c;
 	}
-	
+
 	public DatagramChannel getChannel() {
 		return channel;
 	}

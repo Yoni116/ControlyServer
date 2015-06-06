@@ -2,14 +2,11 @@ import aurelienribon.tweenengine.TweenManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.awt.event.*;
 import java.io.IOException;
 
 
-public class CFMainFrame extends JFrame implements ActionListener, FocusListener{
+public class CFMainFrame extends JFrame implements ActionListener{
 
 	/**
 	 * 
@@ -34,7 +31,8 @@ public class CFMainFrame extends JFrame implements ActionListener, FocusListener
 	private ConnectionFrame info;
 	private int x,y;
     public static TweenManager tweenManager = new TweenManager();
-    public boolean running;
+    private boolean running;
+	private String os;
 
 	/**
 	 * Launch the application.
@@ -72,6 +70,7 @@ public class CFMainFrame extends JFrame implements ActionListener, FocusListener
 					frame.setFocusable(true);
 					frame.setVisible(true);
 					frame.requestFocus();
+
 					CFTools.log(frame.getBounds().toString());
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -84,7 +83,7 @@ public class CFMainFrame extends JFrame implements ActionListener, FocusListener
 	 * Create the frame.
 	 */
 	public CFMainFrame() {
-		
+
 		ipNum ="Start Server First";
 		portNum =0;
 		setSize(197, 216);
@@ -170,9 +169,47 @@ public class CFMainFrame extends JFrame implements ActionListener, FocusListener
 		running = true;
 		info = new ConnectionFrame(x, y);
 		info.start();
+
 		setAlwaysOnTop(true);
+		this.addWindowListener(new WindowListener() {
+			@Override
+			public void windowOpened(WindowEvent e) {
 
+			}
 
+			@Override
+			public void windowClosing(WindowEvent e) {
+
+			}
+
+			@Override
+			public void windowClosed(WindowEvent e) {
+
+			}
+
+			@Override
+			public void windowIconified(WindowEvent e) {
+				if (info.isShown())
+					info.hideFrame();
+
+			}
+
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+				if (!info.isShown() && service != null)
+					info.showFrame();
+			}
+
+			@Override
+			public void windowActivated(WindowEvent e) {
+
+			}
+
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+
+			}
+		});
 
 		
 		
@@ -181,16 +218,13 @@ public class CFMainFrame extends JFrame implements ActionListener, FocusListener
 
 		    @Override
 		    public void run() {
+				os = System.getProperty("os.name");
+				System.out.println(os);
 		        while (running) {
 		            if (lastMillis > 0) {
 		                long currentMillis = System.currentTimeMillis();
 		                final float delta = (currentMillis - lastMillis) / 1000f;
 		                tweenManager.update(delta);
-		                new Thread(new Runnable() {
-		                    @Override public void run() {
-		                   //??
-		                    }
-		                });
 
 		                lastMillis = currentMillis;
 		            } else {
@@ -250,6 +284,7 @@ public class CFMainFrame extends JFrame implements ActionListener, FocusListener
 			}
 			
 			if(e.getSource().equals(minimizeButton)){
+
 				if(service != null) {
 					synchronized (info) {
 						info.notifyAll();
@@ -270,17 +305,12 @@ public class CFMainFrame extends JFrame implements ActionListener, FocusListener
 				CFPopup.incoming(ipNum, portNum , tweenManager);
 			     System.out.println("WTF OMFG");
 				}
-			
-			/*
-	       if(e.getSource().equals(stopButton)){
-	    	   CFTools.log("Stop");
-				statusLabel.setText("Server Stopped");
 
-			}
-	    */
 			
 		}else{
 			if(e.getSource().equals(showApp)){
+				if (trayIcon != null)
+					tray.remove(trayIcon);
 				if(service != null) {
 					synchronized (info) {
 						info.notifyAll();
@@ -325,25 +355,36 @@ public class CFMainFrame extends JFrame implements ActionListener, FocusListener
         popup.add(closeApp);
        
         trayIcon.setPopupMenu(popup);
+
+		trayIcon.addMouseListener(new java.awt.event.MouseAdapter() {
+
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent evt) {
+				if (evt.getClickCount() == 2) {
+					if(service != null) {
+						synchronized (info) {
+							info.notifyAll();
+						}
+					}
+					setVisible(true);
+					tray.remove(trayIcon);
+				}
+			}
+
+		});
        
-        try {
-            tray.add(trayIcon);
-        } catch (AWTException e1) {
-            System.out.println("TrayIcon could not be added.");
-        }
+
+		}
+
+		try {
+			tray.add(trayIcon);
+		} catch (AWTException e1) {
+			System.out.println("TrayIcon could not be added.");
 		}
         setVisible(false);
 	}
 
 
-	@Override
-	public void focusGained(FocusEvent e) {
-			info.showFrame();
-	}
 
-	@Override
-	public void focusLost(FocusEvent e) {
-			info.hideFrame();
-	}
 }
 

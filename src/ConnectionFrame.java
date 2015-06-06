@@ -17,6 +17,7 @@ public class ConnectionFrame extends Thread {
     private JLabel ipLabel;
     private JLabel portLabel;
     private boolean isRuning;
+    private boolean isShown = false;
 
     public ConnectionFrame ( int x, int y){
 
@@ -59,15 +60,27 @@ public class ConnectionFrame extends Thread {
 
         frame.setLocation(x+210,y-50);
         frame.setAlwaysOnTop(true);
+
     }
 
     public void showFrame(){
         frame.setVisible(true);
+        isShown = true;
     }
 
 
     public void hideFrame(){
         frame.setVisible(false);
+        isShown = false;
+    }
+
+    public boolean isShown() {
+        return isShown;
+
+    }
+
+    public boolean isRuning() {
+        return isRuning;
     }
 
     @Override

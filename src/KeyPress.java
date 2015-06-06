@@ -30,7 +30,7 @@ public class KeyPress extends Thread{
 
     public void run(){
         robot.keyPress(command);
-        System.out.println("pressed : 0x" + this.commandString + " which is: " + this.command);
+       // System.out.println("pressed : 0x" + this.commandString + " which is: " + this.command);
         resetTimer();
         try {
             sleep(30);
