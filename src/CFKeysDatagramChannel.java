@@ -7,13 +7,14 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 public class CFKeysDatagramChannel implements Runnable{
 
 	private Robot robot;
 	private DatagramChannel channel;
-    private HashMap<String,KeyPress> pressedKeys = new HashMap<String, KeyPress>();
+    private ConcurrentHashMap<String, KeyPress> pressedKeys = new ConcurrentHashMap<String, KeyPress>();
 
 	public CFKeysDatagramChannel(DatagramChannel c){
 		channel = c;
@@ -56,7 +57,8 @@ public class CFKeysDatagramChannel implements Runnable{
                     final String command = result.substring(2);
                     if(pressedKeys.containsKey(command)){
                         System.out.println("extends "+ command);
-                        pressedKeys.get(command).extendDeletion();
+                        if (pressedKeys.get(command) != null)
+                            pressedKeys.get(command).extendDeletion();
                     }else{
                         KeyPress key = new KeyPress(command,pressedKeys, this);
                         key.start();

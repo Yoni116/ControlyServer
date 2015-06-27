@@ -3,6 +3,7 @@ import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by hent on 3/26/15.
@@ -12,13 +13,12 @@ public class KeyPress extends Thread{
     public String commandString;
     public int command;
     public Timer timer;
-    public HashMap container;
+    public ConcurrentHashMap container;
     public boolean keyPressed;
     public CFKeysDatagramChannel myDatagram;
 
 
-
-    public KeyPress(String hex,HashMap containerRef, CFKeysDatagramChannel dg) throws Exception{
+    public KeyPress(String hex, ConcurrentHashMap containerRef, CFKeysDatagramChannel dg) throws Exception {
         this.myDatagram = dg;
         this.keyPressed = true;
         this.commandString = hex;
@@ -48,9 +48,9 @@ public class KeyPress extends Thread{
         }
 
         robot.keyRelease(command);
-        synchronized (myDatagram) {
-            container.remove(commandString);
-        }
+
+        container.remove(commandString);
+
         System.out.println("released: "+ command);
         }
 
