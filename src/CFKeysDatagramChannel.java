@@ -8,17 +8,21 @@ import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class CFKeysDatagramChannel implements Runnable{
 
-	private Robot robot;
+
 	private DatagramChannel channel;
     private ConcurrentHashMap<String, KeyPress> pressedKeys = new ConcurrentHashMap<String, KeyPress>();
+    private ExecutorService executor;
 
-	public CFKeysDatagramChannel(DatagramChannel c){
-		channel = c;
-	}
+    public CFKeysDatagramChannel(DatagramChannel c) {
+        channel = c;
+        executor = Executors.newFixedThreadPool(5);
+    }
 
 	public DatagramChannel getChannel() {
 		return channel;
@@ -35,9 +39,8 @@ public class CFKeysDatagramChannel implements Runnable{
 	        Charset charSet = Charset.forName("UTF-8");  
 	        CharsetDecoder coder = charSet.newDecoder();  
 	        CharBuffer charBuff;
-	              
-			//robot=new Robot();
-			
+
+
             while(true)
             {
    
@@ -60,9 +63,9 @@ public class CFKeysDatagramChannel implements Runnable{
                         if (pressedKeys.get(command) != null)
                             pressedKeys.get(command).extendDeletion();
                     }else{
-                        KeyPress key = new KeyPress(command,pressedKeys, this);
-                        key.start();
-                        pressedKeys.put(command,key);
+                        Runnable key = new KeyPress(command, pressedKeys, this);
+                        executor.execute(key);
+                        pressedKeys.put(command, (KeyPress) key);
                     }
 
 
@@ -70,38 +73,6 @@ public class CFKeysDatagramChannel implements Runnable{
                     System.out.println("Received a null key");
                 }
 
-
-
-
-/*
-
-   	         if(result != null){
-                 final String command = result.substring(2, 16);
-                 if(pressedKeys.containsKey(command)){
-                 if(System.nanoTime() - pressedKeys.get(command) > 80000000){
-                     robot.keyRelease(Integer.parseInt(command));
-                     pressedKeys.remove(command);
-                 }else {
-
-                 }
-
-                 }else{/*
-                     Thread t1 = new Thread(new Runnable() {
-                         public void run() {
-                             executeCommand(Integer.parseInt(command)); //makes the string an int and pass it to the execute method
-
-                             System.out.println("pressed " + command);
-                             pressedKeys.put(command,System.nanoTime());
-                         }
-                     });
-                     t1.start();
-                     */
-
-
-
-                // }
-   	           //}
-      	                    
                  buff.clear();
 
             }
@@ -111,14 +82,13 @@ public class CFKeysDatagramChannel implements Runnable{
             e.printStackTrace();
         }
     }
-    
-    
-    //this method gets a hex virtual key code and execute it using ROBOT.
-    private void executeCommand(int hex){
-    	robot.keyPress(hex);
-        robot.delay(100);
-        robot.keyRelease(hex);
+
+    public void endThreadPool() {
+        executor.shutdown();
+        while (!executor.isTerminated()) {
+        }
+        System.out.println("closed all threads");
     }
-    
+
 
 }

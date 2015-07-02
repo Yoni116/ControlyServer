@@ -244,7 +244,7 @@ public class CFMainFrame extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		//decide which button was pressed.
 		
-		if((e.getSource() instanceof JButton)){ //just buttons
+
 			
 			if(e.getSource().equals(startButton)){
 				CFTools.log("Start");
@@ -271,7 +271,7 @@ public class CFMainFrame extends JFrame implements ActionListener{
 				//we should register a server.
 				}
 				else{ // if pressed again stop service and defualt the vars
-					service.stop();
+					service.close();
 					ipNum = "Start Server First";
 					portNum=0;
 					service = null;
@@ -293,21 +293,13 @@ public class CFMainFrame extends JFrame implements ActionListener{
 		     minimizeToTray();
 			}
 
-			if(e.getSource().equals(exitButton)){
-				if(service != null)
-					service.stop();
-				System.exit(0);
-			}
 
 			if(e.getSource().equals(settingButton)){
-
 
 				CFPopup.incoming(ipNum, portNum , tweenManager);
 			     System.out.println("WTF OMFG");
 				}
 
-			
-		}else{
 			if(e.getSource().equals(showApp)){
 				if (trayIcon != null)
 					tray.remove(trayIcon);
@@ -318,13 +310,10 @@ public class CFMainFrame extends JFrame implements ActionListener{
 				}
 			     setVisible(true);
 				}
-			if(e.getSource().equals(closeApp)){
-				if(service != null)
-					service.stop();
-				System.exit(0);
+		if (e.getSource().equals(closeApp) || e.getSource().equals(exitButton)) {
+			closeProgram();
+
 			}
-		}
-		
 	}
 	
 	public void minimizeToTray(){
@@ -382,6 +371,12 @@ public class CFMainFrame extends JFrame implements ActionListener{
 			System.out.println("TrayIcon could not be added.");
 		}
         setVisible(false);
+	}
+
+	public void closeProgram() {
+		if (service != null)
+			service.close();
+		System.exit(0);
 	}
 
 

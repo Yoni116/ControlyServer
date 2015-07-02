@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by hent on 3/26/15.
  */
-public class KeyPress extends Thread{
+public class KeyPress implements Runnable {
     private Robot robot;
     public String commandString;
     public int command;
@@ -33,14 +33,14 @@ public class KeyPress extends Thread{
        // System.out.println("pressed : 0x" + this.commandString + " which is: " + this.command);
         resetTimer();
         try {
-            sleep(30);
+            Thread.sleep(30);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         robot.keyRelease(command);
         while(keyPressed) {
             try {
-                sleep(30);
+                Thread.sleep(30);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

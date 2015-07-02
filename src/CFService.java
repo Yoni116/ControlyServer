@@ -7,11 +7,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-
-
-
-
-public class CFService implements CFServiceRegisterListener  {
+public class CFService extends Thread implements CFServiceRegisterListener {
 
      private ArrayList<CFClient> clients;
      private RegisterService register;
@@ -22,6 +18,7 @@ public class CFService implements CFServiceRegisterListener  {
      private CFMouseDatagramChannel mouseChannel;
      private TweenManager tweenManager;
      private CFMessagesReceiver messagesReceiver;
+	private BCListener bcListener;
 	
 	public CFService(TweenManager manager) throws IOException{
 		clients = new ArrayList<CFClient>();
@@ -32,25 +29,23 @@ public class CFService implements CFServiceRegisterListener  {
 		messagesReceiver = new CFMessagesReceiver();
 		
 	}
-	
-	public void start(){
-//		if(register == null){
-//				register = new RegisterService("", serverSocket.getLocalPort(),this);
-//		}
-		new Thread()
-		{
-			public void run() {
-				serviceStarted();
-			}
-		}.start();
-		
+
+	public void run() {
+		bcListener = new BCListener(serverSocket.getLocalPort());
+		new Thread(bcListener).start();
+		serviceStarted();
 	}
-	
-    public void stop(){
+
+	public void close() {
 		if(register != null){
+			keysChannel.endThreadPool();
 			register.stopService();
 			register = null;
 		}
+
+		if (bcListener != null)
+			bcListener.closeBC();
+
 		clients.clear();
 	}
 	
