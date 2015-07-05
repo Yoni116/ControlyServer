@@ -68,7 +68,7 @@ public class BCListener implements Runnable {
             }
 
         } catch (SocketException e) {
-            e.printStackTrace();
+            System.out.println("BCListener closed");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -84,5 +84,6 @@ public class BCListener implements Runnable {
      */
     public void closeBC() {
         serverRunning = false;
+        socket.close();
     }
 }
