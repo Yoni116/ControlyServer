@@ -22,9 +22,9 @@ public class CFMainFrame extends JFrame implements ActionListener{
     private JLabel backbgroundImage;
     private PopupMenu popup;
     private  TrayIcon trayIcon;
-    private  SystemTray tray;
-    private boolean isMinimized = false;
-    private  MenuItem showApp;
+	private SystemTray tray = SystemTray.getSystemTray();
+	private boolean isMinimized = false;
+	private  MenuItem showApp;
 	private  MenuItem closeApp;
 	private int portNum;
 	private String ipNum;
@@ -33,6 +33,7 @@ public class CFMainFrame extends JFrame implements ActionListener{
     public static TweenManager tweenManager = new TweenManager();
     private boolean running;
 	private String os;
+	private int taskbarheight;
 
 	/**
 	 * Launch the application.
@@ -62,6 +63,9 @@ public class CFMainFrame extends JFrame implements ActionListener{
     
     
 	public static void main(String[] args) {
+		System.out.println(System.getenv("COMPUTERNAME"));
+
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -84,11 +88,11 @@ public class CFMainFrame extends JFrame implements ActionListener{
 	 */
 	public CFMainFrame() {
 
-		ipNum ="Start Server First";
+		taskbarheight = Toolkit.getDefaultToolkit().getScreenSize().height - GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 		portNum =0;
-		setSize(197, 216);
+		setSize(200, 215);
 		setTitle("Project-X");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setResizable(false); //frame jumps because of this command 
         setLocationRelativeTo(null);
 		contentPane = new JPanel();
@@ -102,9 +106,9 @@ public class CFMainFrame extends JFrame implements ActionListener{
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
 		Rectangle rect = defaultScreen.getDefaultConfiguration().getBounds();
-		x = (int)rect.getMinX();
-		y = (int)rect.getMaxY()-getHeight();
-		setLocation(x,y-48);
+		x = (int) rect.getMaxX() - 193;
+		y = (int) rect.getMaxY() - getHeight() - taskbarheight;
+		setLocation(x, y);
 		
 
 	    
@@ -171,6 +175,7 @@ public class CFMainFrame extends JFrame implements ActionListener{
 		info.start();
 
 		setAlwaysOnTop(true);
+
 		this.addWindowListener(new WindowListener() {
 			@Override
 			public void windowOpened(WindowEvent e) {
@@ -220,7 +225,12 @@ public class CFMainFrame extends JFrame implements ActionListener{
 		    public void run() {
 				os = System.getProperty("os.name");
 				System.out.println(os);
+				startServer();
+				minimizeToTray();
+				trayIcon.displayMessage("Server Is Running", "open the app to connect", TrayIcon.MessageType.INFO);
+
 		        while (running) {
+
 		            if (lastMillis > 0) {
 		                long currentMillis = System.currentTimeMillis();
 		                final float delta = (currentMillis - lastMillis) / 1000f;
@@ -235,8 +245,9 @@ public class CFMainFrame extends JFrame implements ActionListener{
 		                Thread.sleep(1000/60);
 		                
 		            } catch(InterruptedException ex) {
-		            }
-		        }
+						ex.printStackTrace();
+					}
+				}
 		    }
 		}).start();
 	}
@@ -247,40 +258,7 @@ public class CFMainFrame extends JFrame implements ActionListener{
 
 			
 			if(e.getSource().equals(startButton)){
-				CFTools.log("Start");
-				if(service == null){ // run server if not running
-			   try {
-				   CFTools.log("fuck");
-				service = new CFService(tweenManager);
-				service.start();
-				   ipNum = service.getIP();
-				   portNum = service.getPort();
-				   synchronized (info) {
-					   info.setIpPort(ipNum,portNum);
-					   info.notifyAll();
-				   }
-
-
-
-
-			} catch (IOException e1) {
-				CFTools.log("Couldn't start serversocket(0)");
-				e1.printStackTrace();
-			}
-				statusLabel.setText("Server Started");
-				//we should register a server.
-				}
-				else{ // if pressed again stop service and defualt the vars
-					service.close();
-					ipNum = "Start Server First";
-					portNum=0;
-					service = null;
-					CFTools.log("Stop");
-					statusLabel.setText("Server Stopped");
-					synchronized (info) {
-						info.notifyAll();
-					}
-				}
+				startServer();
 			}
 			
 			if(e.getSource().equals(minimizeButton)){
@@ -315,7 +293,43 @@ public class CFMainFrame extends JFrame implements ActionListener{
 
 			}
 	}
-	
+
+	public void startServer() {
+		CFTools.log("Start");
+		if (service == null) { // run server if not running
+			try {
+
+				service = new CFService(tweenManager);
+				service.start();
+				ipNum = service.getIP();
+				portNum = service.getPort();
+				synchronized (info) {
+					info.setIpPort(ipNum, portNum);
+					info.notifyAll();
+
+				}
+
+
+			} catch (IOException e1) {
+				CFTools.log("Couldn't start serversocket(0)");
+				e1.printStackTrace();
+			}
+			statusLabel.setText("Server Started");
+			//we should register a server.
+		} else { // if pressed again stop service and defualt the vars
+			service.close();
+			ipNum = "Start Server First";
+			portNum = 0;
+			service = null;
+			CFTools.log("Stop");
+			statusLabel.setText("Server Stopped");
+			synchronized (info) {
+				info.notifyAll();
+			}
+		}
+	}
+
+
 	public void minimizeToTray(){
 		   //Check the SystemTray is supported
 		if(popup == null){
@@ -325,10 +339,10 @@ public class CFMainFrame extends JFrame implements ActionListener{
         }
           popup = new PopupMenu();
           trayIcon = new TrayIcon(new ImageIcon(CFMainFrame.class.getResource("/Resources/TrayIcon.png")).getImage());
-          tray = SystemTray.getSystemTray();
-       
-        // Create a pop-up menu components
-        MenuItem aboutItem = new MenuItem("About");
+
+
+			// Create a pop-up menu components
+			MenuItem aboutItem = new MenuItem("About");
         Menu displayMenu = new Menu("Display");
         showApp = new MenuItem("Show App");
 
@@ -366,6 +380,7 @@ public class CFMainFrame extends JFrame implements ActionListener{
 		}
 
 		try {
+
 			tray.add(trayIcon);
 		} catch (AWTException e1) {
 			System.out.println("TrayIcon could not be added.");

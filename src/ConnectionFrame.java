@@ -58,7 +58,7 @@ public class ConnectionFrame extends Thread {
         frame.add(mainLabel);
         //GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 
-        frame.setLocation(x+210,y-50);
+        frame.setLocation(x - 225, y);
         frame.setAlwaysOnTop(true);
 
     }
@@ -92,10 +92,9 @@ public class ConnectionFrame extends Thread {
 
         synchronized (this) {
             try {
-
-                hideFrame();
-                this.wait();
                 showFrame();
+                this.wait();
+                hideFrame();
                 this.wait();
 
             } catch (InterruptedException e) {

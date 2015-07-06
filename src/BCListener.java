@@ -9,14 +9,16 @@ import java.net.*;
  * @author Yoni Maymon
  * @version 1.0
  * @since 02/07/2015
- * <p/>
  * P.S. : to @hen this is how you write code comments !!!!
  */
 
 public class BCListener implements Runnable {
 
+    private final int BC_PORT = 56378;
+    private final String MC_ADDR = "224.0.1.217";
+
     private DatagramSocket socket;
-    private final int bcPort = 56378;
+    private MulticastSocket mcSocket;
     private int connectionPort;
     private boolean serverRunning;
 
@@ -35,17 +37,23 @@ public class BCListener implements Runnable {
     @Override
     public void run() {
         try {
+            InetAddress address = InetAddress.getByName(MC_ADDR);
+
             // port 56378 will always be used for bc reason
-            socket = new DatagramSocket(bcPort, InetAddress.getByName("0.0.0.0"));
+            mcSocket = new MulticastSocket(BC_PORT);
+            mcSocket.joinGroup(address);
+
+            socket = new DatagramSocket(BC_PORT, InetAddress.getByName("0.0.0.0"));
             socket.setBroadcast(true);
+            String reply = "DISCOVER CONTROLY RESPONSE PORT: " + connectionPort + " NAME: " + System.getenv("COMPUTERNAME");
 
             while (serverRunning) {
-                System.out.println(getClass().getName() + ">>>Ready to receive broadcast packets on port: " + bcPort + " !");
+                System.out.println(getClass().getName() + ">>>Ready to receive broadcast packets on port: " + BC_PORT + " !");
 
                 //Receive a packet
                 byte[] recvBuf = new byte[15000];
                 DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
-                socket.receive(packet);
+                mcSocket.receive(packet);
 
                 //Packet received
                 System.out.println(getClass().getName() + ">>>Discovery packet received from: " + packet.getAddress().getHostAddress());
@@ -55,7 +63,7 @@ public class BCListener implements Runnable {
 
                 String message = new String(packet.getData()).trim();
                 if (message.equals("CONTROLY DISCOVER REQUEST")) {
-                    String reply = "DISCOVER CONTROLY RESPONSE PORT: " + connectionPort;
+
                     byte[] sendData = reply.getBytes();
 
                     //Send a response
