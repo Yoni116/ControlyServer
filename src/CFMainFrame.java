@@ -23,7 +23,6 @@ public class CFMainFrame extends JFrame implements ActionListener{
     private PopupMenu popup;
     private  TrayIcon trayIcon;
 	private SystemTray tray = SystemTray.getSystemTray();
-	private boolean isMinimized = false;
 	private  MenuItem showApp;
 	private  MenuItem closeApp;
 	private int portNum;
@@ -32,7 +31,6 @@ public class CFMainFrame extends JFrame implements ActionListener{
 	private int x,y;
     public static TweenManager tweenManager = new TweenManager();
     private boolean running;
-	private String os;
 	private int taskbarheight;
 
 	/**
@@ -40,48 +38,9 @@ public class CFMainFrame extends JFrame implements ActionListener{
 	 */
     
     
-    /*
-    public class CFMainPanel extends JPanel{
-    	
-    	
-		private static final long serialVersionUID = 1L;
 
-		
-    	@Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponents(g);
-            System.out.println("WTFFFf");
-            try {
-    			g.drawImage(ImageIO.read(new File("/Resources/Icons/AppBackground.png")), 0, 0, null);
-    		} catch (IOException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		} // see javadoc for more info on the parameters            
-        }
-    }
-    */
     
-    
-	public static void main(String[] args) {
-		System.out.println(System.getenv("COMPUTERNAME"));
 
-
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					CFMainFrame frame = new CFMainFrame();
-					CFTools.log(frame.getBounds().toString());
-					frame.setFocusable(true);
-					frame.setVisible(true);
-					frame.requestFocus();
-
-					CFTools.log(frame.getBounds().toString());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
@@ -91,7 +50,7 @@ public class CFMainFrame extends JFrame implements ActionListener{
 		taskbarheight = Toolkit.getDefaultToolkit().getScreenSize().height - GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 		portNum =0;
 		setSize(200, 215);
-		setTitle("Project-X");
+		setTitle("Controly");
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setResizable(false); //frame jumps because of this command 
         setLocationRelativeTo(null);
@@ -223,8 +182,7 @@ public class CFMainFrame extends JFrame implements ActionListener{
 
 		    @Override
 		    public void run() {
-				os = System.getProperty("os.name");
-				System.out.println(os);
+
 				startServer();
 				minimizeToTray();
 				trayIcon.displayMessage("Server Is Running", "open the app to connect", TrayIcon.MessageType.INFO);
@@ -317,7 +275,7 @@ public class CFMainFrame extends JFrame implements ActionListener{
 			statusLabel.setText("Server Started");
 			//we should register a server.
 		} else { // if pressed again stop service and defualt the vars
-			service.close();
+			closeService();
 			ipNum = "Start Server First";
 			portNum = 0;
 			service = null;
@@ -389,11 +347,21 @@ public class CFMainFrame extends JFrame implements ActionListener{
 	}
 
 	public void closeProgram() {
-		if (service != null)
-			service.close();
+		running = false;
+		closeService();
+		if(info != null)
+			info.closeThread();
 		System.exit(0);
 	}
 
+	public void closeService(){
+		if (service != null)
+			try {
+				service.close();
+			} catch (IOException e) {
+
+			}
+	}
 
 
 }

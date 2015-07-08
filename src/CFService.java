@@ -10,15 +10,16 @@ import java.util.TimerTask;
 public class CFService extends Thread implements CFServiceRegisterListener {
 
      private ArrayList<CFClient> clients;
-     private RegisterService register;
      private ServerSocket serverSocket;
+	 private Socket socket;
      private DatagramChannel mouseDatagramChannel;
      private DatagramChannel keysDatagramChannel;
      private CFKeysDatagramChannel keysChannel;
      private CFMouseDatagramChannel mouseChannel;
      private TweenManager tweenManager;
      private CFMessagesReceiver messagesReceiver;
-	private BCListener bcListener;
+	 private BCListener bcListener;
+	 private boolean isRuning;
 	
 	public CFService(TweenManager manager) throws IOException{
 		clients = new ArrayList<CFClient>();
@@ -27,24 +28,36 @@ public class CFService extends Thread implements CFServiceRegisterListener {
 		
 		serverSocket = new ServerSocket(0); //0 means choose an available port.
 		messagesReceiver = new CFMessagesReceiver();
+		isRuning = true;
 		
 	}
 
 	public void run() {
+
 		bcListener = new BCListener(serverSocket.getLocalPort());
 		new Thread(bcListener).start();
 		serviceStarted();
 	}
 
-	public void close() {
-		if(register != null){
-			keysChannel.endThreadPool();
-			register.stopService();
-			register = null;
-		}
+	public void close() throws IOException {
+
+		isRuning = false;
 
 		if (bcListener != null)
 			bcListener.closeBC();
+
+		if(socket != null)
+			socket.close();
+
+		if(mouseDatagramChannel != null)
+			mouseDatagramChannel.close();
+
+		if(keysDatagramChannel != null)
+			keysDatagramChannel.close();
+
+		if(serverSocket != null)
+			serverSocket.close();
+
 
 		clients.clear();
 	}
@@ -68,15 +81,15 @@ public class CFService extends Thread implements CFServiceRegisterListener {
 
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			//e1.printStackTrace();
 		}
        
     
-        while(true) {
+        while(isRuning) {
         	try {
         		 //Wait for a client to connect
             	System.out.println("waiting for client");
-                Socket socket = serverSocket.accept();
+                socket = serverSocket.accept();
                 System.out.println("Accepted connection from: " + socket.getRemoteSocketAddress());
                // CFPopup.incoming(socket.getInetAddress().getHostName(), socket.getRemoteSocketAddress().toString() ,tweenManager);
             
@@ -94,7 +107,7 @@ public class CFService extends Thread implements CFServiceRegisterListener {
                
                  
 			} catch (Exception e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 
 				
 			}
@@ -102,20 +115,10 @@ public class CFService extends Thread implements CFServiceRegisterListener {
         }
     }
     
-    public void checkClients(){
-    	Timer timer = new Timer();
-    	timer.schedule(new TimerTask() {
-			
-			@Override
-			public void run() {
-				for(int i=0; i < clients.size() ; i++){
-		    		clients.notifyAll();
-		    	}	
-			}
-		}, 60000);
+
     	
     		
-    }
+
     public int getPort(){
 		return serverSocket.getLocalPort();
 	}

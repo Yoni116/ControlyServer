@@ -93,5 +93,6 @@ public class BCListener implements Runnable {
     public void closeBC() {
         serverRunning = false;
         socket.close();
+        mcSocket.close();
     }
 }

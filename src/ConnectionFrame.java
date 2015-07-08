@@ -79,9 +79,7 @@ public class ConnectionFrame extends Thread {
 
     }
 
-    public boolean isRuning() {
-        return isRuning;
-    }
+
 
     @Override
     public void run() {
@@ -98,7 +96,7 @@ public class ConnectionFrame extends Thread {
                 this.wait();
 
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
 
@@ -113,5 +111,10 @@ public class ConnectionFrame extends Thread {
         portLabel.setText(String.valueOf(portNum));
 
 
+    }
+
+    public void closeThread(){
+        isRuning = false;
+        this.interrupt();
     }
 }
