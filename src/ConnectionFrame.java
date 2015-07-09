@@ -11,7 +11,7 @@ public class ConnectionFrame extends Thread {
 
     private JFrame frame;
     private JPanel mainPanel;
-    private  JLabel mainLabel;
+    private JLabel mainLabel;
     private String ip = "123.456.789";
     private int port = 1234;
     private JLabel ipLabel;
@@ -19,7 +19,7 @@ public class ConnectionFrame extends Thread {
     private boolean isRuning;
     private boolean isShown = false;
 
-    public ConnectionFrame ( int x, int y){
+    public ConnectionFrame(int x, int y) {
 
         frame = new JFrame();
         mainPanel = new JPanel();
@@ -32,7 +32,6 @@ public class ConnectionFrame extends Thread {
         frame.setUndecorated(true);
         frame.setBackground(new Color(0, 0, 0, 0));
         frame.setLocationRelativeTo(null);
-
 
 
         mainPanel.setOpaque(false);
@@ -63,13 +62,13 @@ public class ConnectionFrame extends Thread {
 
     }
 
-    public void showFrame(){
+    public void showFrame() {
         frame.setVisible(true);
         isShown = true;
     }
 
 
-    public void hideFrame(){
+    public void hideFrame() {
         frame.setVisible(false);
         isShown = false;
     }
@@ -80,26 +79,24 @@ public class ConnectionFrame extends Thread {
     }
 
 
-
     @Override
     public void run() {
         isRuning = true;
         System.out.println("test works");
-        while(isRuning) {
+        while (isRuning) {
 
 
-        synchronized (this) {
-            try {
-                showFrame();
-                this.wait();
-                hideFrame();
-                this.wait();
+            synchronized (this) {
+                try {
+                    showFrame();
+                    this.wait();
+                    hideFrame();
+                    this.wait();
 
-            } catch (InterruptedException e) {
-                //e.printStackTrace();
+                } catch (InterruptedException e) {
+                    //e.printStackTrace();
+                }
             }
-        }
-
 
 
         }
@@ -113,7 +110,7 @@ public class ConnectionFrame extends Thread {
 
     }
 
-    public void closeThread(){
+    public void closeThread() {
         isRuning = false;
         this.interrupt();
     }

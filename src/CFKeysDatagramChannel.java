@@ -1,21 +1,17 @@
-import java.awt.*;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-public class CFKeysDatagramChannel implements Runnable{
+public class CFKeysDatagramChannel implements Runnable {
 
 
-	private DatagramChannel channel;
+    private DatagramChannel channel;
     private ConcurrentHashMap<String, KeyPress> pressedKeys = new ConcurrentHashMap<String, KeyPress>();
     private ExecutorService executor;
 
@@ -24,61 +20,59 @@ public class CFKeysDatagramChannel implements Runnable{
         executor = Executors.newFixedThreadPool(5);
     }
 
-	public DatagramChannel getChannel() {
-		return channel;
-	}
+    public DatagramChannel getChannel() {
+        return channel;
+    }
 
 
-    public void run()
-    {
-    	
+    public void run() {
+
         try {
-           
-         	System.out.println("Keys Ready");
-			ByteBuffer buff = ByteBuffer.allocate(48);
-	        Charset charSet = Charset.forName("UTF-8");  
-	        CharsetDecoder coder = charSet.newDecoder();  
-	        CharBuffer charBuff;
+
+            System.out.println("Keys Ready");
+            ByteBuffer buff = ByteBuffer.allocate(48);
+            Charset charSet = Charset.forName("UTF-8");
+            CharsetDecoder coder = charSet.newDecoder();
+            CharBuffer charBuff;
 
 
-            while(true)
-            {
-   
+            while (true) {
+
 //waiting for msg to arrive
-             buff.clear();
-           //  System.out.println("Keys waiting");
-             channel.receive(buff);
-           //  System.out.println("Keys got msg");
-             buff.flip(); 
-             	                              
-             charBuff = coder.decode(buff);  
-             String result = charBuff.toString().trim();
-           	                               
-             System.out.println("this is: " + result);
+                buff.clear();
+                //  System.out.println("Keys waiting");
+                channel.receive(buff);
+                //  System.out.println("Keys got msg");
+                buff.flip();
 
-                if(result!=null){
+                charBuff = coder.decode(buff);
+                String result = charBuff.toString().trim();
+
+                System.out.println("this is: " + result);
+
+                if (result != null) {
                     final String command = result.substring(2);
-                    if(pressedKeys.containsKey(command)){
-                        System.out.println("extends "+ command);
+                    if (pressedKeys.containsKey(command)) {
+                        System.out.println("extends " + command);
                         if (pressedKeys.get(command) != null)
                             pressedKeys.get(command).extendDeletion();
-                    }else{
+                    } else {
                         Runnable key = new KeyPress(command, pressedKeys, this);
                         executor.execute(key);
                         pressedKeys.put(command, (KeyPress) key);
                     }
 
 
-                }else{
+                } else {
                     System.out.println("Received a null key");
                 }
 
-                 buff.clear();
+                buff.clear();
 
             }
 
 
-        } catch( Exception e) {
+        } catch (Exception e) {
             //e.printStackTrace();
         }
     }
