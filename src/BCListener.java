@@ -19,7 +19,7 @@ public class BCListener implements Runnable {
 
     private DatagramSocket socket;
     private MulticastSocket mcSocket;
-    private int connectionPort;
+    private int connectionPort, keysPort, mousePort;
     private boolean serverRunning;
 
 
@@ -27,10 +27,12 @@ public class BCListener implements Runnable {
      * main constructor for class
      * it receives the connection port from the main server
      *
-     * @param port the port to sent to the client for connection
+     * @param mainPort the port to sent to the client for connection
      */
-    public BCListener(int port) {
-        this.connectionPort = port;
+    public BCListener(int mainPort, int kPort, int mPort) {
+        this.connectionPort = mainPort;
+        this.mousePort = mPort;
+        this.keysPort = kPort;
         this.serverRunning = true;
     }
 
@@ -45,7 +47,13 @@ public class BCListener implements Runnable {
 
             socket = new DatagramSocket(BC_PORT, InetAddress.getByName("0.0.0.0"));
             socket.setBroadcast(true);
-            String reply = "DISCOVER CONTROLY RESPONSE PORT: " + connectionPort + " NAME: " + System.getenv("COMPUTERNAME");
+            String reply = "controly:" +
+                    System.getenv("COMPUTERNAME") +
+                    ":" + connectionPort +
+                    ":" + keysPort +
+                    ":" + mousePort;
+
+            System.out.println(reply);
 
             while (serverRunning) {
                 System.out.println(getClass().getName() + ">>>Ready to receive broadcast packets on port: " + BC_PORT + " !");

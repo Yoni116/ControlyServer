@@ -32,8 +32,7 @@ public class CFService extends Thread implements CFServiceRegisterListener {
 
     public void run() {
 
-        bcListener = new BCListener(serverSocket.getLocalPort());
-        new Thread(bcListener).start();
+
         serviceStarted();
     }
 
@@ -76,6 +75,12 @@ public class CFService extends Thread implements CFServiceRegisterListener {
             keysChannel = new CFKeysDatagramChannel(keysDatagramChannel);
             new Thread(keysChannel).start();
 
+            bcListener = new BCListener(serverSocket.getLocalPort(),
+                    keysChannel.getChannel().socket().getLocalPort(),
+                    mouseChannel.getChannel().socket().getLocalPort());
+
+            new Thread(bcListener).start();
+
 
         } catch (IOException e1) {
             // TODO Auto-generated catch block
@@ -85,21 +90,24 @@ public class CFService extends Thread implements CFServiceRegisterListener {
 
         while (isRuning) {
             try {
+
+                //for now not needed maybe will be implemented later
+
                 //Wait for a client to connect
-                System.out.println("waiting for client");
-                socket = serverSocket.accept();
-                System.out.println("Accepted connection from: " + socket.getRemoteSocketAddress());
+                //  System.out.println("waiting for client");
+                //  socket = serverSocket.accept();
+                // System.out.println("Accepted connection from: " + socket.getRemoteSocketAddress());
                 // CFPopup.incoming(socket.getInetAddress().getHostName(), socket.getRemoteSocketAddress().toString() ,tweenManager);
 
 
                 //Create a new custom thread to handle the connection
-                CFClient client = new CFClient(socket, mouseChannel, keysChannel, messagesReceiver.getPort());
+                // CFClient client = new CFClient(socket, mouseChannel, keysChannel, messagesReceiver.getPort());
 
-                clients.add(client);
+                //  clients.add(client);
 
 
                 //Start the thread!
-                new Thread(client).start();
+                // new Thread(client).start();
 
 
             } catch (Exception e) {
