@@ -1,15 +1,22 @@
 import aurelienribon.tweenengine.TweenManager;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.*;
 import java.nio.channels.DatagramChannel;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class CFService extends Thread implements CFServiceRegisterListener {
 
-    private ArrayList<CFClient> clients;
+    private HashSet<CFClient> clients;
     private ServerSocket serverSocket;
-    private Socket socket;
+    private DatagramSocket socket;
+    private DatagramPacket packet;
     private DatagramChannel mouseDatagramChannel;
     private DatagramChannel keysDatagramChannel;
     private CFKeysDatagramChannel keysChannel;
@@ -18,15 +25,17 @@ public class CFService extends Thread implements CFServiceRegisterListener {
     private CFMessagesReceiver messagesReceiver;
     private BCListener bcListener;
     private boolean isRuning;
+    private String receivedMsg;
 
     public CFService(TweenManager manager) throws IOException {
-        clients = new ArrayList<CFClient>();
+        clients = new HashSet<>();
         tweenManager = manager;
         //should create new exception object to deal with specifiec errors.
-
-        serverSocket = new ServerSocket(0); //0 means choose an available port.
-        messagesReceiver = new CFMessagesReceiver();
+        serverSocket = new ServerSocket(0);
+        //0 means choose an available port.
+        // messagesReceiver = new CFMessagesReceiver();
         isRuning = true;
+
 
     }
 
@@ -75,7 +84,10 @@ public class CFService extends Thread implements CFServiceRegisterListener {
             keysChannel = new CFKeysDatagramChannel(keysDatagramChannel);
             new Thread(keysChannel).start();
 
-            bcListener = new BCListener(serverSocket.getLocalPort(),
+
+            socket = new DatagramSocket(serverSocket.getLocalPort(), InetAddress.getLocalHost());
+
+            bcListener = new BCListener(socket.getLocalPort(),
                     keysChannel.getChannel().socket().getLocalPort(),
                     mouseChannel.getChannel().socket().getLocalPort());
 
@@ -91,11 +103,37 @@ public class CFService extends Thread implements CFServiceRegisterListener {
         while (isRuning) {
             try {
 
-                //for now not needed maybe will be implemented later
 
                 //Wait for a client to connect
-                //  System.out.println("waiting for client");
-                //  socket = serverSocket.accept();
+                System.out.println(new Timestamp(System.currentTimeMillis()) + " waiting for client " + socket.getLocalPort());
+                //socket = serverSocket.accept();
+                byte[] recvBuf = new byte[1024];
+                packet = new DatagramPacket(recvBuf, recvBuf.length);
+
+                socket.receive(packet);
+
+                receivedMsg = new String(packet.getData()).trim();
+                System.out.println(new Timestamp(System.currentTimeMillis()) + " The message: " + receivedMsg);
+
+                String[] splitedMsg = receivedMsg.split(":");
+
+                switch (splitedMsg[0]) {
+
+                    case "ControlyClient":
+                        clients.add(new CFClient(splitedMsg[1], packet.getAddress().getHostAddress()));
+                        break;
+
+                    default:
+                        System.out.println("Received Wrong Message");
+                        break;
+
+                }
+
+                for (CFClient c : clients) {
+                    System.out.println(c.toString());
+                }
+
+
                 // System.out.println("Accepted connection from: " + socket.getRemoteSocketAddress());
                 // CFPopup.incoming(socket.getInetAddress().getHostName(), socket.getRemoteSocketAddress().toString() ,tweenManager);
 
@@ -110,12 +148,9 @@ public class CFService extends Thread implements CFServiceRegisterListener {
                 // new Thread(client).start();
 
 
-            } catch (Exception e) {
-                //e.printStackTrace();
-
-
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
         }
     }
 

@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.net.*;
+import java.sql.Timestamp;
 
 /**
  * the BCListener class is a support service class for the main server
@@ -51,21 +52,22 @@ public class BCListener implements Runnable {
                     System.getenv("COMPUTERNAME") +
                     ":" + connectionPort +
                     ":" + keysPort +
-                    ":" + mousePort;
+                    ":" + mousePort +
+                    ":" + InetAddress.getLocalHost().getHostAddress();
 
             System.out.println(reply);
 
             while (serverRunning) {
-                System.out.println(getClass().getName() + ">>>Ready to receive broadcast packets on port: " + BC_PORT + " !");
+                System.out.println(new Timestamp(System.currentTimeMillis()) + " " + getClass().getName() + ">>>Ready to receive broadcast packets on port: " + BC_PORT + " !");
 
                 //Receive a packet
-                byte[] recvBuf = new byte[15000];
+                byte[] recvBuf = new byte[1024];
                 DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
                 mcSocket.receive(packet);
 
                 //Packet received
-                System.out.println(getClass().getName() + ">>>Discovery packet received from: " + packet.getAddress().getHostAddress());
-                System.out.println(getClass().getName() + ">>>Packet received; data: " + new String(packet.getData()));
+                System.out.println(new Timestamp(System.currentTimeMillis()) + " " + getClass().getName() + ">>>Discovery packet received from: " + packet.getAddress().getHostAddress());
+                System.out.println(new Timestamp(System.currentTimeMillis()) + " " + getClass().getName() + ">>>Packet received; data: " + new String(packet.getData()));
 
                 //See if the packet holds the right command (message)
 
@@ -78,7 +80,7 @@ public class BCListener implements Runnable {
                     DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, packet.getAddress(), packet.getPort());
                     socket.send(sendPacket);
 
-                    System.out.println(getClass().getName() + ">>>Sent packet to: " + sendPacket.getAddress().getHostAddress());
+                    System.out.println(new Timestamp(System.currentTimeMillis()) + " " + getClass().getName() + ">>>Sent packet to: " + sendPacket.getAddress().getHostAddress());
 
                 }
             }
