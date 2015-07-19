@@ -44,8 +44,8 @@ public class BCListener implements Runnable {
 
             // port 56378 will always be used for bc reason
             mcSocket = new MulticastSocket(BC_PORT);
-            mcSocket.joinGroup(address);
             mcSocket.setInterface(InetAddress.getByName(InetAddress.getLocalHost().getHostAddress()));
+            mcSocket.joinGroup(address);
             socket = new DatagramSocket(0);
             socket.setBroadcast(true);
             String reply = "controly:" +
