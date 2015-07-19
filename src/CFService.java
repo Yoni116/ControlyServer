@@ -54,6 +54,7 @@ public class CFService extends Thread implements CFServiceRegisterListener {
 
         if (socket != null)
             socket.close();
+        while (!socket.isClosed()) ;
 
         if (mouseDatagramChannel != null)
             mouseDatagramChannel.close();
@@ -149,8 +150,9 @@ public class CFService extends Thread implements CFServiceRegisterListener {
 
 
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
+
         }
     }
 

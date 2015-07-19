@@ -270,12 +270,13 @@ public class CFMainFrame extends JFrame implements ActionListener {
             statusLabel.setText("Server Started");
             //we should register a server.
         } else { // if pressed again stop service and defualt the vars
+            statusLabel.setText("Server Stopped");
             closeService();
             ipNum = "Start Server First";
             portNum = 0;
             service = null;
             CFTools.log("Stop");
-            statusLabel.setText("Server Stopped");
+
             synchronized (info) {
                 info.notifyAll();
             }
