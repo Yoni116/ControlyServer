@@ -46,11 +46,10 @@ public class BCListener implements Runnable {
             mcSocket = new MulticastSocket(BC_PORT);
             mcSocket.joinGroup(address);
             mcSocket.setInterface(InetAddress.getByName(InetAddress.getLocalHost().getHostAddress()));
-            //mcSocket.setNetworkInterface(NetworkInterface.getByName("en1"));
             socket = new DatagramSocket(0);
             socket.setBroadcast(true);
             String reply = "controly:" +
-                    System.getenv("COMPUTERNAME") +
+                    InetAddress.getLocalHost().getHostName() +
                     ":" + connectionPort +
                     ":" + keysPort +
                     ":" + mousePort +
