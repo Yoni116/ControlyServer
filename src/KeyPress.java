@@ -13,17 +13,16 @@ public class KeyPress implements Runnable {
     public Timer timer;
     public ConcurrentHashMap container;
     public boolean keyPressed;
-    public CFKeysDatagramChannel myDatagram;
 
 
-    public KeyPress(String hex, ConcurrentHashMap containerRef, CFKeysDatagramChannel dg) throws Exception {
-        this.myDatagram = dg;
+    public KeyPress(String hex, ConcurrentHashMap containerRef, Robot robot) {
+
         this.keyPressed = true;
         this.commandString = hex;
         this.command = Integer.parseInt(hex, 16);
         this.container = containerRef;
-        this.robot = new Robot();
-        robot.setAutoDelay(10);
+        this.robot = robot;
+
     }
 
     public void run() {

@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.DatagramChannel;
@@ -14,10 +15,19 @@ public class CFKeysDatagramChannel implements Runnable {
     private DatagramChannel channel;
     private ConcurrentHashMap<String, KeyPress> pressedKeys = new ConcurrentHashMap<String, KeyPress>();
     private ExecutorService executor;
+    private Robot robot;
 
     public CFKeysDatagramChannel(DatagramChannel c) {
         channel = c;
         executor = Executors.newFixedThreadPool(5);
+        try {
+            robot = new Robot();
+            robot.setAutoWaitForIdle(true);
+            // robot.setAutoDelay(10);
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public DatagramChannel getChannel() {
@@ -57,8 +67,8 @@ public class CFKeysDatagramChannel implements Runnable {
                         if (pressedKeys.get(command) != null)
                             pressedKeys.get(command).extendDeletion();
                     } else {
-                        Runnable key = new KeyPress(command, pressedKeys, this);
-                        executor.execute(key);
+                        Runnable key = new KeyPress(command, pressedKeys, robot);
+                        executor.submit(key);
                         pressedKeys.put(command, (KeyPress) key);
                     }
 
