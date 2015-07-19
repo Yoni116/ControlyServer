@@ -13,10 +13,18 @@ public class CFMouseDatagramChannel implements Runnable {
 
     private DatagramChannel channel;
     private ExecutorService executor;
+    private Robot mouse;
 
     public CFMouseDatagramChannel(DatagramChannel c) {
         channel = c;
-        executor = Executors.newFixedThreadPool(10);
+        executor = Executors.newFixedThreadPool(20);
+        try {
+            mouse = new Robot();
+            mouse.setAutoWaitForIdle(true);
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public DatagramChannel getChannel() {
@@ -53,8 +61,8 @@ public class CFMouseDatagramChannel implements Runnable {
                 String result = cBuff.toString().trim();
 
                 //CFMouseMovement cFMouseMovement = new CFMouseMovement(result);
-                Runnable mouseCommand = new CFMouseMovement(result);
-                executor.execute(mouseCommand);
+                Runnable mouseCommand = new CFMouseMovement(result, mouse);
+                executor.submit(mouseCommand);
                 //new Thread(cFMouseMovement).start();
 
                 buf.clear();

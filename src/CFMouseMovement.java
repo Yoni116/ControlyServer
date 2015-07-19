@@ -6,25 +6,22 @@ import java.nio.CharBuffer;
 
 public class CFMouseMovement implements Runnable {
 
-    private Robot mouse;
+
     private double x;
     private double y;
+    private Robot mouse;
 
 
     private String result;
 
-    public CFMouseMovement(String point) {
+    public CFMouseMovement(String point, Robot mouse) {
         result = point;
+        this.mouse = mouse;
 
     }
 
     public void run() {
-        try {
-            mouse = new Robot();
-        } catch (AWTException e) {
 
-            e.printStackTrace();
-        }
 
 //	 NativeMouse nativeMouse = new NativeMouse();
         Point mousePoint = MouseInfo.getPointerInfo().getLocation();
