@@ -23,7 +23,7 @@ public class CFKeysDatagramChannel implements Runnable {
         try {
             robot = new Robot();
             robot.setAutoWaitForIdle(true);
-            // robot.setAutoDelay(10);
+            robot.setAutoDelay(1);
         } catch (AWTException e) {
             e.printStackTrace();
         }

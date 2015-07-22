@@ -30,14 +30,14 @@ public class KeyPress implements Runnable {
         // System.out.println("pressed : 0x" + this.commandString + " which is: " + this.command);
         resetTimer();
         try {
-            Thread.sleep(30);
+            Thread.sleep(27);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         robot.keyRelease(command);
         while (keyPressed) {
             try {
-                Thread.sleep(30);
+                Thread.sleep(27);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
