@@ -1,24 +1,31 @@
 import java.awt.*;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
+import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 
 public class CFKeysDatagramChannel implements Runnable {
 
+    private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     private DatagramChannel channel;
+    private HashSet<CFClient> clients;
     private ConcurrentHashMap<String, KeyPress> pressedKeys = new ConcurrentHashMap<String, KeyPress>();
     private ExecutorService executor;
     private Robot robot;
+    private SocketAddress clientAddress;
 
-    public CFKeysDatagramChannel(DatagramChannel c) {
+    public CFKeysDatagramChannel(DatagramChannel c, HashSet<CFClient> clients) {
         channel = c;
+        this.clients = clients;
         executor = Executors.newFixedThreadPool(5);
         try {
             robot = new Robot();
@@ -39,7 +46,7 @@ public class CFKeysDatagramChannel implements Runnable {
 
         try {
 
-            System.out.println("Keys Ready");
+            LOGGER.info("Keys Ready");
             ByteBuffer buff = ByteBuffer.allocate(48);
             Charset charSet = Charset.forName("UTF-8");
             CharsetDecoder coder = charSet.newDecoder();
@@ -51,19 +58,20 @@ public class CFKeysDatagramChannel implements Runnable {
 //waiting for msg to arrive
                 buff.clear();
                 //  System.out.println("Keys waiting");
-                channel.receive(buff);
+                clientAddress = channel.receive(buff);
                 //  System.out.println("Keys got msg");
                 buff.flip();
 
                 charBuff = coder.decode(buff);
                 String result = charBuff.toString().trim();
 
-                System.out.println("this is: " + result);
+
+                LOGGER.info("Received Key: " + result + " From: " + clientAddress);
 
                 if (result != null) {
                     final String command = result.substring(2);
                     if (pressedKeys.containsKey(command)) {
-                        System.out.println("extends " + command);
+                        LOGGER.info("extends " + command + " From: " + clientAddress);
                         if (pressedKeys.get(command) != null)
                             pressedKeys.get(command).extendDeletion();
                     } else {
@@ -74,7 +82,7 @@ public class CFKeysDatagramChannel implements Runnable {
 
 
                 } else {
-                    System.out.println("Received a null key");
+                    LOGGER.warning("Received a null key");
                 }
 
                 buff.clear();
@@ -91,7 +99,7 @@ public class CFKeysDatagramChannel implements Runnable {
         executor.shutdown();
         while (!executor.isTerminated()) {
         }
-        System.out.println("closed all threads");
+        LOGGER.info("closed all threads");
     }
 
 

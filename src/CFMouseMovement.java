@@ -2,10 +2,12 @@ import java.awt.*;
 import java.awt.event.InputEvent;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
+import java.util.logging.Logger;
 
 
 public class CFMouseMovement implements Runnable {
 
+    private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     private double x;
     private double y;
@@ -87,8 +89,8 @@ public class CFMouseMovement implements Runnable {
             recievedY = Math.round(Y);
 
 
-            System.out.println(recievedX);
-            System.out.println(recievedY);
+            LOGGER.info("Move Mouse by (" + recievedX + "," + recievedY + ")");
+
 
 
             mousePoint = MouseInfo.getPointerInfo().getLocation();

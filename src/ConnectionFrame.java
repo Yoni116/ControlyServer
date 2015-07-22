@@ -82,7 +82,7 @@ public class ConnectionFrame extends Thread {
     @Override
     public void run() {
         isRuning = true;
-        System.out.println("test works");
+
         while (isRuning) {
 
 

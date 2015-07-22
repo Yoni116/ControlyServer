@@ -10,8 +10,12 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CFService extends Thread implements CFServiceRegisterListener {
+
+    private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     private HashSet<CFClient> clients;
     private ServerSocket serverSocket;
@@ -82,7 +86,7 @@ public class CFService extends Thread implements CFServiceRegisterListener {
 
             keysDatagramChannel = DatagramChannel.open();
             keysDatagramChannel.socket().bind(new InetSocketAddress(0));
-            keysChannel = new CFKeysDatagramChannel(keysDatagramChannel);
+            keysChannel = new CFKeysDatagramChannel(keysDatagramChannel, clients);
             new Thread(keysChannel).start();
 
 
@@ -96,7 +100,7 @@ public class CFService extends Thread implements CFServiceRegisterListener {
 
 
         } catch (IOException e1) {
-            // TODO Auto-generated catch block
+            LOGGER.log(Level.SEVERE, e1.toString(), e1);
             //e1.printStackTrace();
         }
 
@@ -106,7 +110,7 @@ public class CFService extends Thread implements CFServiceRegisterListener {
 
 
                 //Wait for a client to connect
-                System.out.println(new Timestamp(System.currentTimeMillis()) + " waiting for client " + socket.getLocalPort());
+                LOGGER.info("waiting for client " + socket.getLocalPort());
                 //socket = serverSocket.accept();
                 byte[] recvBuf = new byte[1024];
                 packet = new DatagramPacket(recvBuf, recvBuf.length);
@@ -114,7 +118,7 @@ public class CFService extends Thread implements CFServiceRegisterListener {
                 socket.receive(packet);
 
                 receivedMsg = new String(packet.getData()).trim();
-                System.out.println(new Timestamp(System.currentTimeMillis()) + " The message: " + receivedMsg);
+                LOGGER.info("The message: " + receivedMsg);
 
                 String[] splitedMsg = receivedMsg.split(":");
 
@@ -125,13 +129,13 @@ public class CFService extends Thread implements CFServiceRegisterListener {
                         break;
 
                     default:
-                        System.out.println("Received Wrong Message");
+                        LOGGER.warning("Received Wrong Message");
                         break;
 
                 }
 
                 for (CFClient c : clients) {
-                    System.out.println(c.toString());
+                    LOGGER.info(c.toString());
                 }
 
 
@@ -150,7 +154,7 @@ public class CFService extends Thread implements CFServiceRegisterListener {
 
 
             } catch (IOException e) {
-                //e.printStackTrace();
+                LOGGER.log(Level.SEVERE, e.toString(), e);
             }
 
         }

@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.net.*;
 import java.sql.Timestamp;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * the BCListener class is a support service class for the main server
@@ -14,6 +16,8 @@ import java.sql.Timestamp;
  */
 
 public class BCListener implements Runnable {
+
+    private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     private final int BC_PORT = 56378;
     private final String MC_ADDR = "224.0.1.217";
@@ -55,10 +59,10 @@ public class BCListener implements Runnable {
                     ":" + mousePort +
                     ":" + InetAddress.getLocalHost().getHostAddress();
 
-            System.out.println(reply);
+            LOGGER.info(reply);
 
             while (serverRunning) {
-                System.out.println(new Timestamp(System.currentTimeMillis()) + " " + getClass().getName() + ">>>Ready to receive broadcast packets on port: " + BC_PORT + " !");
+                LOGGER.info("Ready to receive broadcast packets on port: " + BC_PORT + " !");
 
                 //Receive a packet
                 byte[] recvBuf = new byte[1024];
@@ -66,8 +70,8 @@ public class BCListener implements Runnable {
                 mcSocket.receive(packet);
 
                 //Packet received
-                System.out.println(new Timestamp(System.currentTimeMillis()) + " " + getClass().getName() + ">>>Discovery packet received from: " + packet.getAddress().getHostAddress());
-                System.out.println(new Timestamp(System.currentTimeMillis()) + " " + getClass().getName() + ">>>Packet received; data: " + new String(packet.getData()));
+                LOGGER.info("Discovery packet received from: " + packet.getAddress().getHostAddress());
+                LOGGER.info("Packet received; data: " + new String(packet.getData()));
 
                 //See if the packet holds the right command (message)
 
@@ -80,17 +84,18 @@ public class BCListener implements Runnable {
                     DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, packet.getAddress(), packet.getPort());
                     socket.send(sendPacket);
 
-                    System.out.println(new Timestamp(System.currentTimeMillis()) + " " + getClass().getName() + ">>>Sent packet to: " + sendPacket.getAddress().getHostAddress());
+                    LOGGER.info("Sent packet to: " + sendPacket.getAddress().getHostAddress());
 
                 }
             }
 
         } catch (SocketException e) {
-            System.out.println("BCListener closed");
+            LOGGER.warning("BCListener closed");
+            LOGGER.log(Level.SEVERE, e.toString(), e);
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.toString(), e);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.toString(), e);
         }
 
     }

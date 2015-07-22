@@ -2,17 +2,22 @@ import java.awt.*;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 /**
  * Created by hent on 3/26/15.
  */
 public class KeyPress implements Runnable {
+
+
+    private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
     private Robot robot;
-    public String commandString;
-    public int command;
-    public Timer timer;
-    public ConcurrentHashMap container;
-    public boolean keyPressed;
+    private String commandString;
+    private int command;
+    private Timer timer;
+    private ConcurrentHashMap container;
+    private boolean keyPressed;
 
 
     public KeyPress(String hex, ConcurrentHashMap containerRef, Robot robot) {
@@ -27,7 +32,7 @@ public class KeyPress implements Runnable {
 
     public void run() {
         robot.keyPress(command);
-        // System.out.println("pressed : 0x" + this.commandString + " which is: " + this.command);
+
         resetTimer();
         try {
             Thread.sleep(27);
@@ -48,7 +53,7 @@ public class KeyPress implements Runnable {
 
         container.remove(commandString);
 
-        System.out.println("released: " + command);
+        LOGGER.info("released: " + command);
     }
 
 

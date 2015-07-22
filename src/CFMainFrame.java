@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class CFMainFrame extends JFrame implements ActionListener {
@@ -15,6 +17,8 @@ public class CFMainFrame extends JFrame implements ActionListener {
      *
      */
     private static final long serialVersionUID = 1L;
+    private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
     private JPanel contentPane;
     private JLabel statusLabel;
     private JButton startButton;
@@ -199,7 +203,7 @@ public class CFMainFrame extends JFrame implements ActionListener {
                         Thread.sleep(1000 / 60);
 
                     } catch (InterruptedException ex) {
-                        ex.printStackTrace();
+                        LOGGER.log(Level.SEVERE, ex.toString(), ex);
                     }
                 }
             }
@@ -248,7 +252,7 @@ public class CFMainFrame extends JFrame implements ActionListener {
     }
 
     public void startServer() {
-        CFTools.log("Start");
+        LOGGER.info("Start");
         if (service == null) { // run server if not running
             try {
 
@@ -264,8 +268,8 @@ public class CFMainFrame extends JFrame implements ActionListener {
 
 
             } catch (IOException e1) {
-                CFTools.log("Couldn't start serversocket(0)");
-                e1.printStackTrace();
+                LOGGER.log(Level.SEVERE, e1.toString(), e1);
+                //e1.printStackTrace();
             }
             statusLabel.setText("Server Started");
             //we should register a server.
@@ -275,7 +279,7 @@ public class CFMainFrame extends JFrame implements ActionListener {
             ipNum = "Start Server First";
             portNum = 0;
             service = null;
-            CFTools.log("Stop");
+            LOGGER.info("Stop");
 
             synchronized (info) {
                 info.notifyAll();
@@ -288,7 +292,7 @@ public class CFMainFrame extends JFrame implements ActionListener {
         //Check the SystemTray is supported
         if (popup == null) {
             if (!SystemTray.isSupported()) {
-                System.out.println("SystemTray is not supported");
+                LOGGER.warning("SystemTray is not supported");
                 return;
             }
             popup = new PopupMenu();
@@ -337,7 +341,7 @@ public class CFMainFrame extends JFrame implements ActionListener {
 
             tray.add(trayIcon);
         } catch (AWTException e1) {
-            System.out.println("TrayIcon could not be added.");
+            LOGGER.warning("TrayIcon could not be added.");
         }
         setVisible(false);
     }
