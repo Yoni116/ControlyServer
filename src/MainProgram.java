@@ -14,7 +14,8 @@ public class MainProgram {
         LOGGER.info(System.getProperty("os.name"));
 
         LOGGER.info("Program Started");
-        CFMainFrame frame = new CFMainFrame();
+        newMainFrame frame = new newMainFrame();
+
         frame.setFocusable(true);
         frame.setVisible(true);
         frame.requestFocus();

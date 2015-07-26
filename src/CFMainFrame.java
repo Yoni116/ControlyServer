@@ -126,11 +126,12 @@ public class CFMainFrame extends JFrame implements ActionListener {
 		settingButton.addActionListener(this);
 		contentPane.add(settingButton);*/
 
+
+        running = true;
         backbgroundImage = new JLabel("");
         backbgroundImage.setIcon(new ImageIcon(CFMainFrame.class.getResource("/Resources/AppBackground.png")));
         backbgroundImage.setBounds(0, 0, 197, 216);
         contentPane.add(backbgroundImage);
-        running = true;
         info = new ConnectionFrame(x, y);
         info.start();
 
@@ -256,7 +257,7 @@ public class CFMainFrame extends JFrame implements ActionListener {
         if (service == null) { // run server if not running
             try {
 
-                service = new CFService(tweenManager);
+                service = new CFService();
                 service.start();
                 ipNum = service.getIP();
                 portNum = service.getPort();

@@ -31,9 +31,9 @@ public class CFService extends Thread implements CFServiceRegisterListener {
     private boolean isRuning;
     private String receivedMsg;
 
-    public CFService(TweenManager manager) throws IOException {
+    public CFService() throws IOException {
         clients = new HashSet<>();
-        tweenManager = manager;
+        //tweenManager = manager;
         //should create new exception object to deal with specifiec errors.
         serverSocket = new ServerSocket(0);
         //0 means choose an available port.
