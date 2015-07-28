@@ -30,8 +30,11 @@ public class CFService extends Thread implements CFServiceRegisterListener {
     private BCListener bcListener;
     private boolean isRuning;
     private String receivedMsg;
+    private NewMainFrame mainFrame;
+    private String myIp;
 
-    public CFService() throws IOException {
+    public CFService(NewMainFrame mf) throws IOException {
+        mainFrame = mf;
         clients = new HashSet<>();
         //tweenManager = manager;
         //should create new exception object to deal with specifiec errors.
@@ -39,6 +42,7 @@ public class CFService extends Thread implements CFServiceRegisterListener {
         //0 means choose an available port.
         // messagesReceiver = new CFMessagesReceiver();
         isRuning = true;
+        myIp = getExternalIp();
 
 
     }
@@ -104,6 +108,8 @@ public class CFService extends Thread implements CFServiceRegisterListener {
             //e1.printStackTrace();
         }
 
+        mainFrame.setIpAndPort();
+
 
         while (isRuning) {
             try {
@@ -161,9 +167,9 @@ public class CFService extends Thread implements CFServiceRegisterListener {
     }
 
 
-    public int getPort() {
-        return serverSocket.getLocalPort();
-    }
+    // public int getPort() {
+    //     return serverSocket.getLocalPort();
+    // }
 
     public String getIP() {
         String ipNum = "";
@@ -177,5 +183,33 @@ public class CFService extends Thread implements CFServiceRegisterListener {
 
     public void serviceFailed() {
         //means the service has failed to register.
+    }
+
+    public String getExternalIp() {
+        URL whatismyip = null;
+        String ip = "";
+        try {
+            whatismyip = new URL("http://checkip.amazonaws.com");
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    whatismyip.openStream()));
+
+            ip = in.readLine(); //you get the IP as a String
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return ip;
+    }
+
+    public String getPort() {
+        return bcListener.getBC_PORT();
+    }
+
+    public String getMyIp() {
+        return myIp;
     }
 }

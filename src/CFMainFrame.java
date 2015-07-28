@@ -255,23 +255,18 @@ public class CFMainFrame extends JFrame implements ActionListener {
     public void startServer() {
         LOGGER.info("Start");
         if (service == null) { // run server if not running
-            try {
 
-                service = new CFService();
-                service.start();
-                ipNum = service.getIP();
-                portNum = service.getPort();
-                synchronized (info) {
-                    info.setIpPort(ipNum, portNum);
-                    info.notifyAll();
+            // service = new CFService();
+            service.start();
+            ipNum = service.getIP();
+            //portNum = service.getPort();
+            synchronized (info) {
+                info.setIpPort(ipNum, portNum);
+                info.notifyAll();
 
-                }
-
-
-            } catch (IOException e1) {
-                LOGGER.log(Level.SEVERE, e1.toString(), e1);
-                //e1.printStackTrace();
             }
+
+
             statusLabel.setText("Server Started");
             //we should register a server.
         } else { // if pressed again stop service and defualt the vars

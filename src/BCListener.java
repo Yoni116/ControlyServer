@@ -27,6 +27,8 @@ public class BCListener implements Runnable {
     private int connectionPort, keysPort, mousePort;
     private boolean serverRunning;
 
+    //private ServerSocket sc;
+
 
     /**
      * main constructor for class
@@ -46,7 +48,9 @@ public class BCListener implements Runnable {
         try {
             InetAddress address = InetAddress.getByName(MC_ADDR);
 
+
             // port 56378 will always be used for bc reason
+
             mcSocket = new MulticastSocket(BC_PORT);
             mcSocket.setInterface(InetAddress.getByName(InetAddress.getLocalHost().getHostAddress()));
             mcSocket.joinGroup(address);
@@ -67,7 +71,7 @@ public class BCListener implements Runnable {
                 //Receive a packet
                 byte[] recvBuf = new byte[1024];
                 DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
-                mcSocket.receive(packet);
+                socket.receive(packet);
 
                 //Packet received
                 LOGGER.info("Discovery packet received from: " + packet.getAddress().getHostAddress());
@@ -109,5 +113,9 @@ public class BCListener implements Runnable {
         serverRunning = false;
         socket.close();
         mcSocket.close();
+    }
+
+    public String getBC_PORT() {
+        return "" + this.BC_PORT;
     }
 }

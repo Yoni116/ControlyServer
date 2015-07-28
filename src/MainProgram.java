@@ -1,4 +1,3 @@
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -14,10 +13,9 @@ public class MainProgram {
         LOGGER.info(System.getProperty("os.name"));
 
         LOGGER.info("Program Started");
-        newMainFrame frame = new newMainFrame();
+        NewMainFrame frame = new NewMainFrame();
 
         frame.setFocusable(true);
-        frame.setVisible(true);
         frame.requestFocus();
     }
 }
