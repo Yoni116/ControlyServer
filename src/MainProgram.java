@@ -13,7 +13,7 @@ public class MainProgram {
         LOGGER.info(System.getProperty("os.name"));
 
         LOGGER.info("Program Started");
-        NewMainFrame frame = new NewMainFrame();
+        MainFrame frame = new MainFrame();
 
         frame.setFocusable(true);
         frame.requestFocus();
