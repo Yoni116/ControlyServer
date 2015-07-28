@@ -30,10 +30,10 @@ public class CFService extends Thread implements CFServiceRegisterListener {
     private BCListener bcListener;
     private boolean isRuning;
     private String receivedMsg;
-    private NewMainFrame mainFrame;
+    private MainFrame mainFrame;
     private String myIp;
 
-    public CFService(NewMainFrame mf) throws IOException {
+    public CFService(MainFrame mf) throws IOException {
         mainFrame = mf;
         clients = new HashSet<>();
         //tweenManager = manager;
