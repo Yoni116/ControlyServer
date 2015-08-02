@@ -27,7 +27,7 @@ public class BCListener implements Runnable {
     private int connectionPort, keysPort, mousePort;
     private boolean serverRunning;
 
-    //private ServerSocket sc;
+    private ServerSocket sc;
 
 
     /**
@@ -71,7 +71,7 @@ public class BCListener implements Runnable {
                 //Receive a packet
                 byte[] recvBuf = new byte[1024];
                 DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
-                socket.receive(packet);
+                mcSocket.receive(packet);
 
                 //Packet received
                 LOGGER.info("Discovery packet received from: " + packet.getAddress().getHostAddress());

@@ -1,4 +1,4 @@
-import aurelienribon.tweenengine.TweenManager;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class CFService extends Thread implements CFServiceRegisterListener {
+public class CFService extends Thread {
 
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
@@ -25,7 +25,6 @@ public class CFService extends Thread implements CFServiceRegisterListener {
     private DatagramChannel keysDatagramChannel;
     private CFKeysDatagramChannel keysChannel;
     private CFMouseDatagramChannel mouseChannel;
-    private TweenManager tweenManager;
     private CFMessagesReceiver messagesReceiver;
     private BCListener bcListener;
     private boolean isRuning;
@@ -48,7 +47,6 @@ public class CFService extends Thread implements CFServiceRegisterListener {
     }
 
     public void run() {
-
 
         serviceStarted();
     }
@@ -131,7 +129,10 @@ public class CFService extends Thread implements CFServiceRegisterListener {
                 switch (splitedMsg[0]) {
 
                     case "ControlyClient":
-                        clients.add(new CFClient(splitedMsg[1], packet.getAddress().getHostAddress()));
+                        CFClient temp = new CFClient(splitedMsg[1], packet.getAddress().getHostAddress());
+                        new Thread(new DeviceConnectedFrame(temp.getName())).start();
+                        clients.add(temp);
+                        mainFrame.addClientToLabel(temp);
                         break;
 
                     default:
@@ -181,9 +182,6 @@ public class CFService extends Thread implements CFServiceRegisterListener {
         return ipNum;
     }
 
-    public void serviceFailed() {
-        //means the service has failed to register.
-    }
 
     public String getExternalIp() {
         URL whatismyip = null;
@@ -212,4 +210,6 @@ public class CFService extends Thread implements CFServiceRegisterListener {
     public String getMyIp() {
         return myIp;
     }
+
+
 }

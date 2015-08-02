@@ -12,6 +12,10 @@ public class CFClient {
         ip = clientIP;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
     @Override
     public String toString() {
         return "ClientName: " + name + "\tClientIP: " + ip;

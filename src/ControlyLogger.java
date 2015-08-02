@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.logging.*;
 import java.util.logging.SimpleFormatter;
 
@@ -17,20 +18,20 @@ public class ControlyLogger {
         Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
         // suppress the logging output to the console
-        Logger rootLogger = Logger.getLogger("");
-        Handler[] handlers = rootLogger.getHandlers();
-        if (handlers[0] instanceof ConsoleHandler) {
-            rootLogger.removeHandler(handlers[0]);
-        }
+//        Logger rootLogger = Logger.getLogger("");
+//        Handler[] handlers = rootLogger.getHandlers();
+//        if (handlers[0] instanceof ConsoleHandler) {
+//            rootLogger.removeHandler(handlers[0]);
+//        }
 
-        logger.setLevel(Level.INFO);
-        fileTxt = new FileHandler("Logging.txt");
+        //logger.setLevel(Level.INFO);
+        //fileTxt = new FileHandler("Logging.txt",false);
 
 
         // create a TXT formatter
-        formatterTxt = new SimpleFormatter();
-        fileTxt.setFormatter(formatterTxt);
-        logger.addHandler(fileTxt);
+        //formatterTxt = new SimpleFormatter();
+        //fileTxt.setFormatter(formatterTxt);
+        //logger.addHandler(fileTxt);
 
 
     }

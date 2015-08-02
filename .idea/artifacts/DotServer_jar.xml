@@ -2,9 +2,7 @@
   <artifact type="jar" build-on-make="true" name="DotServer:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/DotServer_jar</output-path>
     <root id="archive" name="DotServer.jar">
-      <element id="library" level="project" name="tween-engine-api-sources" />
       <element id="module-output" name="DotServer" />
-      <element id="library" level="project" name="tween-engine-api" />
     </root>
   </artifact>
 </component>

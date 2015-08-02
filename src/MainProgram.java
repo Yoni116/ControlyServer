@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
@@ -8,7 +9,12 @@ public class MainProgram {
 
     public static void main(String[] args) {
 
-
+        try {
+            ControlyLogger.setup();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        LOGGER.info("--------------------------------------------------------------");
         LOGGER.info(System.getenv("COMPUTERNAME"));
         LOGGER.info(System.getProperty("os.name"));
 
