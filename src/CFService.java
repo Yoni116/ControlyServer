@@ -31,9 +31,12 @@ public class CFService extends Thread {
     private String receivedMsg;
     private MainFrame mainFrame;
     private String myIp;
+    private MacroRecorder mr;
+    private boolean macroBusy;
 
     public CFService(MainFrame mf) throws IOException {
         mainFrame = mf;
+        macroBusy = false;
         clients = new HashSet<>();
         //tweenManager = manager;
         //should create new exception object to deal with specifiec errors.
@@ -133,6 +136,27 @@ public class CFService extends Thread {
                         new Thread(new DeviceConnectedFrame(temp.getName())).start();
                         clients.add(temp);
                         mainFrame.addClientToLabel(temp);
+                        break;
+                    case "MacroStart":
+                        if (!macroBusy) {
+                            macroBusy = true;
+                            LOGGER.info("Received Macro Start Msg");
+                            if (splitedMsg[1] == "0")
+                                mr = new MacroRecorder(false, packet.getAddress().getHostAddress());
+                            else
+                                mr = new MacroRecorder(true, packet.getAddress().getHostAddress());
+                            mr.start();
+                        }
+                        break;
+                    case "MacroStop":
+                        LOGGER.info("Received Macro Stop Msg");
+                        mr.stopRecord();
+                        String m = mr.buildMacro();
+                        mr.finishMacro();
+                        byte[] macroBuffer = m.getBytes();
+                        DatagramPacket sendMacro = new DatagramPacket(macroBuffer, macroBuffer.length, packet.getAddress(), packet.getPort());
+                        socket.send(sendMacro);
+                        macroBusy = false;
                         break;
 
                     default:

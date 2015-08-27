@@ -9,12 +9,9 @@ import java.awt.event.WindowEvent;
  */
 public class DeviceConnectedFrame extends JFrame implements Runnable {
 
+    private static int nextLocation = ((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 4) / 4;
     private final int FRAME_WIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 4;
     private final int FRAME_HEIGHT = FRAME_WIDTH / 4;
-
-    private static int nextLocation = ((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 4) / 4;
-
-
     private float s = 1.0f;
 
     private JFrame frame;

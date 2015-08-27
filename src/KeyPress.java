@@ -9,7 +9,6 @@ import java.util.logging.Logger;
  */
 public class KeyPress implements Runnable {
 
-
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     private Robot robot;
