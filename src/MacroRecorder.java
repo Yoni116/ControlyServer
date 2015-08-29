@@ -42,7 +42,7 @@ public class MacroRecorder extends Thread {
 
     @Override
     public void run() {
-        LOGGER.info("Starting Macro Record For Client: " + client);
+        LOGGER.info("Starting Macro Record For Client: " + client + (withTimer ? " With " : " Without ") + "Timer");
         if (withTimer)
             startTime = System.nanoTime() / 1000000;
 

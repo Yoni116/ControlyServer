@@ -128,6 +128,7 @@ public class CFService extends Thread {
                 LOGGER.info("The message: " + receivedMsg);
 
                 String[] splitedMsg = receivedMsg.split(":");
+                LOGGER.info(splitedMsg[0]);
 
                 switch (splitedMsg[0]) {
 
@@ -138,10 +139,11 @@ public class CFService extends Thread {
                         mainFrame.addClientToLabel(temp);
                         break;
                     case "MacroStart":
+                        LOGGER.info(macroBusy ? "macro busy" : " macro free");
                         if (!macroBusy) {
                             macroBusy = true;
                             LOGGER.info("Received Macro Start Msg");
-                            if (splitedMsg[1] == "0")
+                            if (Integer.parseInt(splitedMsg[1]) == 0)
                                 mr = new MacroRecorder(false, packet.getAddress().getHostAddress());
                             else
                                 mr = new MacroRecorder(true, packet.getAddress().getHostAddress());
@@ -156,6 +158,7 @@ public class CFService extends Thread {
                         byte[] macroBuffer = m.getBytes();
                         DatagramPacket sendMacro = new DatagramPacket(macroBuffer, macroBuffer.length, packet.getAddress(), packet.getPort());
                         socket.send(sendMacro);
+                        LOGGER.info(m);
                         macroBusy = false;
                         break;
 
