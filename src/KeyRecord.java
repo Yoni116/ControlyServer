@@ -51,4 +51,24 @@ public class KeyRecord {
                 ", keyUpDown=" + keyUpDown +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        KeyRecord keyRecord = (KeyRecord) o;
+
+        if (keyCode != keyRecord.keyCode) return false;
+        if (keyUpDown != keyRecord.keyUpDown) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = keyCode;
+        result = 31 * result + keyUpDown;
+        return result;
+    }
 }

@@ -47,7 +47,7 @@ public class CFKeysDatagramChannel implements Runnable {
         try {
 
             LOGGER.info("Keys Ready");
-            ByteBuffer buff = ByteBuffer.allocate(48);
+            ByteBuffer buff = ByteBuffer.allocate(512);
             Charset charSet = Charset.forName("UTF-8");
             CharsetDecoder coder = charSet.newDecoder();
             CharBuffer charBuff;
@@ -60,30 +60,48 @@ public class CFKeysDatagramChannel implements Runnable {
                 //  System.out.println("Keys waiting");
                 clientAddress = channel.receive(buff);
                 //  System.out.println("Keys got msg");
+
                 buff.flip();
 
                 charBuff = coder.decode(buff);
-                String result = charBuff.toString().trim();
+
+                String temp = charBuff.toString().trim();
+
+                String[] splitedMsg = temp.split(":");
+
+                switch (splitedMsg[0]) {
+
+                    case "key":
+                        String result = splitedMsg[1];
+                        LOGGER.info("Received Key: " + result + " From: " + clientAddress);
+
+                        if (result != null) {
+                            final String command = result.substring(2);
+                            if (pressedKeys.containsKey(command)) {
+                                LOGGER.info("extends " + command + " From: " + clientAddress);
+                                if (pressedKeys.get(command) != null)
+                                    pressedKeys.get(command).extendDeletion();
+                            } else {
+                                Runnable key = new KeyPress(command, pressedKeys, robot);
+                                executor.submit(key);
+                                pressedKeys.put(command, (KeyPress) key);
+                            }
 
 
-                LOGGER.info("Received Key: " + result + " From: " + clientAddress);
+                        } else {
+                            LOGGER.warning("Received a null key");
+                        }
 
-                if (result != null) {
-                    final String command = result.substring(2);
-                    if (pressedKeys.containsKey(command)) {
-                        LOGGER.info("extends " + command + " From: " + clientAddress);
-                        if (pressedKeys.get(command) != null)
-                            pressedKeys.get(command).extendDeletion();
-                    } else {
-                        Runnable key = new KeyPress(command, pressedKeys, robot);
-                        executor.submit(key);
-                        pressedKeys.put(command, (KeyPress) key);
-                    }
+                        break;
+                    case "macro":
+                        new Thread(
+                                new MacroExecute(splitedMsg[2], Integer.parseInt(splitedMsg[1]))).start();
+
+                        break;
 
 
-                } else {
-                    LOGGER.warning("Received a null key");
                 }
+
 
                 buff.clear();
 

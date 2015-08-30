@@ -3,13 +3,9 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.*;
 import java.nio.channels.DatagramChannel;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,7 +16,7 @@ public class CFService extends Thread {
     private HashSet<CFClient> clients;
     private ServerSocket serverSocket;
     private DatagramSocket socket;
-    private DatagramPacket packet;
+    private DatagramPacket receivedPacket;
     private DatagramChannel mouseDatagramChannel;
     private DatagramChannel keysDatagramChannel;
     private CFKeysDatagramChannel keysChannel;
@@ -31,8 +27,14 @@ public class CFService extends Thread {
     private String receivedMsg;
     private MainFrame mainFrame;
     private String myIp;
+
     private MacroRecorder mr;
     private boolean macroBusy;
+
+    private String returnMsg;
+    private byte[] msgBuffer;
+    private byte[] recvBuf;
+    private DatagramPacket returnPacket;
 
     public CFService(MainFrame mf) throws IOException {
         mainFrame = mf;
@@ -119,12 +121,10 @@ public class CFService extends Thread {
                 //Wait for a client to connect
                 LOGGER.info("waiting for client " + socket.getLocalPort());
                 //socket = serverSocket.accept();
-                byte[] recvBuf = new byte[1024];
-                packet = new DatagramPacket(recvBuf, recvBuf.length);
-
-                socket.receive(packet);
-
-                receivedMsg = new String(packet.getData()).trim();
+                recvBuf = new byte[512];
+                receivedPacket = new DatagramPacket(recvBuf, recvBuf.length);
+                socket.receive(receivedPacket);
+                receivedMsg = new String(receivedPacket.getData()).trim();
                 LOGGER.info("The message: " + receivedMsg);
 
                 String[] splitedMsg = receivedMsg.split(":");
@@ -133,32 +133,55 @@ public class CFService extends Thread {
                 switch (splitedMsg[0]) {
 
                     case "ControlyClient":
-                        CFClient temp = new CFClient(splitedMsg[1], packet.getAddress().getHostAddress());
+                        CFClient temp = new CFClient(splitedMsg[1], receivedPacket.getAddress().getHostAddress());
                         new Thread(new DeviceConnectedFrame(temp.getName())).start();
                         clients.add(temp);
                         mainFrame.addClientToLabel(temp);
+                        returnMsg = "1000-OK";
+                        msgBuffer = returnMsg.getBytes();
+                        returnPacket = new DatagramPacket(msgBuffer, msgBuffer.length, receivedPacket.getAddress(), receivedPacket.getPort());
+                        socket.send(returnPacket);
+                        LOGGER.info("Sent Back " + returnMsg);
+
                         break;
                     case "MacroStart":
                         LOGGER.info(macroBusy ? "macro busy" : " macro free");
                         if (!macroBusy) {
                             macroBusy = true;
+                            returnMsg = "2000-macro record started";
+                            msgBuffer = returnMsg.getBytes();
+                            returnPacket = new DatagramPacket(msgBuffer, msgBuffer.length, receivedPacket.getAddress(), receivedPacket.getPort());
+                            socket.send(returnPacket);
                             LOGGER.info("Received Macro Start Msg");
                             if (Integer.parseInt(splitedMsg[1]) == 0)
-                                mr = new MacroRecorder(false, packet.getAddress().getHostAddress());
+                                mr = new MacroRecorder(false, receivedPacket.getAddress().getHostAddress());
                             else
-                                mr = new MacroRecorder(true, packet.getAddress().getHostAddress());
+                                mr = new MacroRecorder(true, receivedPacket.getAddress().getHostAddress());
                             mr.start();
+                        } else {
+                            returnMsg = "2002-cannot record more then one macro at a time";
+                            msgBuffer = returnMsg.getBytes();
+                            returnPacket = new DatagramPacket(msgBuffer, msgBuffer.length, receivedPacket.getAddress(), receivedPacket.getPort());
+                            socket.send(returnPacket);
                         }
                         break;
                     case "MacroStop":
                         LOGGER.info("Received Macro Stop Msg");
+                        returnMsg = "2001-macro record finished";
+                        msgBuffer = returnMsg.getBytes();
+                        returnPacket = new DatagramPacket(msgBuffer, msgBuffer.length, receivedPacket.getAddress(), receivedPacket.getPort());
+                        socket.send(returnPacket);
                         mr.stopRecord();
-                        String m = mr.buildMacro();
+                        returnMsg = mr.buildMacro();
+                        if (returnMsg == "")
+                            returnMsg = "2001-Empty";
+                        else
+                            returnMsg = "2001-" + returnMsg;
                         mr.finishMacro();
-                        byte[] macroBuffer = m.getBytes();
-                        DatagramPacket sendMacro = new DatagramPacket(macroBuffer, macroBuffer.length, packet.getAddress(), packet.getPort());
-                        socket.send(sendMacro);
-                        LOGGER.info(m);
+                        msgBuffer = returnMsg.getBytes();
+                        returnPacket = new DatagramPacket(msgBuffer, msgBuffer.length, receivedPacket.getAddress(), receivedPacket.getPort());
+                        socket.send(returnPacket);
+                        LOGGER.info(returnMsg);
                         macroBusy = false;
                         break;
 
@@ -173,18 +196,7 @@ public class CFService extends Thread {
                 }
 
 
-                // System.out.println("Accepted connection from: " + socket.getRemoteSocketAddress());
-                // CFPopup.incoming(socket.getInetAddress().getHostName(), socket.getRemoteSocketAddress().toString() ,tweenManager);
 
-
-                //Create a new custom thread to handle the connection
-                // CFClient client = new CFClient(socket, mouseChannel, keysChannel, messagesReceiver.getPort());
-
-                //  clients.add(client);
-
-
-                //Start the thread!
-                // new Thread(client).start();
 
 
             } catch (IOException e) {

@@ -8,32 +8,40 @@ import java.util.logging.Logger;
  */
 public class MacroRecorder extends Thread {
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    public static Vector<KeyRecord> macro = new Vector<>();
+    public static Vector<KeyRecord> macro;
     private static int seq;
     private static long startTime;
     private static boolean withTimer;
     public String client;
-    public String finalMacro = "";
+    public String finalMacro = "macro:";
     private long endTime;
 
 
     public MacroRecorder(boolean withTimer, String client) {
         seq = 1;
-        MacroRecorder.withTimer = withTimer;
         this.client = client;
+        MacroRecorder.withTimer = withTimer;
+        macro = new Vector<>();
 
     }
 
     public static void recordKey(int key, int type) {
         KeyRecord temp;
-        // System.out.println(key +" "+type);
-
+        if (key == 162)
+            key = 17;
+        if (key == 160)
+            key = 16;
+        if (key == 164)
+            key = 18;
+        if (key == 91)
+            key = 524;
         if (withTimer) {
             temp = new KeyRecord((System.nanoTime() / 1000000 - startTime), key, type);
         } else {
             temp = new KeyRecord(key, type);
         }
         macro.add(temp);
+
     }
 
     public static native void SetHook();
@@ -42,12 +50,10 @@ public class MacroRecorder extends Thread {
 
     @Override
     public void run() {
-        LOGGER.info("Starting Macro Record For Client: " + client + (withTimer ? " With " : " Without ") + "Timer");
-        if (withTimer)
-            startTime = System.nanoTime() / 1000000;
-
-
+        LOGGER.info("Starting Macro Record for client: " + client);
         new Thread(() -> {
+            if (withTimer)
+                startTime = System.nanoTime() / 1000000;
             SetHook();
             System.out.println("here");
         }).start();
@@ -59,8 +65,7 @@ public class MacroRecorder extends Thread {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }
-        LOGGER.info("Macro Thread Closing");
+            }
 
 
     }
@@ -69,12 +74,12 @@ public class MacroRecorder extends Thread {
         if (withTimer)
             endTime = System.nanoTime() / 1000000;
         ReleaseHook();
-        LOGGER.info("Macro Record Ended");
     }
 
     public String buildMacro() {
 
         if (withTimer) {
+            finalMacro = finalMacro.concat("1:");
             boolean found = false;
             while (macro.size() > 0) {
                 Iterator<KeyRecord> iterator = macro.iterator();
@@ -104,8 +109,11 @@ public class MacroRecorder extends Thread {
             }
 
         } else {
+            finalMacro = finalMacro.concat("0:");
+            KeyRecord lastKey = null;
             HashSet<Integer> temp = new HashSet<>();
             for (KeyRecord key : macro) {
+
                 switch (key.getKeyUpDown()) {
                     case 0:
                         if (!temp.contains(key.getKeyCode())) {
@@ -115,17 +123,17 @@ public class MacroRecorder extends Thread {
                         break;
                     case 1:
                         temp.remove(key.getKeyCode());
-                        finalMacro = finalMacro.concat(key.getKeyCode() + "," + key.getKeyUpDown() + ";");
+                        if (!lastKey.equals(key))
+                            finalMacro = finalMacro.concat(key.getKeyCode() + "," + key.getKeyUpDown() + ";");
                         break;
                 }
+                lastKey = key;
             }
         }
-        LOGGER.info("Finished Building Macro String For Client: " + client);
         return finalMacro;
     }
 
     public void finishMacro() {
-
         synchronized (this) {
             this.notifyAll();
         }

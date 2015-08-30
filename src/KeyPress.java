@@ -38,7 +38,7 @@ public class KeyPress implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        robot.keyRelease(command);
+        // robot.keyRelease(command);
         while (keyPressed) {
             try {
                 Thread.sleep(27);
