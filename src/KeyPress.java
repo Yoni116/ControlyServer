@@ -17,6 +17,7 @@ public class KeyPress implements Runnable {
     private Timer timer;
     private ConcurrentHashMap container;
     private boolean keyPressed;
+    private boolean cmdKey;
 
 
     public KeyPress(String hex, ConcurrentHashMap containerRef, Robot robot) {
@@ -26,6 +27,8 @@ public class KeyPress implements Runnable {
         this.command = Integer.parseInt(hex, 16);
         this.container = containerRef;
         this.robot = robot;
+        if(command ==( 16 | 17 | 18 ))
+            cmdKey = true;
 
     }
 
@@ -38,14 +41,16 @@ public class KeyPress implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        // robot.keyRelease(command);
+        if(!cmdKey)
+            robot.keyRelease(command);
         while (keyPressed) {
             try {
                 Thread.sleep(27);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            robot.keyPress(command);
+            if(!cmdKey)
+                robot.keyPress(command);
         }
 
         robot.keyRelease(command);

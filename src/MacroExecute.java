@@ -19,7 +19,7 @@ public class MacroExecute extends Thread {
 
         this.macroCommand = macro;
         this.mode = mode;
-        executor = Executors.newFixedThreadPool(5);
+        executor = Executors.newFixedThreadPool(8);
         try {
             robot = new Robot();
             robot.setAutoWaitForIdle(true);
@@ -32,10 +32,10 @@ public class MacroExecute extends Thread {
 
     @Override
     public void run() {
-        LOGGER.info(macroCommand);
+        LOGGER.info("Running Macro : "+macroCommand);
         String[] keys = macroCommand.split(";");
         if (mode == 0) {
-            robot.setAutoDelay(20);
+            robot.setAutoDelay(27);
             for (int i = 0; i < keys.length; i++) {
                 String[] currentKey = keys[i].split(",");
                 if (Integer.parseInt(currentKey[1]) == 0) {
@@ -47,8 +47,34 @@ public class MacroExecute extends Thread {
                 }
             }
         } else {
+            LOGGER.info("Starting Timed Macro");
+            robot.setAutoDelay(1);
+            String[] currentKey = null;
+            String[] nextKey = null;
+            long nowPress = 0;
+            long nextPress = 0;
+            for (int i = 0; i < keys.length; i++) {
 
+                try {
+                    if(i==0) {
+                        currentKey = keys[i].split(",");
+                        nowPress = Integer.parseInt(currentKey[0]);
+                        this.sleep(nowPress);
+                    }
+                    executor.submit(new MacroKeyPress(Integer.parseInt(currentKey[1]),robot,Integer.parseInt(currentKey[2])));
+                    if(i!=keys.length-1){
+                        nextKey = keys[i+1].split(",");
+                        nextPress = Integer.parseInt(nextKey[0]);
+                        this.sleep(nextPress-nowPress);
+                        nowPress = nextPress;
+                        currentKey = nextKey;
+                    }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+            }
 
+            LOGGER.info("Finished Timed Macro");
         }
 
 

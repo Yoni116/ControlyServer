@@ -7,7 +7,8 @@ import java.awt.event.WindowEvent;
 /**
  * Created by yoni on 02/08/2015.
  */
-public class DeviceConnectedFrame extends JFrame implements Runnable {
+public class NotificationFrame extends JFrame implements Runnable {
+
 
     private static int nextLocation = ((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 4) / 4;
     private final int FRAME_WIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 4;
@@ -20,10 +21,12 @@ public class DeviceConnectedFrame extends JFrame implements Runnable {
     private JLabel background;
     private JLabel clientNameLabel;
 
+    private int type;
     //private String clientName;
 
 
-    public DeviceConnectedFrame(String name) {
+    public NotificationFrame(String name, int type) {
+        this.type = type;
         frame = this;
         setUndecorated(true);
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
@@ -36,8 +39,21 @@ public class DeviceConnectedFrame extends JFrame implements Runnable {
 
 
         background = new JLabel();
-        bimg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/ConnectionTile.png"))
-                .getImage().getScaledInstance(FRAME_WIDTH, FRAME_HEIGHT, Image.SCALE_SMOOTH);
+       switch(type) {
+           case 0:
+            bimg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/ConnectionTile.png"))
+                    .getImage().getScaledInstance(FRAME_WIDTH, FRAME_HEIGHT, Image.SCALE_SMOOTH);
+               break;
+           case 1:
+            bimg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/RecordingStarted.png"))
+                    .getImage().getScaledInstance(FRAME_WIDTH, FRAME_HEIGHT, Image.SCALE_SMOOTH);
+               break;
+           case 2:
+               bimg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/RecordingFinished.png"))
+                       .getImage().getScaledInstance(FRAME_WIDTH, FRAME_HEIGHT, Image.SCALE_SMOOTH);
+               break;
+        }
+
         background.setIcon(new ImageIcon(bimg));
         background.setBounds(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
 

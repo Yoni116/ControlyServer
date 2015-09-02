@@ -134,7 +134,7 @@ public class CFService extends Thread {
 
                     case "ControlyClient":
                         CFClient temp = new CFClient(splitedMsg[1], receivedPacket.getAddress().getHostAddress());
-                        new Thread(new DeviceConnectedFrame(temp.getName())).start();
+                        new Thread(new NotificationFrame(temp.getName(),0)).start();
                         clients.add(temp);
                         mainFrame.addClientToLabel(temp);
                         returnMsg = "1000-OK";
@@ -153,11 +153,13 @@ public class CFService extends Thread {
                             returnPacket = new DatagramPacket(msgBuffer, msgBuffer.length, receivedPacket.getAddress(), receivedPacket.getPort());
                             socket.send(returnPacket);
                             LOGGER.info("Received Macro Start Msg");
+
                             if (Integer.parseInt(splitedMsg[1]) == 0)
                                 mr = new MacroRecorder(false, receivedPacket.getAddress().getHostAddress());
                             else
                                 mr = new MacroRecorder(true, receivedPacket.getAddress().getHostAddress());
                             mr.start();
+                            new Thread(new NotificationFrame("",1)).start();
                         } else {
                             returnMsg = "2002-cannot record more then one macro at a time";
                             msgBuffer = returnMsg.getBytes();
@@ -172,6 +174,7 @@ public class CFService extends Thread {
                         returnPacket = new DatagramPacket(msgBuffer, msgBuffer.length, receivedPacket.getAddress(), receivedPacket.getPort());
                         socket.send(returnPacket);
                         mr.stopRecord();
+                        new Thread(new NotificationFrame("",2)).start();
                         returnMsg = mr.buildMacro();
                         if (returnMsg == "")
                             returnMsg = "2001-Empty";

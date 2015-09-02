@@ -1,19 +1,19 @@
 /**
  * Created by yoni on 26/08/2015.
  */
-public class KeyRecord {
+public class MacroKeyRecord {
 
     private long time;
     private int keyCode;
     private int keyUpDown; // 0 = down, 1 = up
 
-    public KeyRecord(int key, int mode) {
+    public MacroKeyRecord(int key, int mode) {
         this.time = 0;
         keyCode = key;
         keyUpDown = mode;
     }
 
-    public KeyRecord(long time, int key, int mode) {
+    public MacroKeyRecord(long time, int key, int mode) {
         this.time = time;
         keyCode = key;
         keyUpDown = mode;
@@ -45,7 +45,7 @@ public class KeyRecord {
 
     @Override
     public String toString() {
-        return "KeyRecord{" +
+        return "MacroKeyRecord{" +
                 "time=" + time +
                 ", keyCode=" + keyCode +
                 ", keyUpDown=" + keyUpDown +
@@ -57,7 +57,7 @@ public class KeyRecord {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        KeyRecord keyRecord = (KeyRecord) o;
+        MacroKeyRecord keyRecord = (MacroKeyRecord) o;
 
         if (keyCode != keyRecord.keyCode) return false;
         if (keyUpDown != keyRecord.keyUpDown) return false;

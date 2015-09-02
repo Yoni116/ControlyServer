@@ -8,7 +8,7 @@ import java.util.logging.Logger;
  */
 public class MacroRecorder extends Thread {
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    public static Vector<KeyRecord> macro;
+    public static Vector<MacroKeyRecord> macro;
     private static int seq;
     private static long startTime;
     private static boolean withTimer;
@@ -26,7 +26,7 @@ public class MacroRecorder extends Thread {
     }
 
     public static void recordKey(int key, int type) {
-        KeyRecord temp;
+        MacroKeyRecord temp;
         if (key == 162)
             key = 17;
         if (key == 160)
@@ -36,9 +36,9 @@ public class MacroRecorder extends Thread {
         if (key == 91)
             key = 524;
         if (withTimer) {
-            temp = new KeyRecord((System.nanoTime() / 1000000 - startTime), key, type);
+            temp = new MacroKeyRecord((System.nanoTime() / 1000000 - startTime), key, type);
         } else {
-            temp = new KeyRecord(key, type);
+            temp = new MacroKeyRecord(key, type);
         }
         macro.add(temp);
 
@@ -82,14 +82,14 @@ public class MacroRecorder extends Thread {
             finalMacro = finalMacro.concat("1:");
             boolean found = false;
             while (macro.size() > 0) {
-                Iterator<KeyRecord> iterator = macro.iterator();
-                KeyRecord current = iterator.next();
+                Iterator<MacroKeyRecord> iterator = macro.iterator();
+                MacroKeyRecord current = iterator.next();
                 if (current.getKeyUpDown() == 1) {
                     iterator.remove();
                 } else {
                     iterator.remove();
                     while (iterator.hasNext()) {
-                        KeyRecord temp = iterator.next();
+                        MacroKeyRecord temp = iterator.next();
                         if (temp.getKeyCode() == current.getKeyCode()) {
                             if (temp.getKeyUpDown() == 0)
                                 iterator.remove();
@@ -110,9 +110,9 @@ public class MacroRecorder extends Thread {
 
         } else {
             finalMacro = finalMacro.concat("0:");
-            KeyRecord lastKey = null;
+            MacroKeyRecord lastKey = null;
             HashSet<Integer> temp = new HashSet<>();
-            for (KeyRecord key : macro) {
+            for (MacroKeyRecord key : macro) {
 
                 switch (key.getKeyUpDown()) {
                     case 0:

@@ -73,7 +73,7 @@ public class CFKeysDatagramChannel implements Runnable {
 
                     case "key":
                         String result = splitedMsg[1];
-                        LOGGER.info("Received Key: " + result + " From: " + clientAddress);
+                        LOGGER.info("Received Key: " + splitedMsg[1] + " From: " + clientAddress);
 
                         if (result != null) {
                             final String command = result.substring(2);
@@ -94,12 +94,10 @@ public class CFKeysDatagramChannel implements Runnable {
 
                         break;
                     case "macro":
+                        LOGGER.info("Received Macro: " + splitedMsg[2] + " in Mode: "+splitedMsg[1] +" From: " + clientAddress);
                         new Thread(
                                 new MacroExecute(splitedMsg[2], Integer.parseInt(splitedMsg[1]))).start();
-
                         break;
-
-
                 }
 
 
