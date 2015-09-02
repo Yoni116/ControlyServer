@@ -27,14 +27,28 @@ public class MacroRecorder extends Thread {
 
     public static void recordKey(int key, int type) {
         MacroKeyRecord temp;
-        if (key == 162)
-            key = 17;
-        if (key == 160)
-            key = 16;
-        if (key == 164)
-            key = 18;
-        if (key == 91)
-            key = 524;
+        switch(key){
+            case 13: // enter key
+                key = '\n';
+                break;
+            case 160: // left shift
+            case 161: // right shift
+                key = 16;
+                break;
+            case 162: // left ctrl
+            case 163: // right ctrl
+                key = 17;
+                break;
+            case 164: // left alt
+            case 165: // right alt
+                key = 18;
+                break;
+            case 91: // left win key
+            case 92: // right win key
+                key = 524;
+                break;
+        }
+
         if (withTimer) {
             temp = new MacroKeyRecord((System.nanoTime() / 1000000 - startTime), key, type);
         } else {

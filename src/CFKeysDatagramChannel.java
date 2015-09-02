@@ -47,7 +47,7 @@ public class CFKeysDatagramChannel implements Runnable {
         try {
 
             LOGGER.info("Keys Ready");
-            ByteBuffer buff = ByteBuffer.allocate(512);
+            ByteBuffer buff = ByteBuffer.allocate(10240);
             Charset charSet = Charset.forName("UTF-8");
             CharsetDecoder coder = charSet.newDecoder();
             CharBuffer charBuff;
