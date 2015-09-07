@@ -169,10 +169,6 @@ public class CFService extends Thread {
                         break;
                     case "MacroStop":
                         LOGGER.info("Received Macro Stop Msg");
-                        returnMsg = "2001-macro record finished";
-                        msgBuffer = returnMsg.getBytes();
-                        returnPacket = new DatagramPacket(msgBuffer, msgBuffer.length, receivedPacket.getAddress(), receivedPacket.getPort());
-                        socket.send(returnPacket);
                         mr.stopRecord();
                         new Thread(new NotificationFrame("",2)).start();
                         returnMsg = mr.buildMacro();

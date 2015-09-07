@@ -91,7 +91,7 @@ public class MacroRecorder extends Thread {
     }
 
     public String buildMacro() {
-
+        LOGGER.info("Macro before format: " + macro);
         if (withTimer) {
             finalMacro = finalMacro.concat("1:");
             boolean found = false;
@@ -126,6 +126,7 @@ public class MacroRecorder extends Thread {
             finalMacro = finalMacro.concat("0:");
             MacroKeyRecord lastKey = null;
             HashSet<Integer> temp = new HashSet<>();
+
             for (MacroKeyRecord key : macro) {
 
                 switch (key.getKeyUpDown()) {
@@ -144,6 +145,7 @@ public class MacroRecorder extends Thread {
                 lastKey = key;
             }
         }
+        LOGGER.info("Macro after format: " + finalMacro);
         return finalMacro;
     }
 

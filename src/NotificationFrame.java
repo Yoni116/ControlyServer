@@ -22,7 +22,7 @@ public class NotificationFrame extends JFrame implements Runnable {
     private JLabel clientNameLabel;
 
     private int type;
-    //private String clientName;
+
 
 
     public NotificationFrame(String name, int type) {
@@ -64,6 +64,7 @@ public class NotificationFrame extends JFrame implements Runnable {
 
         background.add(clientNameLabel);
         add(background);
+        setAlwaysOnTop(true);
 
     }
 
