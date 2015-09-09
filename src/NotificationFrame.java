@@ -72,6 +72,7 @@ public class NotificationFrame extends JFrame implements Runnable {
     public void run() {
 
         this.setVisible(true);
+        this.setFocusableWindowState(false);
 
         try {
             Thread.sleep(2000);

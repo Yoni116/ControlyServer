@@ -16,14 +16,19 @@ public class ControlyLogger {
 
 
     static public void setup() throws IOException {
+        String today = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+        String folder = "Logs/" + today;
+        String timeStamp = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss").format(new Timestamp(System.currentTimeMillis()));
+
 
         // get the global logger to configure it
         Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
 
         logger.setLevel(Level.INFO);
-        new File("Logs").mkdir();
-        fileTxt = new FileHandler("Logs/" + new SimpleDateFormat("dd-MM-yyyy").format(new Date()) + "Log.txt", 500000, 1, true);
+        System.out.println(new File("Logs").mkdir());
+        System.out.println(new File(folder).mkdir());
+        fileTxt = new FileHandler(folder + "/" + timeStamp + "_Log.txt", 500000, 1, true);
 
 
         // create a TXT formatter

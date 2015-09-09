@@ -31,6 +31,19 @@ public class MacroRecorder extends Thread {
             case 13: // enter key
                 key = '\n';
                 break;
+            case 44: // print screen key
+                key = 154;
+                break;
+            case 46: // DELETE key
+                key = 127;
+                break;
+            case 47: // HELP key
+                key = 156;
+                break;
+            case 91: // left win key
+            case 92: // right win key
+                key = 524;
+                break;
             case 160: // left shift
             case 161: // right shift
                 key = 16;
@@ -43,10 +56,29 @@ public class MacroRecorder extends Thread {
             case 165: // right alt
                 key = 18;
                 break;
-            case 91: // left win key
-            case 92: // right win key
-                key = 524;
+            case 186: // SEMICOLON ;
+                key = 59;
                 break;
+            case 188: // COMMA (,<)
+                key = 44;
+                break;
+            case 190: // (.>)
+                key = 46;
+                break;
+            case 191: // (?/)
+                key = 47;
+                break;
+            case 219: // { open bracket
+                key = 91;
+                break;
+            case 220: // BACKSLASH (\|)
+                key = 92;
+                break;
+            case 221: // } close bracket
+                key = 93;
+                break;
+
+
         }
 
         if (withTimer) {

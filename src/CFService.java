@@ -14,6 +14,7 @@ public class CFService extends Thread {
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     private HashSet<CFClient> clients;
+    private InetAddress localAddress;
     private ServerSocket serverSocket;
     private DatagramSocket socket;
     private DatagramPacket receivedPacket;
@@ -47,6 +48,7 @@ public class CFService extends Thread {
         // messagesReceiver = new CFMessagesReceiver();
         isRuning = true;
         myIp = getExternalIp();
+        localAddress = ControlyUtility.getInetAddress();
 
 
     }
@@ -97,7 +99,7 @@ public class CFService extends Thread {
             new Thread(keysChannel).start();
 
 
-            socket = new DatagramSocket(serverSocket.getLocalPort(), InetAddress.getLocalHost());
+            socket = new DatagramSocket(serverSocket.getLocalPort(), localAddress);
 
             bcListener = new BCListener(socket.getLocalPort(),
                     keysChannel.getChannel().socket().getLocalPort(),

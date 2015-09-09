@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.net.*;
 import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,6 +23,8 @@ public class BCListener implements Runnable {
     private final int BC_PORT = 56378;
     private final String MC_ADDR = "224.0.1.217";
 
+    private InetAddress localAddress;
+
     private DatagramSocket socket;
     private MulticastSocket mcSocket;
     private int connectionPort, keysPort, mousePort;
@@ -41,6 +44,7 @@ public class BCListener implements Runnable {
         this.mousePort = mPort;
         this.keysPort = kPort;
         this.serverRunning = true;
+        this.localAddress = ControlyUtility.getInetAddress();
     }
 
     @Override
@@ -49,10 +53,11 @@ public class BCListener implements Runnable {
             InetAddress address = InetAddress.getByName(MC_ADDR);
 
 
+
             // port 56378 will always be used for bc reason
 
             mcSocket = new MulticastSocket(BC_PORT);
-            mcSocket.setInterface(InetAddress.getByName(InetAddress.getLocalHost().getHostAddress()));
+            mcSocket.setNetworkInterface(NetworkInterface.getByInetAddress(localAddress));
             mcSocket.joinGroup(address);
             socket = new DatagramSocket(0);
             socket.setBroadcast(true);
@@ -61,7 +66,7 @@ public class BCListener implements Runnable {
                     ":" + connectionPort +
                     ":" + keysPort +
                     ":" + mousePort +
-                    ":" + InetAddress.getLocalHost().getHostAddress();
+                    ":" + localAddress.getHostAddress();
 
             LOGGER.info(reply);
 
@@ -118,4 +123,6 @@ public class BCListener implements Runnable {
     public String getBC_PORT() {
         return "" + this.BC_PORT;
     }
+
+
 }
