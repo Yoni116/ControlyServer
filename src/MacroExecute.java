@@ -59,13 +59,13 @@ public class MacroExecute extends Thread {
                     if(i==0) {
                         currentKey = keys[i].split(",");
                         nowPress = Integer.parseInt(currentKey[0]);
-                        this.sleep(nowPress);
+                        //this.sleep(nowPress);
                     }
                     executor.submit(new MacroKeyPress(Integer.parseInt(currentKey[1]),robot,Integer.parseInt(currentKey[2])));
                     if(i!=keys.length-1){
                         nextKey = keys[i+1].split(",");
                         nextPress = Integer.parseInt(nextKey[0]);
-                        this.sleep(nextPress-nowPress);
+                        sleep(nextPress - nowPress);
                         nowPress = nextPress;
                         currentKey = nextKey;
                     }

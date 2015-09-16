@@ -65,6 +65,7 @@ public class NotificationFrame extends JFrame implements Runnable {
         background.add(clientNameLabel);
         add(background);
         setAlwaysOnTop(true);
+        setFocusableWindowState(false);
 
     }
 
@@ -72,7 +73,7 @@ public class NotificationFrame extends JFrame implements Runnable {
     public void run() {
 
         this.setVisible(true);
-        this.setFocusableWindowState(false);
+
 
         try {
             Thread.sleep(2000);
