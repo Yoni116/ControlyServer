@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.*;
 import java.nio.channels.DatagramChannel;
 import java.util.HashSet;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,7 +18,7 @@ public class CFService extends Thread {
     private HashSet<CFClient> clients;
     private InetAddress localAddress;
     private ServerSocket serverSocket;
-    private DatagramSocket socket;
+    private Socket socket;
     private DatagramPacket receivedPacket;
     private DatagramChannel mouseDatagramChannel;
     private DatagramChannel keysDatagramChannel;
@@ -65,9 +67,9 @@ public class CFService extends Thread {
         if (bcListener != null)
             bcListener.closeBC();
 
-        if (socket != null)
-            socket.close();
-        while (!socket.isClosed()) ;
+        if (serverSocket != null)
+            serverSocket.close();
+        while (!serverSocket.isClosed()) ;
 
         if (mouseDatagramChannel != null)
             mouseDatagramChannel.close();
@@ -75,8 +77,7 @@ public class CFService extends Thread {
         if (keysDatagramChannel != null)
             keysDatagramChannel.close();
 
-        if (serverSocket != null)
-            serverSocket.close();
+
 
 
         clients.clear();
@@ -99,9 +100,9 @@ public class CFService extends Thread {
             new Thread(keysChannel).start();
 
 
-            socket = new DatagramSocket(serverSocket.getLocalPort(), localAddress);
+            //socket = new DatagramSocket(serverSocket.getLocalPort(), localAddress);
 
-            bcListener = new BCListener(socket.getLocalPort(),
+            bcListener = new BCListener(serverSocket.getLocalPort(),
                     keysChannel.getChannel().socket().getLocalPort(),
                     mouseChannel.getChannel().socket().getLocalPort());
 
@@ -114,90 +115,27 @@ public class CFService extends Thread {
         }
 
         mainFrame.setIpAndPort();
+        Timer t = new Timer();
+        t.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                LOGGER.info("Starting to Ping all connected clients");
+                pingAllClients();
+            }
+        }, 0, 60000);
 
 
         while (isRuning) {
+
             try {
 
-
                 //Wait for a client to connect
-                LOGGER.info("waiting for client " + socket.getLocalPort());
-                //socket = serverSocket.accept();
-                recvBuf = new byte[512];
-                receivedPacket = new DatagramPacket(recvBuf, recvBuf.length);
-                socket.receive(receivedPacket);
-                receivedMsg = new String(receivedPacket.getData()).trim();
-                LOGGER.info("The message: " + receivedMsg);
-
-                String[] splitedMsg = receivedMsg.split(":");
-                LOGGER.info(splitedMsg[0]);
-
-                switch (splitedMsg[0]) {
-
-                    case "ControlyClient":
-                        CFClient temp = new CFClient(splitedMsg[1], receivedPacket.getAddress().getHostAddress());
-                        new Thread(new NotificationFrame(temp.getName(),0)).start();
-                        clients.add(temp);
-                        mainFrame.addClientToLabel(temp);
-                        returnMsg = "1000-OK";
-                        msgBuffer = returnMsg.getBytes();
-                        returnPacket = new DatagramPacket(msgBuffer, msgBuffer.length, receivedPacket.getAddress(), receivedPacket.getPort());
-                        socket.send(returnPacket);
-                        LOGGER.info("Sent Back " + returnMsg);
-
-                        break;
-                    case "MacroStart":
-                        LOGGER.info(macroBusy ? "macro busy" : " macro free");
-                        if (!macroBusy) {
-                            macroBusy = true;
-                            returnMsg = "2000-macro record started";
-                            msgBuffer = returnMsg.getBytes();
-                            returnPacket = new DatagramPacket(msgBuffer, msgBuffer.length, receivedPacket.getAddress(), receivedPacket.getPort());
-                            socket.send(returnPacket);
-                            LOGGER.info("Received Macro Start Msg");
-
-                            if (Integer.parseInt(splitedMsg[1]) == 0)
-                                mr = new MacroRecorder(false, receivedPacket.getAddress().getHostAddress());
-                            else
-                                mr = new MacroRecorder(true, receivedPacket.getAddress().getHostAddress());
-                            mr.start();
-                            new Thread(new NotificationFrame("",1)).start();
-                        } else {
-                            returnMsg = "2002-cannot record more then one macro at a time";
-                            msgBuffer = returnMsg.getBytes();
-                            returnPacket = new DatagramPacket(msgBuffer, msgBuffer.length, receivedPacket.getAddress(), receivedPacket.getPort());
-                            socket.send(returnPacket);
-                        }
-                        break;
-                    case "MacroStop":
-                        LOGGER.info("Received Macro Stop Msg");
-                        mr.stopRecord();
-                        new Thread(new NotificationFrame("",2)).start();
-                        returnMsg = mr.buildMacro();
-                        if (returnMsg == "")
-                            returnMsg = "2001-Empty";
-                        else
-                            returnMsg = "2001-" + returnMsg;
-                        mr.finishMacro();
-                        msgBuffer = returnMsg.getBytes();
-                        returnPacket = new DatagramPacket(msgBuffer, msgBuffer.length, receivedPacket.getAddress(), receivedPacket.getPort());
-                        socket.send(returnPacket);
-                        LOGGER.info(returnMsg);
-                        macroBusy = false;
-                        break;
-
-                    default:
-                        LOGGER.warning("Received Wrong Message");
-                        break;
-
-                }
-
-                for (CFClient c : clients) {
-                    LOGGER.info(c.toString());
-                }
-
-
-
+                LOGGER.info("waiting for client " + serverSocket.getLocalPort());
+                socket = serverSocket.accept();
+                LOGGER.info("Server received connection from: " + socket.getInetAddress().toString());
+                CFClient temp = new CFClient(socket, socket.getInetAddress().toString(), mainFrame, this);
+                clients.add(temp);
+                temp.start();
 
 
             } catch (IOException e) {
@@ -208,23 +146,11 @@ public class CFService extends Thread {
     }
 
 
-    // public int getPort() {
-    //     return serverSocket.getLocalPort();
-    // }
 
-    public String getIP() {
-        String ipNum = "";
-        try {
-            ipNum = (InetAddress.getLocalHost().getHostAddress());
-        } catch (UnknownHostException e1) {
-            e1.printStackTrace();
-        }
-        return ipNum;
-    }
 
 
     public String getExternalIp() {
-        URL whatismyip = null;
+        URL whatismyip;
         String ip = "";
         try {
             whatismyip = new URL("http://checkip.amazonaws.com");
@@ -249,6 +175,21 @@ public class CFService extends Thread {
 
     public String getMyIp() {
         return myIp;
+    }
+
+    public synchronized void removeClient(CFClient cl) {
+        System.out.println(clients.remove(cl));
+    }
+
+    public synchronized void printClients() {
+        for (CFClient c : clients) {
+            LOGGER.info(c.toString());
+        }
+
+    }
+
+    public synchronized void pingAllClients() {
+        clients.forEach(CFClient::pingClient);
     }
 
 

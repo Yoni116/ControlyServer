@@ -375,7 +375,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
     public void addClientToLabel(CFClient cfc) {
 
-        JLabel temp = new JLabel(cfc.getName());
+        JLabel temp = new JLabel(cfc.getClientName());
         Image bimg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/Cell.png"))
                 .getImage().getScaledInstance(frameSize / 3, buttonSize / 2, Image.SCALE_SMOOTH);
         temp.setIcon(new ImageIcon(bimg));
