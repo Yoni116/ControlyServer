@@ -23,6 +23,7 @@ public class CFClient extends Thread {
     private BufferedOutputStream os;
     private String receivedMsg;
     private String returnMsg;
+    private boolean isSuspended;
 
     private MainFrame mainFrame;
     private MacroRecorder mr;
@@ -37,6 +38,7 @@ public class CFClient extends Thread {
         this.ip = clientIP;
         this.mainFrame = mf;
         this.server = server;
+        this.isSuspended = false;
     }
 
     public String getClientName() {
@@ -142,6 +144,18 @@ public class CFClient extends Thread {
                             closeClient();
                             break;
 
+                        case "Suspend":
+                            if (timer != null)
+                                timer.cancel();
+                            isSuspended = true;
+                            LOGGER.info("Client Suspended");
+                            break;
+
+                        case "UnSuspend":
+                            isSuspended = false;
+                            LOGGER.info("Client UnSuspend");
+                            break;
+
                         case "Pong":
                             if (timer != null)
                                 timer.cancel();
@@ -178,7 +192,7 @@ public class CFClient extends Thread {
     }
 
     public void pingClient() {
-        if (ready) {
+        if (ready && !isSuspended) {
             returnMsg = "Ping";
             msgBuffer = returnMsg.getBytes();
             try {

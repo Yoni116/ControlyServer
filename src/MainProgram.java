@@ -1,4 +1,3 @@
-import sun.java2d.loops.ProcessPath;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -10,6 +9,7 @@ import java.util.logging.Logger;
 
 /**
  * Created by yoni on 08/07/2015.
+ * Controly Server V3.2
  */
 public class MainProgram {
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
