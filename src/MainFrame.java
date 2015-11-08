@@ -1,7 +1,9 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.RoundRectangle2D;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -12,8 +14,10 @@ import java.util.logging.Logger;
  */
 public class MainFrame extends JFrame implements ActionListener {
 
-    private static final long serialVersionUID = 1L;
+    private final static long serialVersionUID = 1L;
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    public final static Color backColor = Color.decode("#889092");
+
 
     public static Font font;
 
@@ -32,8 +36,10 @@ public class MainFrame extends JFrame implements ActionListener {
     private JButton settingButton;
     private JButton backButton;
 
-    private JLabel settingImage;
-    private JLabel backbgroundImage;
+//    private JLabel settingImage;
+//    private JLabel backgroundImage;
+
+
     private JLabel ipLabel;
     private JLabel portLabel;
     private JLabel ipCellLabel;
@@ -58,6 +64,7 @@ public class MainFrame extends JFrame implements ActionListener {
         loadFont();
 
         Dimension trayIconSize = tray.getTrayIconSize();
+
         trayIconeImg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/TrayIcon.png"))
                 .getImage().getScaledInstance((int) trayIconSize.getWidth(), (int) trayIconSize.getHeight(), Image.SCALE_SMOOTH);
 
@@ -127,64 +134,63 @@ public class MainFrame extends JFrame implements ActionListener {
         settingPane.add(backButton);
 
 
-        backbgroundImage = new JLabel("");
-        bimg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/SettingBackground.png"))
-                .getImage().getScaledInstance(frameSize, frameSize, Image.SCALE_SMOOTH);
-        backbgroundImage.setIcon(new ImageIcon(bimg));
-        backbgroundImage.setBounds(0, 0, frameSize, frameSize);
+//        backgroundImage = new JLabel("");
+//        bimg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/SettingBackground.png"))
+//                .getImage().getScaledInstance(frameSize, frameSize, Image.SCALE_SMOOTH);
+//        backgroundImage.setIcon(new ImageIcon(bimg));
+//        backgroundImage.setBounds(0, 0, frameSize, frameSize);
 
         ipCellLabel = new JLabel();
-        bimg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/IpCell.png"))
-                .getImage().getScaledInstance(frameSize / 2, (int) (buttonSize * 0.6), Image.SCALE_SMOOTH);
-        ipCellLabel.setIcon(new ImageIcon(bimg));
-        ipCellLabel.setBounds(frameSize / 5, frameSize / 3, frameSize / 2, (int) (buttonSize * 0.6));
+//        bimg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/IpCell.png"))
+//                .getImage().getScaledInstance(frameSize / 2, (int) (buttonSize * 0.6), Image.SCALE_SMOOTH);
+//        ipCellLabel.setIcon(new ImageIcon(bimg));
+        ipCellLabel.setBounds(frameSize / 4, frameSize / 3, frameSize / 2, (int) (buttonSize * 0.6));
         ipCellLabel.setForeground(Color.WHITE);
         ipCellLabel.setFont(font);
         ipCellLabel.setHorizontalTextPosition(JLabel.CENTER);
         ipCellLabel.setVerticalTextPosition(JLabel.CENTER);
 
 
-        portCellLabel = new JLabel();
-        bimg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/PortCell.png"))
-                .getImage().getScaledInstance(frameSize / 2, (int) (buttonSize * 0.6), Image.SCALE_SMOOTH);
-        portCellLabel.setIcon(new ImageIcon(bimg));
-        portCellLabel.setBounds(frameSize / 5, (frameSize / 3) + (int) (buttonSize * 0.6) + buttonSize, frameSize / 2, (int) (buttonSize * 0.6));
+        portCellLabel = new JLabel("PORT:");
+//        bimg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/PortCell.png"))
+//                .getImage().getScaledInstance(frameSize / 2, (int) (buttonSize * 0.6), Image.SCALE_SMOOTH);
+//        portCellLabel.setIcon(new ImageIcon(bimg));
+        portCellLabel.setBounds(frameSize / 4, (frameSize / 3) + (int) (buttonSize * 0.6) + buttonSize, frameSize / 2, (int) (buttonSize * 0.6));
         portCellLabel.setForeground(Color.WHITE);
         portCellLabel.setFont(font);
         portCellLabel.setHorizontalTextPosition(JLabel.CENTER);
         portCellLabel.setVerticalTextPosition(JLabel.CENTER);
 
-        ipLabel = new JLabel("Text");
+        ipLabel = new JLabel("IP:");
         ipLabel.setBounds(frameSize / 5, frameSize / 3, frameSize / 2, (int) (buttonSize * 0.6));
         ipLabel.setForeground(Color.WHITE);
         ipLabel.setFont(font);
 
-
-        backbgroundImage.add(ipCellLabel);
-        backbgroundImage.add(portCellLabel);
-        mainPane.add(backbgroundImage);
-
-        settingImage = new JLabel("");
-        bimg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/SettingBackground.png"))
-                .getImage().getScaledInstance(frameSize, frameSize, Image.SCALE_SMOOTH);
-        settingImage.setIcon(new ImageIcon(bimg));
-        settingImage.setBounds(0, 0, frameSize, frameSize);
-        settingPane.add(settingImage);
+        settingPane.setBackground(backColor);
+        mainPane.setBackground(backColor);
 
 
+        mainPane.add(ipCellLabel);
+        mainPane.add(portCellLabel);
+//        mainPane.add(backgroundImage);
 
 
-        portLabel = new JLabel("Test");
-        portLabel.setBounds(260, 275, 250, 50);
-        portLabel.setForeground(Color.WHITE);
-        portLabel.setFont(font);
+//        settingImage = new JLabel("");
 
-        backbgroundImage.add(ipLabel);
-        //  backbgroundImage.add(portLabel);
+
+//        bimg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/SettingBackground.png"))
+//                .getImage().getScaledInstance(frameSize, frameSize, Image.SCALE_SMOOTH);
+//        settingImage.setIcon(new ImageIcon(bimg));
+//        settingImage.setBounds(0, 0, frameSize, frameSize);
+        // settingPane.add(settingImage);
+
+
+        //backgroundImage.add(ipLabel);
+        //  backgroundImage.add(portLabel);
 
         connectedClinets = new ArrayList<JLabel>();
         clientPanel = new JPanel(new GridLayout(frameSize / buttonSize, 0, 5, 15));
-        clientPanel.setBounds(frameSize / 3, buttonSize + 30, frameSize / 3, frameSize - buttonSize - 30);
+        clientPanel.setBounds(frameSize / 4, buttonSize + 30, frameSize / 2, frameSize - buttonSize - 30);
         clientPanel.setOpaque(false);
 
         JLabel test = new JLabel("Connected Clients:");
@@ -194,16 +200,15 @@ public class MainFrame extends JFrame implements ActionListener {
         test.setFont(font);
 
 
-        //clientPanel.add(test);
         clientPanel.add(test);
-        //clientPanel.add(new JLabel("Test222"));
 
 
-        settingImage.add(clientPanel);
-
+        // settingImage.add(clientPanel);
+        settingPane.add(clientPanel);
 
         container.add(mainPane, "Main");
         container.add(settingPane, "Settings");
+        setShape(new RoundRectangle2D.Double(0, 0, frameSize, frameSize, 40, 40));
 
         setAlwaysOnTop(true);
 
@@ -285,8 +290,8 @@ public class MainFrame extends JFrame implements ActionListener {
 
             bimg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/MainBackground.png"))
                     .getImage().getScaledInstance(frameSize, frameSize, Image.SCALE_SMOOTH);
-            backbgroundImage.setIcon(new ImageIcon(bimg));
-            backbgroundImage.setBounds(0, 0, frameSize, frameSize);
+            // backgroundImage.setIcon(new ImageIcon(bimg));
+            //  backgroundImage.setBounds(0, 0, frameSize, frameSize);
 
             repaint();
 
@@ -297,8 +302,8 @@ public class MainFrame extends JFrame implements ActionListener {
     }
 
     public void setIpAndPort() {
-        ipCellLabel.setText(service.getMyIp());
-        portCellLabel.setText(service.getPort());
+        ipCellLabel.setText("IP:        " + service.getMyIp());
+        portCellLabel.setText("PORT:        " + service.getPort());
     }
 
 
@@ -396,7 +401,7 @@ public class MainFrame extends JFrame implements ActionListener {
         InputStream is = MainFrame.class.getResourceAsStream("Fonts/OpenSans-Regular.ttf");
         try {
             //create the font to use. Specify the size!
-            font = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(20f);
+            font = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(24f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             //register the font
             ge.registerFont(font);

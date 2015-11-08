@@ -119,7 +119,7 @@ public class CFService extends Thread {
         t.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                LOGGER.info("Starting to Ping all connected clients");
+
                 pingAllClients();
             }
         }, 0, 60000);
@@ -170,11 +170,14 @@ public class CFService extends Thread {
     }
 
     public String getPort() {
-        return bcListener.getBC_PORT();
+        //return bcListener.getBC_PORT();
+        return Integer.toString(serverSocket.getLocalPort());
     }
 
     public String getMyIp() {
-        return myIp;
+
+        //return myIp;
+        return localAddress.getHostAddress();
     }
 
     public synchronized void removeClient(CFClient cl) {
@@ -189,6 +192,12 @@ public class CFService extends Thread {
     }
 
     public synchronized void pingAllClients() {
+        LOGGER.info("Connected Clients List:");
+        for (CFClient c : clients) {
+            LOGGER.info(c.toString());
+        }
+        clients.forEach(CFClient::toString);
+        LOGGER.info("Starting to Ping all connected clients");
         clients.forEach(CFClient::pingClient);
     }
 

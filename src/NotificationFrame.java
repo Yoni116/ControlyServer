@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.awt.geom.RoundRectangle2D;
 
 /**
  * Created by yoni on 02/08/2015.
@@ -26,6 +27,7 @@ public class NotificationFrame extends JFrame implements Runnable {
 
 
     public NotificationFrame(String name, int type) {
+        getContentPane().setBackground(MainFrame.backColor);
         this.type = type;
         frame = this;
         setUndecorated(true);
@@ -38,32 +40,38 @@ public class NotificationFrame extends JFrame implements Runnable {
             nextLocation = FRAME_HEIGHT;
 
 
-        background = new JLabel();
+        //background = new JLabel();
+
        switch(type) {
            case 0:
-            bimg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/ConnectionTile.png"))
-                    .getImage().getScaledInstance(FRAME_WIDTH, FRAME_HEIGHT, Image.SCALE_SMOOTH);
+//            bimg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/ConnectionTile.png"))
+//                    .getImage().getScaledInstance(FRAME_WIDTH, FRAME_HEIGHT, Image.SCALE_SMOOTH);
+               clientNameLabel = new JLabel("<html>Device Connected:<br>" + name + " </html>", SwingConstants.CENTER);
                break;
            case 1:
-            bimg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/RecordingStarted.png"))
-                    .getImage().getScaledInstance(FRAME_WIDTH, FRAME_HEIGHT, Image.SCALE_SMOOTH);
+//            bimg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/RecordingStarted.png"))
+//                    .getImage().getScaledInstance(FRAME_WIDTH, FRAME_HEIGHT, Image.SCALE_SMOOTH);
+               clientNameLabel = new JLabel("Recording Started", SwingConstants.CENTER);
                break;
            case 2:
-               bimg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/RecordingFinished.png"))
-                       .getImage().getScaledInstance(FRAME_WIDTH, FRAME_HEIGHT, Image.SCALE_SMOOTH);
+//               bimg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/RecordingFinished.png"))
+//                       .getImage().getScaledInstance(FRAME_WIDTH, FRAME_HEIGHT, Image.SCALE_SMOOTH);
+               clientNameLabel = new JLabel("Recording Finished", SwingConstants.CENTER);
                break;
         }
 
-        background.setIcon(new ImageIcon(bimg));
-        background.setBounds(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
+        //background.setIcon(new ImageIcon(bimg));
+        //background.setBounds(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
 
-        clientNameLabel = new JLabel(name);
+
         clientNameLabel.setForeground(Color.WHITE);
         clientNameLabel.setFont(MainFrame.font);
-        clientNameLabel.setBounds(FRAME_WIDTH / 5, FRAME_HEIGHT / 2, FRAME_WIDTH / 3, FRAME_HEIGHT / 3);
+        clientNameLabel.setBounds(FRAME_WIDTH / 2, FRAME_HEIGHT / 2, FRAME_WIDTH / 3, FRAME_HEIGHT / 3);
 
-        background.add(clientNameLabel);
-        add(background);
+        add(clientNameLabel);
+
+
+        setShape(new RoundRectangle2D.Double(0, 0, FRAME_WIDTH, FRAME_HEIGHT, 40, 40));
         setAlwaysOnTop(true);
         setFocusableWindowState(false);
 

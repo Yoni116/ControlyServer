@@ -47,7 +47,7 @@ public class CFClient extends Thread {
 
     @Override
     public String toString() {
-        return "ClientName: " + name + "\tClientIP: " + ip;
+        return "{ ClientName: " + name + "\tClientIP: " + ip + " Suspended: " + isSuspended + " }";
     }
 
     @Override
@@ -57,10 +57,7 @@ public class CFClient extends Thread {
 
     @Override
     public boolean equals(Object obj) {
-        if (this.ip.equals(((CFClient) obj).ip))
-            return true;
-        else
-            return false;
+        return this.ip.equals(((CFClient) obj).ip);
 
     }
 
@@ -142,28 +139,29 @@ public class CFClient extends Thread {
 
                         case "Disconnect":
                             closeClient();
+                            LOGGER.info("Client Disconnected  " + this);
                             break;
 
                         case "Suspend":
                             if (timer != null)
                                 timer.cancel();
                             isSuspended = true;
-                            LOGGER.info("Client Suspended");
+                            LOGGER.info("Client Suspended " + this);
                             break;
 
                         case "UnSuspend":
                             isSuspended = false;
-                            LOGGER.info("Client UnSuspend");
+                            LOGGER.info("Client UnSuspend " + this);
                             break;
 
                         case "Pong":
                             if (timer != null)
                                 timer.cancel();
-                            LOGGER.info("Received ping back from client: " + name + " ip: " + ip);
+                            LOGGER.info("Received ping back from client: " + this);
                             break;
 
                         default:
-                            LOGGER.warning("Received Wrong Message");
+                            LOGGER.warning("Received Wrong Message from client: " + this);
                             break;
 
                     }
@@ -173,7 +171,7 @@ public class CFClient extends Thread {
 
 
         } catch (IOException e) {
-            LOGGER.info("IO Exception occurred - Ignore this if it happened after ping TimeOut - " + e.getMessage());
+            LOGGER.info("IO Exception occurred - Ignore this if it happened after ping TimeOut - " + e.getMessage() + " From Client: " + this.toString());
 
         } finally {
             try {
