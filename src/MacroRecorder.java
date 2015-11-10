@@ -59,8 +59,14 @@ public class MacroRecorder extends Thread {
             case 186: // SEMICOLON ;
                 key = 59;
                 break;
+            case 187: // PLUS (+)
+                key = 61;
+                break;
             case 188: // COMMA (,<)
                 key = 44;
+                break;
+            case 189: // MINUS (-)
+                key = 45;
                 break;
             case 190: // (.>)
                 key = 46;
