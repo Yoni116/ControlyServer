@@ -13,6 +13,8 @@ public class CFClient extends Thread {
 
     private String name = "";
     private String ip;
+    private int keyPort;
+    private int mousePort;
     private Socket clientSocket;
     private boolean isRunning;
     private boolean ready = false;
@@ -32,13 +34,15 @@ public class CFClient extends Thread {
     private Timer timer;
 
 
-    public CFClient(Socket socket, String clientIP, MainFrame mf, CFService server) {
+    public CFClient(Socket socket, String clientIP, MainFrame mf, CFService server, int keyPort, int mousePort) {
         this.isRunning = true;
         this.clientSocket = socket;
         this.ip = clientIP;
         this.mainFrame = mf;
         this.server = server;
         this.isSuspended = false;
+        this.keyPort = keyPort;
+        this.mousePort = mousePort;
     }
 
     public String getClientName() {
@@ -87,7 +91,7 @@ public class CFClient extends Thread {
                             this.name = splitedMsg[1];
                             new Thread(new NotificationFrame(this.name, 0)).start();
                             mainFrame.addClientToLabel(this);
-                            returnMsg = "1000-OK";
+                            returnMsg = "1000-OK:" + keyPort + ":" + mousePort;
                             msgBuffer = returnMsg.getBytes();
                             os.write(msgBuffer);
                             os.flush();

@@ -133,7 +133,7 @@ public class CFService extends Thread {
                 LOGGER.info("waiting for client " + serverSocket.getLocalPort());
                 socket = serverSocket.accept();
                 LOGGER.info("Server received connection from: " + socket.getInetAddress().toString());
-                CFClient temp = new CFClient(socket, socket.getInetAddress().toString(), mainFrame, this);
+                CFClient temp = new CFClient(socket, socket.getInetAddress().toString(), mainFrame, this, keysChannel.getChannel().socket().getLocalPort(), mouseChannel.getChannel().socket().getLocalPort());
                 clients.add(temp);
                 temp.start();
 
