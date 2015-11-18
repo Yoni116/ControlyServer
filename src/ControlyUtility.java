@@ -1,3 +1,5 @@
+import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -24,5 +26,10 @@ public class ControlyUtility {
             LOGGER.severe(e.getMessage());
         }
         return null;
+    }
+
+    public static void setCapsLockFalse(){
+        Toolkit.getDefaultToolkit().setLockingKeyState(KeyEvent.VK_CAPS_LOCK,false);
+
     }
 }

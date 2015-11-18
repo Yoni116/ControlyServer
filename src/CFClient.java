@@ -1,7 +1,10 @@
+import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
@@ -26,6 +29,7 @@ public class CFClient extends Thread {
     private String receivedMsg;
     private String returnMsg;
     private boolean isSuspended;
+    private boolean capsState;
 
     private MainFrame mainFrame;
     private MacroRecorder mr;
@@ -163,6 +167,16 @@ public class CFClient extends Thread {
                                 timer.cancel();
                             LOGGER.info("Received ping back from client: " + this);
                             break;
+
+                        case "ActivateKeyboard":
+                            ControlyUtility.setCapsLockFalse();
+//                            capsState = Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
+                            returnMsg = "SystemInfo:CapsLockState:"+false+":SystemLang:"+ Locale.getDefault();
+                            msgBuffer = returnMsg.getBytes();
+                            os.write(msgBuffer);
+                            os.flush();
+                            break;
+
 
                         default:
                             LOGGER.warning("Received Wrong Message from client: " + this);
