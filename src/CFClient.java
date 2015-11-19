@@ -11,6 +11,8 @@ import java.util.logging.Logger;
 
 public class CFClient extends Thread {
 
+    public static native boolean GetCapsLockState();
+
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     private static boolean macroBusy;
 
@@ -169,9 +171,8 @@ public class CFClient extends Thread {
                             break;
 
                         case "ActivateKeyboard":
-                            ControlyUtility.setCapsLockFalse();
-//                            capsState = Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
-                            returnMsg = "SystemInfo:CapsLockState:"+false+":SystemLang:"+ Locale.getDefault();
+
+                            returnMsg = "SystemInfo:CapsLockState:" + GetCapsLockState() + ":SystemLang:" + Locale.getDefault();
                             msgBuffer = returnMsg.getBytes();
                             os.write(msgBuffer);
                             os.flush();
