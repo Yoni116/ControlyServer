@@ -82,7 +82,7 @@ public class CFKeysDatagramChannel implements Runnable {
                                 if (pressedKeys.get(command) != null)
                                     pressedKeys.get(command).extendDeletion();
                             } else {
-                                LOGGER.info("pressing " + Integer.parseInt(command, 16) + " From: " + clientAddress);
+                                LOGGER.info("pressing " + command + " From: " + clientAddress);
                                 Runnable key = new KeyPress(command, pressedKeys, robot);
                                 executor.submit(key);
                                 pressedKeys.put(command, (KeyPress) key);
@@ -108,7 +108,7 @@ public class CFKeysDatagramChannel implements Runnable {
 
 
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
     }
 

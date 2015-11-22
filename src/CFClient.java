@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.im.InputContext;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -172,10 +173,11 @@ public class CFClient extends Thread {
 
                         case "ActivateKeyboard":
 
-                            returnMsg = "SystemInfo:CapsLockState:" + GetCapsLockState() + ":SystemLang:" + Locale.getDefault();
+                            returnMsg = "SystemInfo:CapsLockState:" + GetCapsLockState() + ":SystemLang:" + Locale.getDefault() + ":CurrentInput:" + InputContext.getInstance().getLocale().toLanguageTag();
                             msgBuffer = returnMsg.getBytes();
                             os.write(msgBuffer);
                             os.flush();
+                            LOGGER.info(returnMsg);
                             break;
 
 

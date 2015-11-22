@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,7 +25,7 @@ public class KeyPress implements Runnable {
 
         this.keyPressed = true;
         this.commandString = hex;
-        this.command = Integer.parseInt(hex, 16);
+        this.command = Integer.parseInt(this.commandString, 16);
         this.container = containerRef;
         this.robot = robot;
         if(command ==( 16 | 17 | 18 ))
