@@ -363,6 +363,7 @@ public class MainFrame extends JFrame implements ActionListener {
     }
 
     public void closeProgram() {
+
         running = false;
         LOGGER.severe("Closing Controly");
         System.exit(0);

@@ -99,7 +99,7 @@ public class BCListener implements Runnable {
             }
 
         } catch (SocketException e) {
-            LOGGER.warning("BCListener closed");
+            LOGGER.warning("BCListener closed ignore exception");
             LOGGER.log(Level.SEVERE, e.toString(), e);
         } catch (UnknownHostException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);

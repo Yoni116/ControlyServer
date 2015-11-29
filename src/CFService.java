@@ -30,6 +30,7 @@ public class CFService extends Thread {
     private String receivedMsg;
     private MainFrame mainFrame;
     private String myIp;
+    private NetworkInfo currentNetwork;
 
     private MacroRecorder mr;
     private boolean macroBusy;
@@ -66,6 +67,9 @@ public class CFService extends Thread {
 
         if (bcListener != null)
             bcListener.closeBC();
+
+        if (currentNetwork != null)
+            currentNetwork.closeInfo();
 
         if (serverSocket != null)
             serverSocket.close();
@@ -107,6 +111,11 @@ public class CFService extends Thread {
                     mouseChannel.getChannel().socket().getLocalPort());
 
             new Thread(bcListener).start();
+
+            // TODO redistribute broadcast when changing network
+            //  currentNetwork = new NetworkInfo(localAddress,this);
+            //  new Thread(currentNetwork).run();
+
 
 
         } catch (IOException e1) {
@@ -199,6 +208,15 @@ public class CFService extends Thread {
         clients.forEach(CFClient::toString);
         LOGGER.info("Starting to Ping all connected clients");
         clients.forEach(CFClient::pingClient);
+    }
+
+    public void resetBCListner() {
+        bcListener.closeBC();
+        bcListener = new BCListener(serverSocket.getLocalPort(),
+                keysChannel.getChannel().socket().getLocalPort(),
+                mouseChannel.getChannel().socket().getLocalPort());
+        new Thread(bcListener).start();
+
     }
 
 

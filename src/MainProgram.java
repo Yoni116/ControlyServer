@@ -62,23 +62,26 @@ public class MainProgram {
             JOptionPane.showMessageDialog(null, ep);
             LOGGER.severe("Closing Controly");
         } else {
+            if (System.getProperty("os.name").contains("Windows")) {
 
-            try {
-                if (javaArch.equals("amd64") || javaArch.equals("x86_64")) {
-                    System.loadLibrary("keyListener");
-                    LOGGER.info("Loading dll for 64bit system");
-                } else {
-                    System.loadLibrary("keyListener32");
-                    LOGGER.info("Loading dll for 32bit system");
+
+                try {
+                    if (javaArch.equals("amd64") || javaArch.equals("x86_64")) {
+                        System.loadLibrary("keyListener");
+                        LOGGER.info("Loading dll for 64bit system");
+                    } else {
+                        System.loadLibrary("keyListener32");
+                        LOGGER.info("Loading dll for 32bit system");
+                    }
+
+                } catch (UnsatisfiedLinkError e) {
+                    LOGGER.severe(e.getMessage());
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "keyListener DLL is missing please reinstall Controly");
+                    LOGGER.severe("Closing Controly");
+                    System.exit(0);
+
                 }
-
-            } catch (UnsatisfiedLinkError e) {
-                LOGGER.severe(e.getMessage());
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(null, "keyListener DLL is missing please reinstall Controly");
-                LOGGER.severe("Closing Controly");
-                System.exit(0);
-
             }
 
             LOGGER.info("--------------------------------------------------------------");

@@ -21,15 +21,20 @@ public class CFMouseDatagramChannel implements Runnable {
     private Robot mouse;
     private SocketAddress clientAddress;
 
+
+    private long time;
+
     public CFMouseDatagramChannel(DatagramChannel c) {
         channel = c;
-        executor = Executors.newFixedThreadPool(20);
+        executor = Executors.newFixedThreadPool(15);
         try {
             mouse = new Robot();
             mouse.setAutoWaitForIdle(true);
         } catch (AWTException e) {
             e.printStackTrace();
         }
+        time = 0;
+
 
     }
 
@@ -56,6 +61,7 @@ public class CFMouseDatagramChannel implements Runnable {
             LOGGER.info("mouse pos is x: " + x + " y: " + y);
 
             while (true) {
+
                 //someone is sending us data
                 buf.clear();
                 //  System.out.println("Keys waiting");
@@ -66,13 +72,33 @@ public class CFMouseDatagramChannel implements Runnable {
                 cBuff = coder.decode(buf);
                 String result = cBuff.toString().trim();
 
-                LOGGER.info("Received Command: " + result + " From: " + clientAddress);
-                Runnable mouseCommand = new CFMouseMovement(result, mouse);
-                executor.submit(mouseCommand);
-                //new Thread(cFMouseMovement).start();
+                //LOGGER.warning("Received Command: " + result + " From: " + clientAddress);
+                String[] msg = result.split(":");
+                if (msg.length > 1) {
+                    long nextTime = Long.parseLong(msg[0]);
+                    //LOGGER.warning("received time: " + nextTime);
+                    if (nextTime > time) {
+                        time = nextTime;
+                        // LOGGER.warning("running time: " + nextTime);
+                        Runnable mouseCommand = new CFMouseMovement(msg[1], mouse);
+
+                        executor.submit(mouseCommand);
+                        //new Thread(cFMouseMovement).start();
+
+
+//                synchronized (this) {
+//
+//                    amount++;
+//                    LOGGER.info("amount: " + amount);
+//
+//                }
+                    }
+                } else {
+                    Runnable mouseCommand = new CFMouseMovement(msg[0], mouse);
+                    executor.submit(mouseCommand);
+                }
 
                 buf.clear();
-
 
             }
 

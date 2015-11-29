@@ -14,6 +14,7 @@ public class CFMouseMovement implements Runnable {
     private Robot mouse;
 
 
+
     private String result;
 
     public CFMouseMovement(String point, Robot mouse) {
@@ -23,10 +24,6 @@ public class CFMouseMovement implements Runnable {
     }
 
     public void run() {
-
-
-        //System.out.println(result);
-
 
         switch (result) {
             case "leftClick":
@@ -45,17 +42,21 @@ public class CFMouseMovement implements Runnable {
                 mouseMovement(result);
                 break;
         }
+//        synchronized (mdc) {
+//            CFMouseDatagramChannel.amount--;
+//            LOGGER.info("amount: " + CFMouseDatagramChannel.amount);
+//        }
 
     }
 
 
     private void mouseMovement(String result) {
 
-        Point mousePoint = MouseInfo.getPointerInfo().getLocation();
-        x = mousePoint.getX();
-        y = mousePoint.getY();
-
-
+//        Point mousePoint = MouseInfo.getPointerInfo().getLocation();
+//        x = mousePoint.getX();
+//        y = mousePoint.getY();
+//
+//
         String[] pointArray;
 
         pointArray = result.split(",", 2);
@@ -107,15 +108,15 @@ public class CFMouseMovement implements Runnable {
         recievedY = Math.round(Y);
 
 
-        LOGGER.info("Move Mouse by (" + recievedX + "," + recievedY + ")");
+        LOGGER.info("Move Mouse by (" + pointArray[0] + "," + pointArray[1] + ")");
 
 
-        mousePoint = MouseInfo.getPointerInfo().getLocation();
+        Point mousePoint = MouseInfo.getPointerInfo().getLocation();
         x = mousePoint.getX();
         y = mousePoint.getY();
 //System.out.println(mousePoint);
-
         mouse.mouseMove((int) (x + recievedX), (int) (y + recievedY));
+
 
         //We need a try-catch because lots of errors can be thrown
     }
