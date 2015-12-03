@@ -14,7 +14,6 @@ public class ControlyLogger {
     static private FileHandler fileTxt;
     static private SimpleFormatter formatterTxt;
 
-
     static public void setup() throws IOException {
         String today = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
         String folder = "Logs/" + today;

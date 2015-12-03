@@ -96,6 +96,8 @@ public class BCListener implements Runnable {
                     LOGGER.info("Sent packet to: " + sendPacket.getAddress().getHostAddress());
 
                 }
+
+                recvBuf = null;
             }
 
         } catch (SocketException e) {

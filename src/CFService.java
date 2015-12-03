@@ -32,13 +32,13 @@ public class CFService extends Thread {
     private String myIp;
     private NetworkInfo currentNetwork;
 
-    private MacroRecorder mr;
+    // private MacroRecorder mr;
     private boolean macroBusy;
 
-    private String returnMsg;
-    private byte[] msgBuffer;
-    private byte[] recvBuf;
-    private DatagramPacket returnPacket;
+//    private String returnMsg;
+//    private byte[] msgBuffer;
+//    private byte[] recvBuf;
+//    private DatagramPacket returnPacket;
 
     public CFService(MainFrame mf) throws IOException {
         mainFrame = mf;
@@ -202,12 +202,17 @@ public class CFService extends Thread {
 
     public synchronized void pingAllClients() {
         LOGGER.info("Connected Clients List:");
+        boolean haveActiveClients = false;
         for (CFClient c : clients) {
             LOGGER.info(c.toString());
+            if (!c.isSuspended())
+                haveActiveClients = true;
         }
-        clients.forEach(CFClient::toString);
-        LOGGER.info("Starting to Ping all connected clients");
-        clients.forEach(CFClient::pingClient);
+        if (!clients.isEmpty() || haveActiveClients) {
+            // clients.forEach(CFClient::toString);
+            LOGGER.info("Starting to Ping all connected clients");
+            clients.forEach(CFClient::pingClient);
+        }
     }
 
     public void resetBCListner() {

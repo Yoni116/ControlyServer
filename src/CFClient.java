@@ -31,6 +31,8 @@ public class CFClient extends Thread {
     private BufferedOutputStream os;
     private String receivedMsg;
     private String returnMsg;
+
+
     private boolean isSuspended;
     private boolean capsState;
 
@@ -54,6 +56,10 @@ public class CFClient extends Thread {
 
     public String getClientName() {
         return this.name;
+    }
+
+    public boolean isSuspended() {
+        return isSuspended;
     }
 
     @Override
@@ -83,7 +89,7 @@ public class CFClient extends Thread {
                 this.recvBuf = new byte[512];
                 if (is.read(recvBuf) > 0 && isRunning) {
                     receivedMsg = new String(recvBuf);
-
+                    recvBuf = null;
                     receivedMsg = receivedMsg.trim();
                     LOGGER.info("The message: " + receivedMsg);
 
@@ -102,6 +108,7 @@ public class CFClient extends Thread {
                             msgBuffer = returnMsg.getBytes();
                             os.write(msgBuffer);
                             os.flush();
+                            msgBuffer = null;
                             LOGGER.info("Received connection request from client: " + this.name + " address: " + this.ip);
                             server.printClients();
                             ready = true;
@@ -115,6 +122,7 @@ public class CFClient extends Thread {
                                 msgBuffer = returnMsg.getBytes();
                                 os.write(msgBuffer);
                                 os.flush();
+                                msgBuffer = null;
                                 LOGGER.info("Received Macro Start Msg");
 
                                 if (Integer.parseInt(splitedMsg[1]) == 0)
@@ -144,6 +152,7 @@ public class CFClient extends Thread {
                             msgBuffer = returnMsg.getBytes();
                             os.write(msgBuffer);
                             os.flush();
+                            msgBuffer = null;
                             LOGGER.info(returnMsg);
                             macroBusy = false;
                             break;
@@ -177,6 +186,7 @@ public class CFClient extends Thread {
                             msgBuffer = returnMsg.getBytes();
                             os.write(msgBuffer);
                             os.flush();
+                            msgBuffer = null;
                             LOGGER.info(returnMsg);
                             break;
 
@@ -217,6 +227,7 @@ public class CFClient extends Thread {
             try {
                 os.write(msgBuffer);
                 os.flush();
+                msgBuffer = null;
             } catch (IOException e) {
                 e.printStackTrace();
             }
