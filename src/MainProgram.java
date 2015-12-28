@@ -3,8 +3,12 @@ import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.net.URISyntaxException;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.util.logging.Logger;
 
 /**
@@ -14,7 +18,38 @@ import java.util.logging.Logger;
 public class MainProgram {
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
+    private static File f;
+    private static FileChannel channel;
+    private static FileLock lock;
+
     public static void main(String[] args) {
+
+        try {
+            f = new File("RingOnRequest.lock");
+            // Check if the lock exist
+            if (f.exists()) {
+                // if exist try to delete it
+                f.delete();
+            }
+            // Try to get the lock
+            channel = new RandomAccessFile(f, "rw").getChannel();
+            lock = channel.tryLock();
+            if (lock == null) {
+                // File is lock by other application
+                channel.close();
+                JOptionPane.showMessageDialog(null, "Controly Is Already Running");
+                throw new RuntimeException("Only 1 instance of Controly can run.");
+            }
+            // Add shutdown hook to release lock when application shutdown
+            ShutdownHook shutdownHook = new ShutdownHook();
+            Runtime.getRuntime().addShutdownHook(shutdownHook);
+
+            //Your application tasks here..
+            System.out.println("Running");
+
+        } catch (IOException e) {
+            throw new RuntimeException("Could not start process.", e);
+        }
 
         try {
             ControlyLogger.setup();
@@ -93,6 +128,27 @@ public class MainProgram {
 
             frame.setFocusable(true);
             frame.requestFocus();
+        }
+    }
+
+
+    public static void unlockFile() {
+        // release and delete file lock
+        try {
+            if (lock != null) {
+                lock.release();
+                channel.close();
+                f.delete();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static class ShutdownHook extends Thread {
+
+        public void run() {
+            unlockFile();
         }
     }
 }

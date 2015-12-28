@@ -302,8 +302,8 @@ public class MainFrame extends JFrame implements ActionListener {
     }
 
     public void setIpAndPort() {
-        ipCellLabel.setText("IP:        " + service.getMyIp());
-        portCellLabel.setText("PORT:        " + service.getPort());
+        ipCellLabel.setText("IP:    " + service.getMyIp());
+        portCellLabel.setText("PORT:    " + service.getPort());
     }
 
 
