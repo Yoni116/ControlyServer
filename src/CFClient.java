@@ -104,7 +104,7 @@ public class CFClient extends Thread {
                             this.name = splitedMsg[1];
                             new Thread(new NotificationFrame(this.name, 0)).start();
                             mainFrame.addClientToLabel(this);
-                            returnMsg = "1000-OK:" + keyPort + ":" + mousePort;
+                            returnMsg = "1000-OK:" + keyPort + ":" + mousePort +":"+ControlyUtility.OSName;
                             msgBuffer = returnMsg.getBytes();
                             os.write(msgBuffer);
                             os.flush();
@@ -183,6 +183,7 @@ public class CFClient extends Thread {
                         case "ActivateKeyboard":
 
                             returnMsg = "SystemInfo:CapsLockState:" + GetCapsLockState() + ":SystemLang:" + Locale.getDefault() + ":CurrentInput:" + InputContext.getInstance().getLocale().toLanguageTag();
+                            returnMsg = returnMsg.trim();
                             msgBuffer = returnMsg.getBytes();
                             os.write(msgBuffer);
                             os.flush();

@@ -14,6 +14,7 @@ public class ControlyUtility {
 
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
+    public static String OSName = System.getProperty("os.name");
 
     public static InetAddress getInetAddress() {
 

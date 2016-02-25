@@ -38,17 +38,20 @@ public class MainProgram {
                 // File is lock by other application
                 channel.close();
                 JOptionPane.showMessageDialog(null, "Controly Is Already Running");
-                throw new RuntimeException("Only 1 instance of Controly can run.");
+                //throw new RuntimeException("Only 1 instance of Controly can run.");
+                System.exit(0);
             }
             // Add shutdown hook to release lock when application shutdown
             ShutdownHook shutdownHook = new ShutdownHook();
             Runtime.getRuntime().addShutdownHook(shutdownHook);
 
-            //Your application tasks here..
-            System.out.println("Running");
+
+
 
         } catch (IOException e) {
-            throw new RuntimeException("Could not start process.", e);
+            //throw new RuntimeException("Could not start process.", e);
+            LOGGER.severe("Closing Controly - already running");
+            System.exit(0);
         }
 
         try {
@@ -121,7 +124,7 @@ public class MainProgram {
 
             LOGGER.info("--------------------------------------------------------------");
             LOGGER.info(System.getenv("COMPUTERNAME"));
-            LOGGER.info(System.getProperty("os.name"));
+            LOGGER.info(ControlyUtility.OSName);
 
             LOGGER.info("Program Started");
             MainFrame frame = new MainFrame();

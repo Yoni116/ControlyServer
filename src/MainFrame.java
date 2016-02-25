@@ -302,8 +302,8 @@ public class MainFrame extends JFrame implements ActionListener {
     }
 
     public void setIpAndPort() {
-        ipCellLabel.setText("IP:    " + service.getMyIp());
-        portCellLabel.setText("PORT:    " + service.getPort());
+        ipCellLabel.setText("IP:  " + service.getMyIp());
+        portCellLabel.setText("PORT:  " + service.getPort());
     }
 
 
@@ -402,7 +402,7 @@ public class MainFrame extends JFrame implements ActionListener {
         InputStream is = MainFrame.class.getResourceAsStream("Fonts/OpenSans-Regular.ttf");
         try {
             //create the font to use. Specify the size!
-            font = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(24f);
+            font = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(22f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             //register the font
             ge.registerFont(font);
