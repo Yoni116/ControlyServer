@@ -16,7 +16,8 @@ public class MainFrame extends JFrame implements ActionListener {
 
     private final static long serialVersionUID = 1L;
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    public final static Color backColor = Color.decode("#889092");
+    public final static Color backColor = Color.decode("#0D0D0D");
+    public final static Color fontColor = Color.decode("#21C3E5");
 
 
     public static Font font;
@@ -28,6 +29,7 @@ public class MainFrame extends JFrame implements ActionListener {
     private JPanel mainPane;
     private JPanel settingPane;
     private JPanel clientPanel;
+    private JPanel passPane;
     private Container container;
     private CardLayout cardLayout;
 
@@ -145,7 +147,7 @@ public class MainFrame extends JFrame implements ActionListener {
 //                .getImage().getScaledInstance(frameSize / 2, (int) (buttonSize * 0.6), Image.SCALE_SMOOTH);
 //        ipCellLabel.setIcon(new ImageIcon(bimg));
         ipCellLabel.setBounds(frameSize / 4, frameSize / 3, frameSize / 2, (int) (buttonSize * 0.6));
-        ipCellLabel.setForeground(Color.WHITE);
+        ipCellLabel.setForeground(fontColor);
         ipCellLabel.setFont(font);
         ipCellLabel.setHorizontalTextPosition(JLabel.CENTER);
         ipCellLabel.setVerticalTextPosition(JLabel.CENTER);
@@ -156,14 +158,14 @@ public class MainFrame extends JFrame implements ActionListener {
 //                .getImage().getScaledInstance(frameSize / 2, (int) (buttonSize * 0.6), Image.SCALE_SMOOTH);
 //        portCellLabel.setIcon(new ImageIcon(bimg));
         portCellLabel.setBounds(frameSize / 4, (frameSize / 3) + (int) (buttonSize * 0.6) + buttonSize, frameSize / 2, (int) (buttonSize * 0.6));
-        portCellLabel.setForeground(Color.WHITE);
+        portCellLabel.setForeground(fontColor);
         portCellLabel.setFont(font);
         portCellLabel.setHorizontalTextPosition(JLabel.CENTER);
         portCellLabel.setVerticalTextPosition(JLabel.CENTER);
 
         ipLabel = new JLabel("IP:");
         ipLabel.setBounds(frameSize / 5, frameSize / 3, frameSize / 2, (int) (buttonSize * 0.6));
-        ipLabel.setForeground(Color.WHITE);
+        ipLabel.setForeground(fontColor);
         ipLabel.setFont(font);
 
         settingPane.setBackground(backColor);
@@ -189,21 +191,38 @@ public class MainFrame extends JFrame implements ActionListener {
         //  backgroundImage.add(portLabel);
 
         connectedClinets = new ArrayList<JLabel>();
-        clientPanel = new JPanel(new GridLayout(frameSize / buttonSize, 0, 5, 15));
+        clientPanel = new JPanel(new GridLayout((frameSize / buttonSize), 0, 5, 15));
+
         clientPanel.setBounds(frameSize / 4, buttonSize + 30, frameSize / 2, frameSize - buttonSize - 30);
         clientPanel.setOpaque(false);
 
-        JLabel test = new JLabel("Connected Clients:");
+        JLabel clientList = new JLabel("Connected Clients:");
 
-        test.setSize(frameSize / 3, buttonSize / 2);
-        test.setForeground(Color.WHITE);
-        test.setFont(font);
+        clientList.setSize(frameSize / 3, buttonSize / 2);
+        clientList.setForeground(fontColor);
+        clientList.setFont(font);
+
+        clientPanel.add(clientList);
+
+        passPane = new JPanel();
+        passPane.setLayout(new BoxLayout(passPane, BoxLayout.Y_AXIS));
+        JLabel passLabel = new JLabel("Add Password Protection");
+        JCheckBox passCheckBox = new JCheckBox("Enable Password");
+        JTextField passText = new JTextField("Enter Password Here", 10);
+
+        passPane.setForeground(fontColor);
+        passPane.setFont(font);
+        passPane.add(passLabel);
+        passPane.add(passCheckBox);
+        passPane.add(passText);
 
 
-        clientPanel.add(test);
+
+
 
 
         // settingImage.add(clientPanel);
+        settingPane.add(passPane);
         settingPane.add(clientPanel);
 
         container.add(mainPane, "Main");
@@ -388,7 +407,7 @@ public class MainFrame extends JFrame implements ActionListener {
         temp.setHorizontalTextPosition(JLabel.CENTER);
         temp.setVerticalTextPosition(JLabel.CENTER);
         temp.setSize(frameSize / 3, (int) (buttonSize / 1.5));
-        temp.setForeground(Color.WHITE);
+        temp.setForeground(fontColor);
         temp.setFont(font);
         connectedClinets.add(temp);
         clientPanel.add(temp);
