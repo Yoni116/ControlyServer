@@ -123,7 +123,7 @@ public class CFService extends Thread {
             //e1.printStackTrace();
         }
 
-        mainFrame.setIpAndPort();
+//        mainFrame.setIpAndPort();
         Timer t = new Timer();
         t.scheduleAtFixedRate(new TimerTask() {
             @Override

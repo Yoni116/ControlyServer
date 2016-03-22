@@ -1,12 +1,26 @@
 
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.paint.*;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.util.logging.Logger;
@@ -15,15 +29,19 @@ import java.util.logging.Logger;
  * Created by yoni on 08/07/2015.
  * Controly Server V3.2
  */
-public class MainProgram {
+public class MainProgram  {
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
+    //vars for file lock (one instance running)
     private static File f;
     private static FileChannel channel;
     private static FileLock lock;
 
+
+
     public static void main(String[] args) {
 
+        //check if the program is already running
         try {
             f = new File("RingOnRequest.lock");
             // Check if the lock exist
@@ -48,11 +66,15 @@ public class MainProgram {
 
 
 
+
         } catch (IOException e) {
             //throw new RuntimeException("Could not start process.", e);
             LOGGER.severe("Closing Controly - already running");
             System.exit(0);
         }
+
+
+
 
         try {
             ControlyLogger.setup();
@@ -67,6 +89,7 @@ public class MainProgram {
         double version = Double.parseDouble(System.getProperty("java.specification.version"));
         LOGGER.info("Java JRE Version: " + version);
 
+        //checking for Java version
         if (version < 1.8) {
             LOGGER.severe("JRE version not compatible");
             JLabel label = new JLabel();
@@ -100,8 +123,8 @@ public class MainProgram {
             JOptionPane.showMessageDialog(null, ep);
             LOGGER.severe("Closing Controly");
         } else {
+            //loading DLL for Windows OS
             if (System.getProperty("os.name").contains("Windows")) {
-
 
                 try {
                     if (javaArch.equals("amd64") || javaArch.equals("x86_64")) {
@@ -127,14 +150,16 @@ public class MainProgram {
             LOGGER.info(ControlyUtility.OSName);
 
             LOGGER.info("Program Started");
-            MainFrame frame = new MainFrame();
 
-            frame.setFocusable(true);
-            frame.requestFocus();
+
+
+            //starting the gui
+            MainFrameFX.launch(MainFrameFX.class);
+
         }
     }
 
-
+//file lock for single instance
     public static void unlockFile() {
         // release and delete file lock
         try {
@@ -154,4 +179,8 @@ public class MainProgram {
             unlockFile();
         }
     }
+
+
+
+
 }

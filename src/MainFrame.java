@@ -17,7 +17,7 @@ public class MainFrame extends JFrame implements ActionListener {
     private final static long serialVersionUID = 1L;
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     public final static Color backColor = Color.decode("#0D0D0D");
-    public final static Color fontColor = Color.decode("#21C3E5");
+    public final static Color fontColor = Color.decode("#43B7E3");
 
 
     public static Font font;
@@ -422,6 +422,7 @@ public class MainFrame extends JFrame implements ActionListener {
         try {
             //create the font to use. Specify the size!
             font = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(22f);
+
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             //register the font
             ge.registerFont(font);

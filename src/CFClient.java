@@ -93,15 +93,15 @@ public class CFClient extends Thread {
                     receivedMsg = receivedMsg.trim();
                     LOGGER.info("The message: " + receivedMsg);
 
-                    String[] splitedMsg = receivedMsg.split(":");
+                    String[] splitMsg = receivedMsg.split(":");
 
-                    LOGGER.info(splitedMsg[0]);
+                    LOGGER.info(splitMsg[0]);
 
 
-                    switch (splitedMsg[0]) {
+                    switch (splitMsg[0]) {
 
                         case "ControlyClient":
-                            this.name = splitedMsg[1];
+                            this.name = splitMsg[1];
                             new Thread(new NotificationFrame(this.name, 0)).start();
                             mainFrame.addClientToLabel(this);
                             returnMsg = "1000-OK:" + keyPort + ":" + mousePort +":"+ControlyUtility.OSName;
@@ -125,7 +125,7 @@ public class CFClient extends Thread {
                                 msgBuffer = null;
                                 LOGGER.info("Received Macro Start Msg");
 
-                                if (Integer.parseInt(splitedMsg[1]) == 0)
+                                if (Integer.parseInt(splitMsg[1]) == 0)
                                     mr = new MacroRecorder(false, this.ip);
                                 else
                                     mr = new MacroRecorder(true, this.ip);
