@@ -41,6 +41,8 @@ public class ServerInfoController {
         assert portLabel != null : "fx:id=\"portLabel\" was not injected: check your FXML file 'ControlyInfoFXML.fxml'.";
         assert settingBtn != null : "fx:id=\"settingBtn\" was not injected: check your FXML file 'ControlyInfoFXML.fxml'.";
 
+
+
     }
 
 

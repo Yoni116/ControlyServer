@@ -1,6 +1,9 @@
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
@@ -21,6 +24,9 @@ public class ServerSettingController {
     private ImageView minimizeBtn;
 
     @FXML
+    private CheckBox passCheckBox;
+
+    @FXML
     private TextField passwordField;
 
     private Stage stage;
@@ -37,6 +43,8 @@ public class ServerSettingController {
         assert clientsList != null : "fx:id=\"clientsList\" was not injected: check your FXML file 'ControlySettingFXML.fxml'.";
         assert minimizeBtn != null : "fx:id=\"minimizeBtn\" was not injected: check your FXML file 'ControlySettingFXML.fxml'.";
         assert passwordField != null : "fx:id=\"passwordField\" was not injected: check your FXML file 'ControlySettingFXML.fxml'.";
+
+        passwordField.disableProperty().bind(passCheckBox.selectedProperty().not());
 
 
     }
@@ -57,6 +65,19 @@ public class ServerSettingController {
     @FXML
     public void changeToInfo(){
         mfFX.changeScene(stage);
+    }
+
+    @FXML
+    void enablePassword(ActionEvent event) {
+
+//        if(passCheckBox.isSelected()){
+//            passwordField.setEditable(true);
+//        }
+//        else {
+//            passwordField.setEditable(false);
+//        }
+
+
     }
 
 }
