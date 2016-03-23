@@ -32,15 +32,13 @@ public class MainFrameFX extends Application {
     private MenuItem showApp;
     private MenuItem closeApp;
 
-    private ServerController sc;
+    private ServerInfoController sc;
     private CFService service;
 
     //JavaFX start method
     @Override
     public void start(Stage primaryStage) throws Exception{
-
-
-
+        LOGGER.info("Frame Size: "+ frameSize);
         Platform.setImplicitExit(false);
 
         Dimension trayIconSize = tray.getTrayIconSize();
@@ -51,14 +49,16 @@ public class MainFrameFX extends Application {
         createTrayIcon(primaryStage);
 
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("ControlyFXML.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ControlyInfoFXML.fxml"));
         Parent root = loader.load();
+        if(frameSize <= 550)
+            frameSize = 550;
         primaryStage.setScene(new Scene(root, frameSize, frameSize, javafx.scene.paint.Color.TRANSPARENT));
         primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setTitle("Controly");
 
 
-        sc = (ServerController)loader.getController();
+        sc = (ServerInfoController)loader.getController();
 
         sc.setMfFX(this);
         sc.setStage(primaryStage);
@@ -68,7 +68,12 @@ public class MainFrameFX extends Application {
         hide(primaryStage);
 
 
-        startServer();
+        startServer(sc);
+
+        sc.setIpAndPort(service.getMyIp(),service.getPort());
+
+
+
 
     }
 
@@ -135,11 +140,6 @@ public class MainFrameFX extends Application {
         // set the TrayIcon properties
         trayIcon.addActionListener(showListener);
 
-//        try {
-//            tray.add(trayIcon);
-//        } catch (AWTException e) {
-//            LOGGER.severe(e.getMessage());
-//        }
 
 
     }
@@ -166,11 +166,11 @@ public class MainFrameFX extends Application {
         });
     }
 
-    public void startServer() {
+    public void startServer(ServerInfoController sc) {
         LOGGER.info("Start");
 
         try {
-            service = new CFService(null);
+            service = new CFService(sc);
 
         } catch (IOException e) {
             e.printStackTrace();

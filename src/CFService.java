@@ -28,7 +28,7 @@ public class CFService extends Thread {
     private BCListener bcListener;
     private boolean isRuning;
     private String receivedMsg;
-    private MainFrame mainFrame;
+    private ServerInfoController sc;
     private String myIp;
     private NetworkInfo currentNetwork;
 
@@ -40,8 +40,8 @@ public class CFService extends Thread {
 //    private byte[] recvBuf;
 //    private DatagramPacket returnPacket;
 
-    public CFService(MainFrame mf) throws IOException {
-        mainFrame = mf;
+    public CFService(ServerInfoController sc) throws IOException {
+        this.sc = sc;
         macroBusy = false;
         clients = new HashSet<>();
         //tweenManager = manager;
@@ -124,6 +124,8 @@ public class CFService extends Thread {
         }
 
 //        mainFrame.setIpAndPort();
+        sc.setIpAndPort(getMyIp(),getPort());
+
         Timer t = new Timer();
         t.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -142,7 +144,8 @@ public class CFService extends Thread {
                 LOGGER.info("waiting for client " + serverSocket.getLocalPort());
                 socket = serverSocket.accept();
                 LOGGER.info("Server received connection from: " + socket.getInetAddress().toString());
-                CFClient temp = new CFClient(socket, socket.getInetAddress().toString(), mainFrame, this, keysChannel.getChannel().socket().getLocalPort(), mouseChannel.getChannel().socket().getLocalPort());
+                // TODO change first null to Server Controller
+                CFClient temp = new CFClient(socket, socket.getInetAddress().toString(), null, this, keysChannel.getChannel().socket().getLocalPort(), mouseChannel.getChannel().socket().getLocalPort());
                 clients.add(temp);
                 temp.start();
 

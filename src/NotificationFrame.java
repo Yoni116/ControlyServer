@@ -27,7 +27,7 @@ public class NotificationFrame extends JFrame implements Runnable {
 
 
     public NotificationFrame(String name, int type) {
-        getContentPane().setBackground(MainFrame.backColor);
+        getContentPane().setBackground(Color.decode("#0D0D0D"));
         this.type = type;
         frame = this;
         setUndecorated(true);
@@ -64,7 +64,7 @@ public class NotificationFrame extends JFrame implements Runnable {
         //background.setBounds(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
 
 
-        clientNameLabel.setForeground(Color.WHITE);
+        clientNameLabel.setForeground(Color.decode("#43b7e3"));
         clientNameLabel.setFont(MainFrame.font);
         clientNameLabel.setBounds(FRAME_WIDTH / 2, FRAME_HEIGHT / 2, FRAME_WIDTH / 3, FRAME_HEIGHT / 3);
 

@@ -243,7 +243,7 @@ public class MainFrame extends JFrame implements ActionListener {
         LOGGER.info("Start");
 
         try {
-            service = new CFService(this);
+            service = new CFService(null);
 
         } catch (IOException e) {
             e.printStackTrace();
