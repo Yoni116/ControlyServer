@@ -11,9 +11,9 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #0D0D0D;&#10;-fx-background-radius: 30px;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #0D0D0D;&#10;-fx-background-radius: 30px;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="ServerSettingController">
   <children>
-    <VBox id="VBox" alignment="CENTER" prefHeight="-1.0" spacing="20.0" AnchorPane.bottomAnchor="48.0" AnchorPane.leftAnchor="148.0" AnchorPane.rightAnchor="148.0" AnchorPane.topAnchor="74.0">
+    <VBox id="VBox" alignment="CENTER" prefHeight="478.0" prefWidth="452.0" spacing="20.0" AnchorPane.bottomAnchor="48.0" AnchorPane.leftAnchor="74.0" AnchorPane.rightAnchor="74.0" AnchorPane.topAnchor="74.0">
       <children>
         <Label prefWidth="-1.0" text="Controly Settings" underline="false" wrapText="true">
           <effect>
@@ -30,40 +30,36 @@
             <Color blue="1.000" green="0.712" red="0.200" fx:id="x3" />
           </textFill>
         </Label>
-        <VBox id="VBox" alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0" spacing="10.0">
+        <HBox id="HBox" alignment="CENTER" prefHeight="60.0" prefWidth="452.0" spacing="5.0">
           <children>
-            <HBox id="HBox" alignment="CENTER" spacing="5.0">
-              <children>
-                <CheckBox mnemonicParsing="false" text="" />
-                <Label text="Enable Password Protecion" textFill="#00a3ff" wrapText="true">
-                  <effect>
-                    <DropShadow color="$x1" height="41.0" radius="20.0" spread="0.075" width="41.0" />
-                  </effect>
-                  <font>
-                    <Font size="18.0" fx:id="x2" />
-                  </font>
-                </Label>
-              </children>
-            </HBox>
-            <HBox id="HBox" alignment="CENTER" spacing="5.0">
-              <children>
-                <Label font="$x2" text="Password :" textFill="$x3" wrapText="true">
-                  <effect>
-                    <DropShadow color="$x1" height="41.0" radius="20.0" spread="0.075" width="41.0" />
-                  </effect>
-                </Label>
-                <TextField fx:id="passwordField" disable="true" editable="false" prefWidth="177.0" promptText="Write Here">
-                  <HBox.margin>
-                    <Insets />
-                  </HBox.margin>
-                </TextField>
-              </children>
-              <padding>
-                <Insets left="5.0" />
-              </padding>
-            </HBox>
+            <CheckBox alignment="CENTER_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" selected="false" text="" />
+            <Label alignment="CENTER" graphicTextGap="4.0" text="Enable Password Protecion" textFill="#00a3ff" wrapText="true">
+              <effect>
+                <DropShadow color="$x1" height="41.0" radius="20.0" spread="0.075" width="41.0" />
+              </effect>
+              <font>
+                <Font size="18.0" fx:id="x2" />
+              </font>
+            </Label>
           </children>
-        </VBox>
+        </HBox>
+        <HBox id="HBox" alignment="CENTER" spacing="5.0">
+          <children>
+            <Label font="$x2" text="Password :" textFill="$x3" wrapText="true">
+              <effect>
+                <DropShadow color="$x1" height="41.0" radius="20.0" spread="0.075" width="41.0" />
+              </effect>
+            </Label>
+            <TextField fx:id="passwordField" disable="true" editable="false" prefWidth="177.0" promptText="Write Here">
+              <HBox.margin>
+                <Insets />
+              </HBox.margin>
+            </TextField>
+          </children>
+          <padding>
+            <Insets left="5.0" />
+          </padding>
+        </HBox>
         <VBox id="VBox" alignment="CENTER" prefHeight="-1.0" spacing="5.0">
           <children>
             <Label font="$x2" text="Connected Clients" textFill="$x3" wrapText="true">
@@ -82,12 +78,12 @@
     </VBox>
     <ImageView fx:id="minimizeBtn" fitHeight="60.0" fitWidth="60.0" onMouseClicked="#minimizeToTray" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
       <image>
-        <Image url="file:/D:/Java/TestFX/src/NewServerDesign/MinimizeButton.png" preserveRatio="true" smooth="true" />
+        <Image url="NewServerDesign/MinimizeButton.png" preserveRatio="true" smooth="true" />
       </image>
     </ImageView>
-    <ImageView fx:id="arrowBtn" fitHeight="60.0" fitWidth="60.0" preserveRatio="false" smooth="true" style="" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
+    <ImageView fx:id="arrowBtn" fitHeight="60.0" fitWidth="60.0" onMouseClicked="#changeToInfo" preserveRatio="false" smooth="true" style="" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
       <image>
-        <Image url="file:/D:/Java/DotServer/src/NewServerDesign/LeftArrowButton.png" />
+        <Image url="NewServerDesign/LeftArrowButton.png" />
       </image>
     </ImageView>
   </children>

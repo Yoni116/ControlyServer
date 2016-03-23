@@ -58,6 +58,11 @@ public class ServerInfoController {
         mfFX.hide(stage);
     }
 
+    @FXML
+    public void changeToSetting(){
+        mfFX.changeScene(stage);
+    }
+
     public void setIpAndPort(String ip, String port){
 
         this.ipLabel.setText("IP: "+ ip);

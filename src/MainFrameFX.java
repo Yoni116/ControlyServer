@@ -32,8 +32,14 @@ public class MainFrameFX extends Application {
     private MenuItem showApp;
     private MenuItem closeApp;
 
-    private ServerInfoController sc;
+    private ServerInfoController sic;
+    private ServerSettingController ssc;
     private CFService service;
+
+    private Scene infoScene;
+    private Scene settingScene;
+
+    private boolean isInfoScene;
 
     //JavaFX start method
     @Override
@@ -49,30 +55,37 @@ public class MainFrameFX extends Application {
         createTrayIcon(primaryStage);
 
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("ControlyInfoFXML.fxml"));
-        Parent root = loader.load();
+        FXMLLoader infoLoader = new FXMLLoader(getClass().getResource("ControlyInfoFXML.fxml"));
+        FXMLLoader settingLoader = new FXMLLoader(getClass().getResource("ControlySettingFXML.fxml"));
+        Parent infoRoot = infoLoader.load();
+        Parent settingRoot = settingLoader.load();
+
         if(frameSize <= 550)
             frameSize = 550;
-        primaryStage.setScene(new Scene(root, frameSize, frameSize, javafx.scene.paint.Color.TRANSPARENT));
+        infoScene = new Scene(infoRoot, frameSize, frameSize, javafx.scene.paint.Color.TRANSPARENT);
+        settingScene = new Scene(settingRoot, frameSize, frameSize, javafx.scene.paint.Color.TRANSPARENT);
+        primaryStage.setScene(infoScene);
+        isInfoScene = true;
         primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setTitle("Controly");
 
+        ssc = (ServerSettingController)settingLoader.getController();
+        sic = (ServerInfoController)infoLoader.getController();
 
-        sc = (ServerInfoController)loader.getController();
+        ssc.setStage(primaryStage);
+        ssc.setMfFX(this);
 
-        sc.setMfFX(this);
-        sc.setStage(primaryStage);
+        sic.setMfFX(this);
+        sic.setStage(primaryStage);
 
         primaryStage.show();
 
         hide(primaryStage);
 
 
-        startServer(sc);
+        startServer(sic);
 
-        sc.setIpAndPort(service.getMyIp(),service.getPort());
-
-
+        sic.setIpAndPort(service.getMyIp(),service.getPort());
 
 
     }
@@ -178,5 +191,23 @@ public class MainFrameFX extends Application {
         service.start();
 
 
+    }
+
+    public void changeScene(Stage stage){
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                if (isInfoScene) {
+                    stage.setScene(settingScene);
+                    isInfoScene = false;
+                } else {
+                    stage.setScene(infoScene);
+                    isInfoScene = true;
+                }
+
+
+            }
+        });
     }
 }

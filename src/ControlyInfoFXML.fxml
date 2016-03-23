@@ -42,7 +42,7 @@
         <Image url="@../../TestFX/src/NewServerDesign/MinimizeButton.png" preserveRatio="true" smooth="true" />
       </image>
     </ImageView>
-    <ImageView fx:id="settingBtn" fitHeight="60.0" fitWidth="60.0" preserveRatio="false" smooth="true" style="" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
+    <ImageView fx:id="settingBtn" fitHeight="60.0" fitWidth="60.0" onMouseClicked="#changeToSetting" preserveRatio="false" smooth="true" style="" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
   </children>
   <stylesheets>
     <URL value="@NewServerDesign/controlyCSS.css" />
