@@ -43,11 +43,13 @@ public class NetworkInfo extends Thread {
             } catch (SocketException e) {
                 e.printStackTrace();
             }
-
+            LOGGER.info("OLD-address: "+ ia +" network: "+ni);
+            LOGGER.info("NEW-address: "+ newAddress +" network: "+newInterface);
             if (!ni.equals(newInterface) || !ia.equals(newAddress)) {
                 myService.resetBCListner();
                 ni = newInterface;
                 ia = newAddress;
+
             }
             try {
                 sleep(20000);

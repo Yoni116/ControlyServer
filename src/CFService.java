@@ -130,8 +130,8 @@ public class CFService extends Thread {
             new Thread(bcListener).start();
 
             // TODO redistribute broadcast when changing network
-            //  currentNetwork = new NetworkInfo(localAddress,this);
-            //  new Thread(currentNetwork).run();
+              currentNetwork = new NetworkInfo(localAddress,this);
+              new Thread(currentNetwork).run();
 
 
 
@@ -222,11 +222,9 @@ public class CFService extends Thread {
                         listItems.remove(l);
                         break;
                     }
-
                 }
             }
         });
-
     }
 
     public ObservableList<Label> getListItems() {
@@ -296,6 +294,7 @@ public class CFService extends Thread {
                 keysChannel.getChannel().socket().getLocalPort(),
                 mouseChannel.getChannel().socket().getLocalPort(),this);
         new Thread(bcListener).start();
+        sc.setIpAndPort(getMyIp(),getPort());
 
     }
 

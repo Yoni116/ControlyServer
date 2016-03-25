@@ -28,7 +28,6 @@ public class MainFrameFX extends Application {
     private Image trayIconeImg;
     private TrayIcon trayIcon;
     private PopupMenu popup;
-    private MenuItem aboutItem;
     private MenuItem showApp;
     private MenuItem closeApp;
 
@@ -69,8 +68,8 @@ public class MainFrameFX extends Application {
         primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setTitle("Controly");
 
-        ssc = (ServerSettingController)settingLoader.getController();
-        sic = (ServerInfoController)infoLoader.getController();
+        ssc = settingLoader.getController();
+        sic = infoLoader.getController();
 
         ssc.setStage(primaryStage);
         ssc.setMfFX(this);
@@ -133,12 +132,8 @@ public class MainFrameFX extends Application {
         };
         // create a popup menu
         showApp = new MenuItem("Show App");
-        aboutItem = new MenuItem("About");
         closeApp = new MenuItem("Exit");
 
-
-//        popup.add(aboutItem);
-//        popup.addSeparator();
 
         showApp.addActionListener(showListener);
         closeApp.addActionListener(closeListener);
@@ -164,8 +159,9 @@ public class MainFrameFX extends Application {
             @Override
             public void run() {
 
-                if (SystemTray.isSupported() && trayIcon != null) {
+                if (SystemTray.isSupported()) {
                     try {
+                        tray = SystemTray.getSystemTray();
                         tray.add(trayIcon);
                         trayIcon.displayMessage("Server Is Running Minimized", "right click here if you want to close the server", TrayIcon.MessageType.INFO);
                     } catch (AWTException e) {
