@@ -32,7 +32,7 @@ public class CFKeysDatagramChannel implements Runnable {
             robot.setAutoWaitForIdle(true);
             robot.setAutoDelay(1);
         } catch (AWTException e) {
-            e.printStackTrace();
+            LOGGER.warning(e.getMessage());
         }
 
     }
@@ -108,7 +108,7 @@ public class CFKeysDatagramChannel implements Runnable {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.warning(e.getMessage());
         }
     }
 

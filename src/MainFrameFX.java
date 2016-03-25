@@ -49,7 +49,7 @@ public class MainFrameFX extends Application {
 
         Dimension trayIconSize = tray.getTrayIconSize();
 
-        trayIconeImg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/TrayIcon.png"))
+        trayIconeImg = new ImageIcon(MainFrameFX.class.getResource("/NewServerDesign/TrayIcon.png"))
                 .getImage().getScaledInstance((int) trayIconSize.getWidth(), (int) trayIconSize.getHeight(), Image.SCALE_SMOOTH);
 
         createTrayIcon(primaryStage);
@@ -85,6 +85,7 @@ public class MainFrameFX extends Application {
 
         startServer(sic);
 
+        ssc.setService(service);
         sic.setIpAndPort(service.getMyIp(),service.getPort());
 
 
@@ -168,7 +169,7 @@ public class MainFrameFX extends Application {
                         tray.add(trayIcon);
                         trayIcon.displayMessage("Server Is Running Minimized", "right click here if you want to close the server", TrayIcon.MessageType.INFO);
                     } catch (AWTException e) {
-                        e.printStackTrace();
+                        LOGGER.warning(e.getMessage());
                     }
 
                     stage.hide();
@@ -186,7 +187,7 @@ public class MainFrameFX extends Application {
             service = new CFService(sc);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.warning(e.getMessage());
         }
         service.start();
 

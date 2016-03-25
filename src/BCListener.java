@@ -30,6 +30,8 @@ public class BCListener implements Runnable {
     private int connectionPort, keysPort, mousePort;
     private boolean serverRunning;
 
+    private CFService server;
+
     private ServerSocket sc;
 
 
@@ -39,21 +41,19 @@ public class BCListener implements Runnable {
      *
      * @param mainPort the port to sent to the client for connection
      */
-    public BCListener(int mainPort, int kPort, int mPort) {
+    public BCListener(int mainPort, int kPort, int mPort, CFService server) {
         this.connectionPort = mainPort;
         this.mousePort = mPort;
         this.keysPort = kPort;
         this.serverRunning = true;
         this.localAddress = ControlyUtility.getInetAddress();
+        this.server = server;
     }
 
     @Override
     public void run() {
         try {
             InetAddress address = InetAddress.getByName(MC_ADDR);
-
-
-
             // port 56378 will always be used for bc reason
 
             mcSocket = new MulticastSocket(BC_PORT);
@@ -86,6 +86,14 @@ public class BCListener implements Runnable {
 
                 String message = new String(packet.getData()).trim();
                 if (message.equals("CONTROLY DISCOVER REQUEST")) {
+
+
+
+                    if(server.getHasPassword()){
+                        reply = reply.concat(":YES");
+                    }
+                    else
+                        reply = reply.concat(":NO");
 
                     byte[] sendData = reply.getBytes();
 

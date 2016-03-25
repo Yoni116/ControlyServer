@@ -1,3 +1,5 @@
+import javafx.beans.property.SimpleStringProperty;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.im.InputContext;
@@ -17,7 +19,7 @@ public class CFClient extends Thread {
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     private static boolean macroBusy;
 
-    private String name = "";
+    private String clientName;
     private String ip;
     private int keyPort;
     private int mousePort;
@@ -36,27 +38,33 @@ public class CFClient extends Thread {
     private boolean isSuspended;
     private boolean capsState;
 
-    private MainFrame mainFrame;
+//    private MainFrame mainFrame;
     private MacroRecorder mr;
     private CFService server;
 
     private Timer timer;
 
 
-    public CFClient(Socket socket, String clientIP, MainFrame mf, CFService server, int keyPort, int mousePort) {
+    public CFClient(Socket socket, String clientIP, CFService server, int keyPort, int mousePort) {
         this.isRunning = true;
         this.clientSocket = socket;
         this.ip = clientIP;
-        this.mainFrame = mf;
+        //this.mainFrame = mf;
         this.server = server;
         this.isSuspended = false;
         this.keyPort = keyPort;
         this.mousePort = mousePort;
+        this.clientName = "";
     }
 
+
+
+
     public String getClientName() {
-        return this.name;
+        return clientName;
     }
+
+
 
     public boolean isSuspended() {
         return isSuspended;
@@ -64,7 +72,7 @@ public class CFClient extends Thread {
 
     @Override
     public String toString() {
-        return "{ ClientName: " + name + "\tClientIP: " + ip + " Suspended: " + isSuspended + " }";
+        return "{ ClientName: " + clientName + "\tClientIP: " + ip + " Suspended: " + isSuspended + " }";
     }
 
     @Override
@@ -101,15 +109,15 @@ public class CFClient extends Thread {
                     switch (splitMsg[0]) {
 
                         case "ControlyClient":
-                            this.name = splitMsg[1];
-                            new Thread(new NotificationFrame(this.name, 0)).start();
-                            mainFrame.addClientToLabel(this);
+                            this.clientName = splitMsg[1];
+                            new Thread(new NotificationFrame(this.clientName, 0)).start();
+                            server.addClientName(this.clientName);
                             returnMsg = "1000-OK:" + keyPort + ":" + mousePort +":"+ControlyUtility.OSName;
                             msgBuffer = returnMsg.getBytes();
                             os.write(msgBuffer);
                             os.flush();
                             msgBuffer = null;
-                            LOGGER.info("Received connection request from client: " + this.name + " address: " + this.ip);
+                            LOGGER.info("Received connection request from client: " + this.clientName + " address: " + this.ip);
                             server.printClients();
                             ready = true;
                             break;
@@ -210,9 +218,10 @@ public class CFClient extends Thread {
                 if (!clientSocket.isClosed())
                     this.clientSocket.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.warning(e.getMessage());
             }
             server.removeClient(this);
+            server.removeClientName(this.clientName);
             server.printClients();
         }
     }
@@ -230,23 +239,23 @@ public class CFClient extends Thread {
                 os.flush();
                 msgBuffer = null;
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.warning(e.getMessage());
             }
-            LOGGER.info("Pinging client: " + name + " ip: " + ip);
+            LOGGER.info("Pinging client: " + clientName + " ip: " + ip);
 
             timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    LOGGER.info("TimeOut - not received ping back from client: " + name + " ip: " + ip);
+                    LOGGER.info("TimeOut - not received ping back from client: " + clientName + " ip: " + ip);
                     closeClient();
                     try {
                         clientSocket.close();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        LOGGER.warning(e.getMessage());
                     }
                 }
-            }, 30000);
+            }, 10000);
         }
 
     }

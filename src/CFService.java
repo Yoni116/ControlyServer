@@ -1,13 +1,22 @@
 
 
+import javafx.application.Platform;
+import javafx.beans.Observable;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleStringProperty;
+
+import javafx.collections.*;
+import javafx.scene.control.Label;
+
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
 import java.nio.channels.DatagramChannel;
-import java.util.HashSet;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,7 +24,10 @@ public class CFService extends Thread {
 
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
+    private final ObservableList<Label> listItems = FXCollections.observableArrayList();
+
     private HashSet<CFClient> clients;
+    private List<Label> clientNames;
     private InetAddress localAddress;
     private ServerSocket serverSocket;
     private Socket socket;
@@ -31,6 +43,8 @@ public class CFService extends Thread {
     private ServerInfoController sc;
     private String myIp;
     private NetworkInfo currentNetwork;
+    private SimpleBooleanProperty hasPassword;
+    private SimpleStringProperty password;
 
     // private MacroRecorder mr;
     private boolean macroBusy;
@@ -41,10 +55,13 @@ public class CFService extends Thread {
 //    private DatagramPacket returnPacket;
 
     public CFService(ServerInfoController sc) throws IOException {
+        password = new SimpleStringProperty("");
+        hasPassword = new SimpleBooleanProperty(false);
         this.sc = sc;
         macroBusy = false;
         clients = new HashSet<>();
-        //tweenManager = manager;
+        clientNames = new ArrayList<>();
+
         //should create new exception object to deal with specifiec errors.
         serverSocket = new ServerSocket(0);
         //0 means choose an available port.
@@ -108,7 +125,7 @@ public class CFService extends Thread {
 
             bcListener = new BCListener(serverSocket.getLocalPort(),
                     keysChannel.getChannel().socket().getLocalPort(),
-                    mouseChannel.getChannel().socket().getLocalPort());
+                    mouseChannel.getChannel().socket().getLocalPort(),this);
 
             new Thread(bcListener).start();
 
@@ -132,8 +149,9 @@ public class CFService extends Thread {
             public void run() {
 
                 pingAllClients();
+
             }
-        }, 0, 60000);
+        }, 0, 20000);
 
 
         while (isRuning) {
@@ -145,7 +163,7 @@ public class CFService extends Thread {
                 socket = serverSocket.accept();
                 LOGGER.info("Server received connection from: " + socket.getInetAddress().toString());
                 // TODO change first null to Server Controller
-                CFClient temp = new CFClient(socket, socket.getInetAddress().toString(), null, this, keysChannel.getChannel().socket().getLocalPort(), mouseChannel.getChannel().socket().getLocalPort());
+                CFClient temp = new CFClient(socket, socket.getInetAddress().toString(), this, keysChannel.getChannel().socket().getLocalPort(), mouseChannel.getChannel().socket().getLocalPort());
                 clients.add(temp);
                 temp.start();
 
@@ -158,8 +176,62 @@ public class CFService extends Thread {
     }
 
 
+    public String getPassword() {
+        return password.get();
+    }
+
+    public SimpleStringProperty passwordProperty() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password.set(password);
+    }
+
+    public boolean getHasPassword() {
+        return hasPassword.get();
+    }
+
+    public SimpleBooleanProperty hasPasswordProperty() {
+        return hasPassword;
+    }
+
+    public void setHasPassword(boolean hasPassword) {
+        this.hasPassword.set(hasPassword);
+    }
+
+    public void addClientName(String name){
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Label temp = new Label(name);
+                listItems.add(temp);
+            }
+        });
 
 
+    }
+
+    public void removeClientName(String name){
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+
+                for (Label l: listItems){
+                    if(l.getText().equals(name)) {
+                        listItems.remove(l);
+                        break;
+                    }
+
+                }
+            }
+        });
+
+    }
+
+    public ObservableList<Label> getListItems() {
+        return listItems;
+    }
 
     public String getExternalIp() {
         URL whatismyip;
@@ -222,7 +294,7 @@ public class CFService extends Thread {
         bcListener.closeBC();
         bcListener = new BCListener(serverSocket.getLocalPort(),
                 keysChannel.getChannel().socket().getLocalPort(),
-                mouseChannel.getChannel().socket().getLocalPort());
+                mouseChannel.getChannel().socket().getLocalPort(),this);
         new Thread(bcListener).start();
 
     }

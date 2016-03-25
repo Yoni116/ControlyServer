@@ -31,7 +31,7 @@ public class CFMouseDatagramChannel implements Runnable {
             mouse = new Robot();
             mouse.setAutoWaitForIdle(true);
         } catch (AWTException e) {
-            e.printStackTrace();
+            LOGGER.warning(e.getMessage());
         }
         time = 0;
 

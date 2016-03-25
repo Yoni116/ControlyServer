@@ -1,6 +1,10 @@
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -18,7 +22,7 @@ public class ServerSettingController {
     private ImageView arrowBtn;
 
     @FXML
-    private ListView<?> clientsList;
+    private ListView clientsList;
 
     @FXML
     private ImageView minimizeBtn;
@@ -31,6 +35,8 @@ public class ServerSettingController {
 
     private Stage stage;
     private MainFrameFX mfFX;
+    private CFService service;
+
 
 
     public ServerSettingController() {
@@ -47,6 +53,7 @@ public class ServerSettingController {
         passwordField.disableProperty().bind(passCheckBox.selectedProperty().not());
 
 
+
     }
 
     public void setMfFX(MainFrameFX mfFX) {
@@ -55,6 +62,15 @@ public class ServerSettingController {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public void setService(CFService service) {
+        this.service = service;
+        passwordField.textProperty().bindBidirectional(service.passwordProperty());
+        passCheckBox.selectedProperty().bindBidirectional(service.hasPasswordProperty());
+
+        clientsList.setItems(service.getListItems());
+
     }
 
     @FXML

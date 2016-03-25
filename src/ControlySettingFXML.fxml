@@ -32,13 +32,9 @@
         </Label>
         <HBox id="HBox" alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0" spacing="1.0">
           <children>
-            <CheckBox fx:id="passCheckBox" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#enablePassword" prefHeight="28.0" prefWidth="301.0" selected="false" text="Enable Password Protection" textAlignment="LEFT" textFill="$x4" wrapText="false">
+            <CheckBox fx:id="passCheckBox" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#enablePassword" prefHeight="28.0" prefWidth="301.0" selected="false" text="Enable Password Protection" textAlignment="LEFT" textFill="#43b7e3" wrapText="false">
               <effect>
-                <DropShadow height="41.0" radius="20.0" spread="0.075" width="41.0">
-                  <color>
-                    <Color blue="0.890" green="0.718" red="0.263" fx:id="x4" />
-                  </color>
-                </DropShadow>
+                <DropShadow color="$x1" height="40.0" radius="19.5" spread="0.1" width="40.0" />
               </effect>
               <font>
                 <Font size="21.0" />

@@ -44,18 +44,13 @@ public class NotificationFrame extends JFrame implements Runnable {
 
        switch(type) {
            case 0:
-//            bimg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/ConnectionTile.png"))
-//                    .getImage().getScaledInstance(FRAME_WIDTH, FRAME_HEIGHT, Image.SCALE_SMOOTH);
+
                clientNameLabel = new JLabel("<html>Device Connected:<br>" + name + " </html>", SwingConstants.CENTER);
                break;
            case 1:
-//            bimg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/RecordingStarted.png"))
-//                    .getImage().getScaledInstance(FRAME_WIDTH, FRAME_HEIGHT, Image.SCALE_SMOOTH);
                clientNameLabel = new JLabel("Recording Started", SwingConstants.CENTER);
                break;
            case 2:
-//               bimg = new ImageIcon(MainFrame.class.getResource("/NewServerDesign/RecordingFinished.png"))
-//                       .getImage().getScaledInstance(FRAME_WIDTH, FRAME_HEIGHT, Image.SCALE_SMOOTH);
                clientNameLabel = new JLabel("Recording Finished", SwingConstants.CENTER);
                break;
         }
@@ -65,7 +60,7 @@ public class NotificationFrame extends JFrame implements Runnable {
 
 
         clientNameLabel.setForeground(Color.decode("#43b7e3"));
-        clientNameLabel.setFont(MainFrame.font);
+        //clientNameLabel.setFont(MainFrame.font);
         clientNameLabel.setBounds(FRAME_WIDTH / 2, FRAME_HEIGHT / 2, FRAME_WIDTH / 3, FRAME_HEIGHT / 3);
 
         add(clientNameLabel);
