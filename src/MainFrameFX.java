@@ -218,5 +218,7 @@ public class MainFrameFX extends Application {
     public void resetService(){
         startServer(sic);
 
+        LOGGER.warning("Finished resetting server");
+
     }
 }

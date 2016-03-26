@@ -49,13 +49,13 @@ public class NetworkInfo extends Thread {
             LOGGER.info("OLD-address: "+ ia +" network: "+ni);
             LOGGER.info("NEW-address: "+ newAddress +" network: "+newInterface);
             if (!ni.equals(newInterface) || !ia.equals(newAddress)) {
-                myService.resetBCListner();
+                restartService();
                 ni = newInterface;
                 ia = newAddress;
 
             }
             try {
-                sleep(20000);
+                sleep(60000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -69,8 +69,9 @@ public class NetworkInfo extends Thread {
 
     public void restartService(){
         try {
+            LOGGER.warning("Starting reset to Server - Expect some Exceptions");
             myService.close();
-            Thread.sleep(5000);
+            Thread.sleep(10000);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

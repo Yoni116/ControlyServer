@@ -67,7 +67,7 @@ public class CFService extends Thread {
         //0 means choose an available port.
         // messagesReceiver = new CFMessagesReceiver();
         isRuning = true;
-        myIp = getExternalIp();
+        //myIp = getExternalIp();
         localAddress = ControlyUtility.getInetAddress();
 
 
@@ -290,7 +290,7 @@ public class CFService extends Thread {
                 keysChannel.getChannel().socket().getLocalPort(),
                 mouseChannel.getChannel().socket().getLocalPort(),this);
         new Thread(bcListener).start();
-        sc.setIpAndPort(getMyIp(),getPort());
+        sc.setIpAndPort(getMyIp(), getPort());
 
     }
 
