@@ -42,7 +42,7 @@ public class CFService extends Thread {
     private String receivedMsg;
     private ServerInfoController sc;
     private String myIp;
-    private NetworkInfo currentNetwork;
+
     private SimpleBooleanProperty hasPassword;
     private SimpleStringProperty password;
 
@@ -85,9 +85,6 @@ public class CFService extends Thread {
         if (bcListener != null)
             bcListener.closeBC();
 
-        if (currentNetwork != null)
-            currentNetwork.closeInfo();
-
         if (serverSocket != null)
             serverSocket.close();
         while (!serverSocket.isClosed()) ;
@@ -97,9 +94,6 @@ public class CFService extends Thread {
 
         if (keysDatagramChannel != null)
             keysDatagramChannel.close();
-
-
-
 
         clients.clear();
     }
@@ -129,9 +123,6 @@ public class CFService extends Thread {
 
             new Thread(bcListener).start();
 
-            // TODO redistribute broadcast when changing network
-              currentNetwork = new NetworkInfo(localAddress,this);
-              new Thread(currentNetwork).run();
 
 
 
@@ -294,7 +285,15 @@ public class CFService extends Thread {
                 keysChannel.getChannel().socket().getLocalPort(),
                 mouseChannel.getChannel().socket().getLocalPort(),this);
         new Thread(bcListener).start();
-        sc.setIpAndPort(getMyIp(),getPort());
+        localAddress = ControlyUtility.getInetAddress();
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                sc.setIpAndPort(getMyIp(), getPort());
+            }
+        });
+
 
     }
 

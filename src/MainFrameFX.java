@@ -35,6 +35,8 @@ public class MainFrameFX extends Application {
     private ServerSettingController ssc;
     private CFService service;
 
+    private NetworkInfo currentNetwork;
+
     private Scene infoScene;
     private Scene settingScene;
 
@@ -86,6 +88,10 @@ public class MainFrameFX extends Application {
 
         ssc.setService(service);
         sic.setIpAndPort(service.getMyIp(),service.getPort());
+
+
+        currentNetwork = new NetworkInfo(ControlyUtility.getInetAddress(), service);
+        new Thread(currentNetwork).run();
 
 
     }
