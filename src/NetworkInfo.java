@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -16,11 +17,13 @@ public class NetworkInfo extends Thread {
     private InetAddress ia;
     private boolean isRunning;
     private CFService myService;
+    private MainFrameFX mfFX;
 
 
-    public NetworkInfo(InetAddress ia, CFService myService) throws SocketException {
+    public NetworkInfo(InetAddress ia, CFService myService, MainFrameFX mfFX) throws SocketException {
         this.ia = ia;
         this.ni = NetworkInterface.getByInetAddress(ia);
+        this.mfFX = mfFX;
         this.myService = myService;
         this.isRunning = true;
     }
@@ -62,6 +65,21 @@ public class NetworkInfo extends Thread {
 
     public void closeInfo() {
         isRunning = false;
+    }
+
+    public void restartService(){
+        try {
+            myService.close();
+            Thread.sleep(5000);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        mfFX.resetService();
+
+
     }
 
 

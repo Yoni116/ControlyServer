@@ -35,6 +35,8 @@ public class MainFrameFX extends Application {
     private ServerSettingController ssc;
     private CFService service;
 
+    private NetworkInfo currentNetwork;
+
     private Scene infoScene;
     private Scene settingScene;
 
@@ -52,6 +54,8 @@ public class MainFrameFX extends Application {
                 .getImage().getScaledInstance((int) trayIconSize.getWidth(), (int) trayIconSize.getHeight(), Image.SCALE_SMOOTH);
 
         createTrayIcon(primaryStage);
+
+
 
 
         FXMLLoader infoLoader = new FXMLLoader(getClass().getResource("ControlyInfoFXML.fxml"));
@@ -85,7 +89,11 @@ public class MainFrameFX extends Application {
         startServer(sic);
 
         ssc.setService(service);
-        sic.setIpAndPort(service.getMyIp(),service.getPort());
+        sic.setIpAndPort(service.getMyIp(), service.getPort());
+
+        // networkListener for network change
+        currentNetwork = new NetworkInfo(ControlyUtility.getInetAddress(),service,this);
+        currentNetwork.start();
 
 
     }
@@ -203,8 +211,12 @@ public class MainFrameFX extends Application {
                     isInfoScene = true;
                 }
 
-
             }
         });
+    }
+
+    public void resetService(){
+        startServer(sic);
+
     }
 }

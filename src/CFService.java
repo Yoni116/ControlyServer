@@ -42,7 +42,7 @@ public class CFService extends Thread {
     private String receivedMsg;
     private ServerInfoController sc;
     private String myIp;
-    private NetworkInfo currentNetwork;
+
     private SimpleBooleanProperty hasPassword;
     private SimpleStringProperty password;
 
@@ -85,8 +85,6 @@ public class CFService extends Thread {
         if (bcListener != null)
             bcListener.closeBC();
 
-        if (currentNetwork != null)
-            currentNetwork.closeInfo();
 
         if (serverSocket != null)
             serverSocket.close();
@@ -129,9 +127,7 @@ public class CFService extends Thread {
 
             new Thread(bcListener).start();
 
-            // TODO redistribute broadcast when changing network
-              currentNetwork = new NetworkInfo(localAddress,this);
-              new Thread(currentNetwork).run();
+
 
 
 
