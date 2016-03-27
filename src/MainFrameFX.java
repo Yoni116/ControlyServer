@@ -177,6 +177,7 @@ public class MainFrameFX extends Application {
                     }
 
                     stage.hide();
+
                 } else {
                     System.exit(0);
                 }
