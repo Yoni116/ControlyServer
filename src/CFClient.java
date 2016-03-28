@@ -228,6 +228,14 @@ public class CFClient extends Thread {
 
     public void closeClient() {
         isRunning = false;
+        try {
+            is.close();
+            os.close();
+        } catch (IOException e) {
+            LOGGER.warning("Closing Client: " + clientName + " expect exceptions");
+            LOGGER.warning(e.getMessage());
+        }
+
     }
 
     public void pingClient() {

@@ -16,6 +16,8 @@ public class ControlyUtility {
 
     public static String OSName = System.getProperty("os.name");
 
+    public static int number = 1;
+
     public static InetAddress getInetAddress() {
 
         try {

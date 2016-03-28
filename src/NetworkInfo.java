@@ -55,12 +55,16 @@ public class NetworkInfo extends Thread {
 
             }
             try {
-                sleep(30000);
+                sleep(20000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
 
+    }
+
+    public void setService(CFService s) {
+        myService = s;
     }
 
     public void closeInfo() {
@@ -71,7 +75,7 @@ public class NetworkInfo extends Thread {
         try {
             LOGGER.warning("Starting reset to Server - Expect some Exceptions");
             myService.close();
-            Thread.sleep(10000);
+            Thread.sleep(5000);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

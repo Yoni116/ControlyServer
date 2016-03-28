@@ -187,7 +187,7 @@ public class MainFrameFX extends Application {
 
     public void startServer(ServerInfoController sc) {
         LOGGER.info("Start");
-
+        service = null;
         try {
             service = new CFService(sc);
 
@@ -218,7 +218,7 @@ public class MainFrameFX extends Application {
 
     public void resetService(){
         startServer(sic);
-
+        currentNetwork.setService(service);
         LOGGER.warning("Finished resetting server");
 
     }

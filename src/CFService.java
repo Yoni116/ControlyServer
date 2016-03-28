@@ -46,6 +46,8 @@ public class CFService extends Thread {
     private SimpleBooleanProperty hasPassword;
     private SimpleStringProperty password;
 
+    //private int serviceNumber = ControlyUtility.number++;
+
     // private MacroRecorder mr;
     private boolean macroBusy;
 
@@ -78,28 +80,23 @@ public class CFService extends Thread {
         serviceStarted();
     }
 
-    public void close() throws IOException {
+    public void close() throws IOException, InterruptedException {
 
         isRuning = false;
 
         if (bcListener != null)
             bcListener.closeBC();
 
-
         if (serverSocket != null)
             serverSocket.close();
-        while (!serverSocket.isClosed()) ;
 
-        if (mouseDatagramChannel != null)
-            mouseDatagramChannel.close();
+        if (mouseChannel != null)
+            mouseChannel.closeMDC();
 
-        if (keysDatagramChannel != null)
-            keysDatagramChannel.close();
+        if (keysChannel != null)
+            keysChannel.closeKDC();
 
-
-
-
-        clients.clear();
+        closeAllClients();
     }
 
 
@@ -111,19 +108,19 @@ public class CFService extends Thread {
             mouseDatagramChannel = DatagramChannel.open();
             mouseDatagramChannel.socket().bind(new InetSocketAddress(0));
             mouseChannel = new CFMouseDatagramChannel(mouseDatagramChannel);
-            new Thread(mouseChannel).start();
+            mouseChannel.start();
 
             keysDatagramChannel = DatagramChannel.open();
             keysDatagramChannel.socket().bind(new InetSocketAddress(0));
             keysChannel = new CFKeysDatagramChannel(keysDatagramChannel, clients);
-            new Thread(keysChannel).start();
+            keysChannel.start();
 
 
             bcListener = new BCListener(serverSocket.getLocalPort(),
                     keysChannel.getChannel().socket().getLocalPort(),
                     mouseChannel.getChannel().socket().getLocalPort(),this);
 
-            new Thread(bcListener).start();
+            bcListener.start();
 
         } catch (IOException e1) {
             LOGGER.log(Level.SEVERE, e1.toString(), e1);
@@ -242,13 +239,10 @@ public class CFService extends Thread {
     }
 
     public String getPort() {
-        //return bcListener.getBC_PORT();
         return Integer.toString(serverSocket.getLocalPort());
     }
 
     public String getMyIp() {
-
-        //return myIp;
         return localAddress.getHostAddress();
     }
 
@@ -272,20 +266,15 @@ public class CFService extends Thread {
                 haveActiveClients = true;
         }
         if (!clients.isEmpty() || haveActiveClients) {
-            // clients.forEach(CFClient::toString);
             LOGGER.info("Starting to Ping all connected clients");
             clients.forEach(CFClient::pingClient);
         }
     }
 
-    public void resetBCListner() {
-        bcListener.closeBC();
-        bcListener = new BCListener(serverSocket.getLocalPort(),
-                keysChannel.getChannel().socket().getLocalPort(),
-                mouseChannel.getChannel().socket().getLocalPort(),this);
-        new Thread(bcListener).start();
-        sc.setIpAndPort(getMyIp(), getPort());
-
+    public void closeAllClients() {
+        LOGGER.warning("starting to close all clients");
+        clients.forEach(CFClient::closeClient);
+        LOGGER.warning("finished closing clients");
     }
 
 
