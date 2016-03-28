@@ -55,7 +55,7 @@ public class NetworkInfo extends Thread {
 
             }
             try {
-                sleep(60000);
+                sleep(30000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

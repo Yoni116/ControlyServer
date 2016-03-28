@@ -27,7 +27,7 @@ public class ControlyLogger {
         logger.setLevel(Level.INFO);
         System.out.println(new File("Logs").mkdir());
         System.out.println(new File(folder).mkdir());
-        fileTxt = new FileHandler(folder + "/" + timeStamp + "_Log.txt", 500000, 1, true);
+        fileTxt = new FileHandler(folder + "/" + timeStamp + "_Log.txt", 1000000, 2, true);
 
 
         // create a TXT formatter

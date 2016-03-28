@@ -119,17 +119,11 @@ public class CFService extends Thread {
             new Thread(keysChannel).start();
 
 
-            //socket = new DatagramSocket(serverSocket.getLocalPort(), localAddress);
-
             bcListener = new BCListener(serverSocket.getLocalPort(),
                     keysChannel.getChannel().socket().getLocalPort(),
                     mouseChannel.getChannel().socket().getLocalPort(),this);
 
             new Thread(bcListener).start();
-
-
-
-
 
         } catch (IOException e1) {
             LOGGER.log(Level.SEVERE, e1.toString(), e1);
@@ -147,7 +141,7 @@ public class CFService extends Thread {
                 pingAllClients();
 
             }
-        }, 0, 20000);
+        }, 0, 60000);
 
 
         while (isRuning) {
