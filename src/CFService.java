@@ -70,8 +70,11 @@ public class CFService extends Thread {
         // messagesReceiver = new CFMessagesReceiver();
         isRuning = true;
         //myIp = getExternalIp();
-        localAddress = ControlyUtility.getInetAddress();
+        try {
+            localAddress = ControlyUtility.getInetAddress();
+        } catch (RuntimeException e){
 
+        }
 
     }
 

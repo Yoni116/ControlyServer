@@ -18,7 +18,7 @@ public class ControlyUtility {
 
     public static int number = 1;
 
-    public static InetAddress getInetAddress() {
+    public static InetAddress getInetAddress() throws RuntimeException{
 
         try {
             return Collections.list(NetworkInterface.getNetworkInterfaces()).stream()
