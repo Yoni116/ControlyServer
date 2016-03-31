@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>C:\Users\yoni\Desktop\Controly\DotServer.jar</jar>
+  <outfile>C:\Users\yoni\Desktop\Controly EXE\Controly.exe</outfile>
+  <errTitle>Wrong Java Version</errTitle>
+  <cmdLine></cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl>www.controly.net</supportUrl>
+  <stayAlive>false</stayAlive>
+  <restartOnCrash>false</restartOnCrash>
+  <manifest>C:\Users\yoni\Desktop\Controly EXE\Controly.exe.manifest</manifest>
+  <icon>C:\Users\yoni\Desktop\Controly\ServerWindowsIco (1).ico</icon>
+  <jre>
+    <path></path>
+    <bundledJre64Bit>false</bundledJre64Bit>
+    <bundledJreAsFallback>false</bundledJreAsFallback>
+    <minVersion>1.8.0</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+    <runtimeBits>64/32</runtimeBits>
+  </jre>
+  <splash>
+    <file>C:\Users\yoni\Desktop\Controly\SplashScreen.bmp</file>
+    <waitForWindow>true</waitForWindow>
+    <timeout>3</timeout>
+    <timeoutErr>false</timeoutErr>
+  </splash>
+  <versionInfo>
+    <fileVersion>1.0.0.0</fileVersion>
+    <txtFileVersion>1.0.0.0</txtFileVersion>
+    <fileDescription>Controly PC Server</fileDescription>
+    <copyright>SimpleAccess LTD</copyright>
+    <productVersion>1.0.0.0</productVersion>
+    <txtProductVersion>1.0.0.0</txtProductVersion>
+    <productName>Controly</productName>
+    <companyName>SimpleAccess</companyName>
+    <internalName>Controly</internalName>
+    <originalFilename>Controly.exe</originalFilename>
+  </versionInfo>
+</launch4jConfig>
