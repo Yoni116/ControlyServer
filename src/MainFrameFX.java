@@ -111,7 +111,7 @@ public class MainFrameFX extends Application {
         currentNetwork.start();
         tray.add(trayIcon);
 
-        np = new NotificationPopup("Server Is Running Minimized","");
+        np = new NotificationPopup("\nServer Is Running Minimized","");
         np.start();
 
     }
@@ -189,7 +189,7 @@ public class MainFrameFX extends Application {
 
                         tray.add(trayIcon);
                         //trayIcon.displayMessage("Server Is Running Minimized", "right click here if you want to close the server", TrayIcon.MessageType.INFO);
-                        np = new NotificationPopup("Server Is Running Minimized","");
+                        np = new NotificationPopup("\nServer Is Running Minimized","");
                         np.start();
                     } catch (AWTException e) {
                         LOGGER.warning(e.getMessage());
