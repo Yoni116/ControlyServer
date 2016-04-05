@@ -1,6 +1,7 @@
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,7 +25,7 @@ import java.util.logging.Logger;
 /**
  * Created by yoni on 3/22/2016.
  */
-public class MainFrameFX extends Application {
+public class MainFrameFX extends Application implements ActionListener {
 
     public static Stage mainStage;
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -174,8 +175,6 @@ public class MainFrameFX extends Application {
         // set the TrayIcon properties
         trayIcon.addActionListener(showListener);
 
-
-
     }
 
 
@@ -203,6 +202,7 @@ public class MainFrameFX extends Application {
             }
         });
     }
+
 
     public void startServer(ServerInfoController sc) {
         LOGGER.info("Start");
@@ -239,6 +239,22 @@ public class MainFrameFX extends Application {
         startServer(sic);
         currentNetwork.setService(service);
         LOGGER.warning("Finished resetting server");
+
+    }
+
+    @Override
+    public void actionPerformed(java.awt.event.ActionEvent e) {
+
+
+        if (e.getSource().equals(showApp)) {
+            if (trayIcon != null)
+                tray.remove(trayIcon);
+            mainStage.show();
+        }
+
+        if (e.getSource().equals(closeApp)) {
+            System.exit(0);
+        }
 
     }
 }
