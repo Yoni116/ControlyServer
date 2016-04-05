@@ -128,41 +128,14 @@ public class MainFrameFX extends Application implements ActionListener {
         popup = new PopupMenu();
         trayIcon = new TrayIcon(trayIconeImg);
 
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent t) {
-                t.consume();
-                hide(stage);
-            }
-        });
-        // create a action listener to listen for default action executed on the tray icon
-        final ActionListener closeListener = new ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                System.exit(0);
-            }
-        };
 
-        ActionListener showListener = new ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (trayIcon != null)
-                            tray.remove(trayIcon);
-                        stage.show();
-                    }
-                });
-            }
-        };
         // create a popup menu
         showApp = new MenuItem("Show App");
         closeApp = new MenuItem("Exit");
 
 
-        showApp.addActionListener(showListener);
-        closeApp.addActionListener(closeListener);
+        showApp.addActionListener(this);
+        closeApp.addActionListener(this);
 
         popup.add(showApp);
         popup.add(closeApp);
@@ -173,7 +146,7 @@ public class MainFrameFX extends Application implements ActionListener {
         // construct a TrayIcon
         trayIcon = new TrayIcon(trayIconeImg, "Controly", popup);
         // set the TrayIcon properties
-        trayIcon.addActionListener(showListener);
+        trayIcon.addActionListener(this);
 
     }
 
@@ -246,15 +219,21 @@ public class MainFrameFX extends Application implements ActionListener {
     public void actionPerformed(java.awt.event.ActionEvent e) {
 
 
-        if (e.getSource().equals(showApp)) {
+        if (e.getSource().equals(showApp) || e.getSource().equals(trayIcon)) {
             if (trayIcon != null)
                 tray.remove(trayIcon);
-            mainStage.show();
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    mainStage.show();
+                }
+            });
         }
 
-        if (e.getSource().equals(closeApp)) {
-            System.exit(0);
-        }
+        if (e.getSource().equals(closeApp))
+                {
+                    System.exit(0);
+                }
 
-    }
-}
+            }
+        }
