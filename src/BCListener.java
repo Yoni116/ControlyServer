@@ -59,7 +59,7 @@ public class BCListener extends Thread {
             // port 56378 will always be used for bc reason
             group = InetAddress.getByName(MC_ADDR);
             mcSocket = new MulticastSocket(BC_PORT);
-            // mcSocket.setNetworkInterface(NetworkInterface.getByInetAddress(localAddress));
+            mcSocket.setNetworkInterface(NetworkInterface.getByInetAddress(localAddress));
             mcSocket.joinGroup(group);
             socket = new DatagramSocket(0);
             socket.setBroadcast(true);
