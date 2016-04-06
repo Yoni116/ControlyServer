@@ -70,11 +70,7 @@ public class CFService extends Thread {
         // messagesReceiver = new CFMessagesReceiver();
         isRuning = true;
         //myIp = getExternalIp();
-        try {
-            localAddress = ControlyUtility.getInetAddress();
-        } catch (RuntimeException e){
 
-        }
 
     }
 
@@ -103,11 +99,18 @@ public class CFService extends Thread {
     }
 
 
-    public void serviceStarted() {
+    public synchronized void serviceStarted() {
         //means the service was registered successfully and we can now start receiving clients.
         //Loop that runs server functions
+        try {
+            this.wait(); // wait to see if there's an internet connection
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         try {
+            localAddress = ControlyUtility.localAddress;
+
             mouseDatagramChannel = DatagramChannel.open();
             mouseDatagramChannel.socket().bind(new InetSocketAddress(0));
             mouseChannel = new CFMouseDatagramChannel(mouseDatagramChannel);
@@ -242,11 +245,17 @@ public class CFService extends Thread {
     }
 
     public String getPort() {
-        return Integer.toString(serverSocket.getLocalPort());
+        if (localAddress == null)
+            return "00000";
+        else
+            return Integer.toString(serverSocket.getLocalPort());
     }
 
     public String getMyIp() {
-        return localAddress.getHostAddress();
+        if (localAddress == null)
+            return "000.000.000.000";
+        else
+            return localAddress.getHostAddress();
     }
 
     public synchronized void removeClient(CFClient cl) {

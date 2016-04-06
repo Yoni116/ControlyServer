@@ -20,6 +20,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.logging.Logger;
 
 /**
@@ -103,16 +104,16 @@ public class MainFrameFX extends Application implements ActionListener {
         sic.setStage(primaryStage);
 
         startServer(sic);
+        currentNetwork = new NetworkInfo(service, this);
+        currentNetwork.start();
 
         ssc.setService(service);
         sic.setIpAndPort(service.getMyIp(), service.getPort());
 
-        // networkListener for network change
-        currentNetwork = new NetworkInfo(ControlyUtility.getInetAddress(),service,this);
-        currentNetwork.start();
+
         tray.add(trayIcon);
 
-        np = new NotificationPopup("\nServer Is Running Minimized","");
+        np = new NotificationPopup("\nServer Is Running Minimized", "");
         np.start();
 
     }
@@ -161,7 +162,7 @@ public class MainFrameFX extends Application implements ActionListener {
 
                         tray.add(trayIcon);
                         //trayIcon.displayMessage("Server Is Running Minimized", "right click here if you want to close the server", TrayIcon.MessageType.INFO);
-                        np = new NotificationPopup("\nServer Is Running Minimized","");
+                        np = new NotificationPopup("\nServer Is Running Minimized", "");
                         np.start();
                     } catch (AWTException e) {
                         LOGGER.warning(e.getMessage());
@@ -179,6 +180,8 @@ public class MainFrameFX extends Application implements ActionListener {
 
     public void startServer(ServerInfoController sc) {
         LOGGER.info("Start");
+        // networkListener for network change
+
         service = null;
         try {
             service = new CFService(sc);
@@ -186,6 +189,8 @@ public class MainFrameFX extends Application implements ActionListener {
         } catch (IOException e) {
             LOGGER.warning(e.getMessage());
         }
+
+
         service.start();
 
 
@@ -208,9 +213,10 @@ public class MainFrameFX extends Application implements ActionListener {
         });
     }
 
-    public void resetService(){
+    public void resetService() {
         startServer(sic);
         currentNetwork.setService(service);
+        sic.setIpAndPort(service.getMyIp(), service.getPort());
         LOGGER.warning("Finished resetting server");
 
     }
@@ -230,10 +236,9 @@ public class MainFrameFX extends Application implements ActionListener {
             });
         }
 
-        if (e.getSource().equals(closeApp))
-                {
-                    System.exit(0);
-                }
-
-            }
+        if (e.getSource().equals(closeApp)) {
+            System.exit(0);
         }
+
+    }
+}

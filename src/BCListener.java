@@ -48,7 +48,7 @@ public class BCListener extends Thread {
         this.mousePort = mPort;
         this.keysPort = kPort;
         this.serverRunning = true;
-        this.localAddress = ControlyUtility.getInetAddress();
+        this.localAddress = ControlyUtility.localAddress;
         this.server = server;
     }
 

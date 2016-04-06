@@ -18,20 +18,25 @@ public class NetworkInfo extends Thread {
     private boolean isRunning;
     private CFService myService;
     private MainFrameFX mfFX;
+    private boolean serviceRunning;
+    private boolean firstTime;
 
 
-    public NetworkInfo(InetAddress ia, CFService myService, MainFrameFX mfFX) throws SocketException {
-        this.ia = ia;
-        this.ni = NetworkInterface.getByInetAddress(ia);
+    public NetworkInfo(CFService myService, MainFrameFX mfFX) {
         this.mfFX = mfFX;
         this.myService = myService;
         this.isRunning = true;
+        this.serviceRunning = false;
+        ControlyUtility.setInetAddress();
+        ia = ControlyUtility.localAddress;
+        firstTime = true;
     }
 
     @Override
     public void run() {
+
         try {
-            sleep(5000);
+            sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -39,34 +44,50 @@ public class NetworkInfo extends Thread {
 
         while (isRunning) {
 
-            InetAddress newAddress = null;
+            ControlyUtility.setInetAddress();
 
-            NetworkInterface newInterface = null;
-            try {
-                newAddress = ControlyUtility.getInetAddress();
-                newInterface = NetworkInterface.getByInetAddress(newAddress);
-            } catch (SocketException e) {
-                e.printStackTrace();
-            } catch (RuntimeException e){
-                restartService();
-                ni = newInterface;
-                ia = newAddress;
-            }
+            if (ControlyUtility.localAddress != null) {
 
-            if (!ni.equals(newInterface) || !ia.equals(newAddress)) {
-                LOGGER.info("OLD-address: "+ ia +" network: "+ni);
-                LOGGER.info("NEW-address: "+ newAddress +" network: "+newInterface);
-                restartService();
-                ni = newInterface;
-                ia = newAddress;
+                if (!serviceRunning) {
+                    synchronized (myService) {
+                        myService.notifyAll();
+                    }
+                    ia = ControlyUtility.localAddress;
+                    serviceRunning = true;
+                }
 
+                InetAddress newAddress = null;
+
+                NetworkInterface newInterface = null;
+                try {
+
+                    ni = NetworkInterface.getByInetAddress(ia);
+                    newAddress = ControlyUtility.localAddress;
+                    newInterface = NetworkInterface.getByInetAddress(newAddress);
+                } catch (SocketException e) {
+                    e.printStackTrace();
+                }
+
+                if (!ni.equals(newInterface) || !ia.equals(newAddress)) {
+                    LOGGER.info("OLD-address: " + ia + " network: " + ni);
+                    LOGGER.info("NEW-address: " + newAddress + " network: " + newInterface);
+                    restartService();
+                    ni = newInterface;
+                    ia = newAddress;
+                }
+            } else {
+                LOGGER.warning("No internet connection present - waiting");
+                if (serviceRunning)
+                    restartService();
             }
             try {
                 sleep(10000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            ia = ControlyUtility.localAddress;
         }
+
 
     }
 
@@ -78,7 +99,7 @@ public class NetworkInfo extends Thread {
         isRunning = false;
     }
 
-    public void restartService(){
+    public void restartService() {
         try {
             LOGGER.warning("Starting reset to Server - Expect some Exceptions");
             myService.close();
@@ -90,6 +111,7 @@ public class NetworkInfo extends Thread {
         }
 
         mfFX.resetService();
+        serviceRunning = false;
 
 
     }

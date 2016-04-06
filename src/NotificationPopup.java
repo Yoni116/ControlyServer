@@ -31,7 +31,7 @@ public class NotificationPopup extends Thread {
     private String msg;
 
 
-    public NotificationPopup( String title, String msg) {
+    public NotificationPopup(String title, String msg) {
         this.title = title;
         this.msg = msg;
 

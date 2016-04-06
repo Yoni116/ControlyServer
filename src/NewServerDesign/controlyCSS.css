@@ -3,7 +3,6 @@
  src: url(din-regular.woff);
 }
 
-
 #settingBtn{
  -fx-image:  url('SettingButton.png');
  }
@@ -39,6 +38,7 @@
 .list-cell {
  -fx-background-color: #0D0D0D;
  -fx-alignment: center;
+ -fx-font-family: Din;
  -fx-font-size: 22px;
  -fx-text-fill: #43b7e3;
  -fx-font-weight: bold;
