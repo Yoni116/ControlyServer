@@ -1,4 +1,5 @@
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -67,7 +68,14 @@ public class ServerInfoController {
 
     public void setIpAndPort(String ip, String port){
 
-        this.ipLabel.setText("IP: "+ ip);
-        this.portLabel.setText("PORT: "+ port);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                ipLabel.setText("IP: " + ip);
+                portLabel.setText("PORT: " + port);
+
+            }
+        });
+
     }
 }

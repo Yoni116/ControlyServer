@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -16,11 +17,13 @@ public class NetworkInfo extends Thread {
     private InetAddress ia;
     private boolean isRunning;
     private CFService myService;
+    private MainFrameFX mfFX;
 
 
-    public NetworkInfo(InetAddress ia, CFService myService) throws SocketException {
+    public NetworkInfo(InetAddress ia, CFService myService, MainFrameFX mfFX) throws SocketException {
         this.ia = ia;
         this.ni = NetworkInterface.getByInetAddress(ia);
+        this.mfFX = mfFX;
         this.myService = myService;
         this.isRunning = true;
     }
@@ -36,23 +39,30 @@ public class NetworkInfo extends Thread {
 
         while (isRunning) {
 
-            InetAddress newAddress = ControlyUtility.getInetAddress();
+            InetAddress newAddress = null;
+
             NetworkInterface newInterface = null;
             try {
+                newAddress = ControlyUtility.getInetAddress();
                 newInterface = NetworkInterface.getByInetAddress(newAddress);
             } catch (SocketException e) {
                 e.printStackTrace();
+            } catch (RuntimeException e){
+                restartService();
+                ni = newInterface;
+                ia = newAddress;
             }
-            LOGGER.info("OLD-address: "+ ia +" network: "+ni);
-            LOGGER.info("NEW-address: "+ newAddress +" network: "+newInterface);
+
             if (!ni.equals(newInterface) || !ia.equals(newAddress)) {
-                myService.resetBCListner();
+                LOGGER.info("OLD-address: "+ ia +" network: "+ni);
+                LOGGER.info("NEW-address: "+ newAddress +" network: "+newInterface);
+                restartService();
                 ni = newInterface;
                 ia = newAddress;
 
             }
             try {
-                sleep(20000);
+                sleep(10000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -60,8 +70,28 @@ public class NetworkInfo extends Thread {
 
     }
 
+    public void setService(CFService s) {
+        myService = s;
+    }
+
     public void closeInfo() {
         isRunning = false;
+    }
+
+    public void restartService(){
+        try {
+            LOGGER.warning("Starting reset to Server - Expect some Exceptions");
+            myService.close();
+            Thread.sleep(5000);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        mfFX.resetService();
+
+
     }
 
 

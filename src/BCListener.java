@@ -16,12 +16,15 @@ import java.util.logging.Logger;
  * P.S. : to @hen this is how you write code comments !!!!
  */
 
-public class BCListener implements Runnable {
+public class BCListener extends Thread {
 
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     private final int BC_PORT = 56378;
     private final String MC_ADDR = "224.0.1.217";
+    private InetAddress group;
+
+    //private int threadNum = ControlyUtility.number++;
 
     private InetAddress localAddress;
 
@@ -32,7 +35,6 @@ public class BCListener implements Runnable {
 
     private CFService server;
 
-    private ServerSocket sc;
 
 
     /**
@@ -53,26 +55,26 @@ public class BCListener implements Runnable {
     @Override
     public void run() {
         try {
-            InetAddress address = InetAddress.getByName(MC_ADDR);
-            // port 56378 will always be used for bc reason
 
+            // port 56378 will always be used for bc reason
+            group = InetAddress.getByName(MC_ADDR);
             mcSocket = new MulticastSocket(BC_PORT);
             mcSocket.setNetworkInterface(NetworkInterface.getByInetAddress(localAddress));
-            mcSocket.joinGroup(address);
+            mcSocket.joinGroup(group);
             socket = new DatagramSocket(0);
             socket.setBroadcast(true);
-            String reply = "controly:" +
-                    InetAddress.getLocalHost().getHostName() +
-                    ":" + connectionPort +
-                    ":" + keysPort +
-                    ":" + mousePort +
-                    ":" + localAddress.getHostAddress();
 
-            LOGGER.info(reply);
 
             while (serverRunning) {
                 LOGGER.info("Ready to receive broadcast packets on port: " + BC_PORT + " !");
 
+                String reply = "controly:" +
+                        InetAddress.getLocalHost().getHostName() +
+                        ":" + connectionPort +
+                        ":" + keysPort +
+                        ":" + mousePort +
+                        ":" + localAddress.getHostAddress();
+                LOGGER.info(reply);
                 //Receive a packet
                 byte[] recvBuf = new byte[1024];
                 DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
@@ -103,6 +105,7 @@ public class BCListener implements Runnable {
 
                     LOGGER.info("Sent packet to: " + sendPacket.getAddress().getHostAddress());
 
+
                 }
 
                 recvBuf = null;
@@ -126,8 +129,14 @@ public class BCListener implements Runnable {
      */
     public void closeBC() {
         serverRunning = false;
-        socket.close();
+        try {
+            mcSocket.leaveGroup(group);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         mcSocket.close();
+        socket.close();
+
     }
 
     public String getBC_PORT() {

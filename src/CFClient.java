@@ -1,7 +1,3 @@
-import javafx.beans.property.SimpleStringProperty;
-
-import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.awt.im.InputContext;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -38,7 +34,7 @@ public class CFClient extends Thread {
     private boolean isSuspended;
     private boolean capsState;
 
-//    private MainFrame mainFrame;
+
     private MacroRecorder mr;
     private CFService server;
 
@@ -49,7 +45,6 @@ public class CFClient extends Thread {
         this.isRunning = true;
         this.clientSocket = socket;
         this.ip = clientIP;
-        //this.mainFrame = mf;
         this.server = server;
         this.isSuspended = false;
         this.keyPort = keyPort;
@@ -110,7 +105,7 @@ public class CFClient extends Thread {
 
                         case "ControlyClient":
                             this.clientName = splitMsg[1];
-                            new Thread(new NotificationFrame(this.clientName, 0)).start();
+                            new Thread(new NotificationPopup("New Client Connected", this.clientName)).start();
                             server.addClientName(this.clientName);
                             returnMsg = "1000-OK:" + keyPort + ":" + mousePort +":"+ControlyUtility.OSName;
                             msgBuffer = returnMsg.getBytes();
@@ -138,7 +133,7 @@ public class CFClient extends Thread {
                                 else
                                     mr = new MacroRecorder(true, this.ip);
                                 mr.start();
-                                new Thread(new NotificationFrame("", 1)).start();
+                                new Thread(new NotificationPopup("Recording Started", "")).start();
                             } else {
                                 returnMsg = "2002-cannot record more then one macro at a time";
                                 msgBuffer = returnMsg.getBytes();
@@ -150,7 +145,7 @@ public class CFClient extends Thread {
                         case "MacroStop":
                             LOGGER.info("Received Macro Stop Msg");
                             mr.stopRecord();
-                            new Thread(new NotificationFrame("", 2)).start();
+                            new Thread(new NotificationPopup("Recording Finished", "")).start();
                             returnMsg = mr.buildMacro();
                             if (returnMsg == "")
                                 returnMsg = "2001-Empty";
@@ -228,6 +223,14 @@ public class CFClient extends Thread {
 
     public void closeClient() {
         isRunning = false;
+        try {
+            is.close();
+            os.close();
+        } catch (IOException e) {
+            LOGGER.warning("Closing Client: " + clientName + " expect exceptions");
+            LOGGER.warning(e.getMessage());
+        }
+
     }
 
     public void pingClient() {

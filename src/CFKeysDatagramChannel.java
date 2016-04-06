@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -12,7 +13,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 
-public class CFKeysDatagramChannel implements Runnable {
+public class CFKeysDatagramChannel extends Thread {
 
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
@@ -22,8 +23,10 @@ public class CFKeysDatagramChannel implements Runnable {
     private ExecutorService executor;
     private Robot robot;
     private SocketAddress clientAddress;
+    private boolean isRunning;
 
     public CFKeysDatagramChannel(DatagramChannel c, HashSet<CFClient> clients) {
+        isRunning = true;
         channel = c;
         this.clients = clients;
         executor = Executors.newFixedThreadPool(5);
@@ -53,7 +56,7 @@ public class CFKeysDatagramChannel implements Runnable {
             CharBuffer charBuff;
 
 
-            while (true) {
+            while (isRunning) {
 
 //waiting for msg to arrive
                 buff.clear();
@@ -117,6 +120,15 @@ public class CFKeysDatagramChannel implements Runnable {
         while (!executor.isTerminated()) {
         }
         LOGGER.info("closed all threads");
+    }
+
+    public void closeKDC() {
+        isRunning = false;
+        try {
+            channel.close();
+        } catch (IOException e) {
+            LOGGER.warning("Closing KDC " + e.getMessage());
+        }
     }
 
 

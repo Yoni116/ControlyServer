@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class CFMouseDatagramChannel implements Runnable {
+public class CFMouseDatagramChannel extends Thread {
 
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
@@ -20,6 +20,7 @@ public class CFMouseDatagramChannel implements Runnable {
     private ExecutorService executor;
     private Robot mouse;
     private SocketAddress clientAddress;
+    private boolean isRunning;
 
 
     private long time;
@@ -34,6 +35,7 @@ public class CFMouseDatagramChannel implements Runnable {
             LOGGER.warning(e.getMessage());
         }
         time = 0;
+        isRunning = true;
 
 
     }
@@ -60,7 +62,7 @@ public class CFMouseDatagramChannel implements Runnable {
             double y = mousePoint.getY();
             LOGGER.info("mouse pos is x: " + x + " y: " + y);
 
-            while (true) {
+            while (isRunning) {
 
                 //someone is sending us data
                 buf.clear();
@@ -105,6 +107,15 @@ public class CFMouseDatagramChannel implements Runnable {
 
         } catch (IOException exception) {
             LOGGER.log(Level.SEVERE, exception.toString(), exception);
+        }
+    }
+
+    public void closeMDC() {
+        isRunning = false;
+        try {
+            channel.close();
+        } catch (IOException e) {
+            LOGGER.warning("Closing MDC" + e.getMessage());
         }
     }
 
