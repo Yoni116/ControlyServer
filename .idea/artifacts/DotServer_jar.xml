@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="DotServer:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/DotServer_jar</output-path>
-    <root id="archive" name="DotServer.jar">
-      <element id="module-output" name="DotServer" />
-    </root>
-  </artifact>
-</component>
