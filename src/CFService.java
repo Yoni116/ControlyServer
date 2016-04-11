@@ -42,6 +42,7 @@ public class CFService extends Thread {
     private String receivedMsg;
     private ServerInfoController sc;
     private String myIp;
+    private Timer t;
 
     private SimpleBooleanProperty hasPassword;
     private SimpleStringProperty password;
@@ -96,6 +97,7 @@ public class CFService extends Thread {
             keysChannel.closeKDC();
 
         closeAllClients();
+        t.cancel();
     }
 
 
@@ -136,7 +138,7 @@ public class CFService extends Thread {
 //        mainFrame.setIpAndPort();
         sc.setIpAndPort(getMyIp(),getPort());
 
-        Timer t = new Timer();
+        t = new Timer();
         t.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -258,18 +260,18 @@ public class CFService extends Thread {
             return localAddress.getHostAddress();
     }
 
-    public synchronized void removeClient(CFClient cl) {
+    public void removeClient(CFClient cl) {
         System.out.println(clients.remove(cl));
     }
 
-    public synchronized void printClients() {
+    public void printClients() {
         for (CFClient c : clients) {
             LOGGER.info(c.toString());
         }
 
     }
 
-    public synchronized void pingAllClients() {
+    public void pingAllClients() {
         LOGGER.info("Connected Clients List:");
         boolean haveActiveClients = false;
         for (CFClient c : clients) {

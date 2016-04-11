@@ -130,7 +130,7 @@ public class BCListener extends Thread {
     public void closeBC() {
         serverRunning = false;
         try {
-            mcSocket.leaveGroup(group);
+            mcSocket.leaveGroup(InetAddress.getByName(MC_ADDR));
         } catch (IOException e) {
             e.printStackTrace();
         }
