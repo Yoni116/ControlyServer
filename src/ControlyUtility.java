@@ -13,6 +13,8 @@ import java.util.logging.Logger;
  */
 public class ControlyUtility {
 
+    //public static native boolean GetCapsLockState();
+
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     public static String OSName = System.getProperty("os.name");
@@ -20,6 +22,10 @@ public class ControlyUtility {
     public static int number = 1;
 
     public static InetAddress localAddress = null;
+
+    public static boolean capsLockState = false;
+
+    public static String osName = System.getProperty("os.name");
 
 
     public static void setInetAddress() {
@@ -50,17 +56,25 @@ public class ControlyUtility {
             ControlyUtility.localAddress = null;
     }
 
-//    public static InetAddress getInetAddress() throws RuntimeException{
+//    public static void initializeVars(){
+//        setInetAddress();
+//        osName = System.getProperty("os.name");
+//        if(osName.contains("Windows"))
+//            capsLockState = GetCapsLockState();
+//        else
+//            capsLockState = false;
 //
-//        try {
-//            return Collections.list(NetworkInterface.getNetworkInterfaces()).stream()
-//                    .flatMap(i -> Collections.list(i.getInetAddresses()).stream())
-//                    .filter(ip -> ip instanceof Inet4Address && ip.isSiteLocalAddress() && !ip.isLoopbackAddress() && !isVmwareMac(ip.get))
-//                    .findFirst().orElseThrow(RuntimeException::new);
-//        } catch (SocketException e) {
-//            LOGGER.severe(e.getMessage());
+//    }
+
+//    public static boolean getCapsState(){
+//
+//        if(osName.contains("Windows")) {
+//            boolean tmp = GetCapsLockState();
+//            return tmp;
 //        }
-//        return null;
+//        else
+//            return false;
+//
 //    }
 
     public static void setCapsLockFalse(){

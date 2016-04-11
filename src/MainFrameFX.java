@@ -39,6 +39,7 @@ public class MainFrameFX extends Application implements ActionListener {
     private TrayIcon trayIcon;
     private PopupMenu popup;
     private MenuItem showApp;
+    private MenuItem goToSite;
     private MenuItem closeApp;
     private NotificationPopup np;
 
@@ -132,13 +133,16 @@ public class MainFrameFX extends Application implements ActionListener {
 
         // create a popup menu
         showApp = new MenuItem("Show App");
+        goToSite = new MenuItem("Read Terms");
         closeApp = new MenuItem("Exit");
 
 
         showApp.addActionListener(this);
+        goToSite.addActionListener(this);
         closeApp.addActionListener(this);
 
         popup.add(showApp);
+        popup.add(goToSite);
         popup.add(closeApp);
 
         //trayIcon.setPopupMenu(popup);
@@ -234,6 +238,10 @@ public class MainFrameFX extends Application implements ActionListener {
                     mainStage.show();
                 }
             });
+        }
+
+        if (e.getSource().equals(goToSite)) {
+            getHostServices().showDocument("www.controly.net");
         }
 
         if (e.getSource().equals(closeApp)) {

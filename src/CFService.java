@@ -104,11 +104,13 @@ public class CFService extends Thread {
     public synchronized void serviceStarted() {
         //means the service was registered successfully and we can now start receiving clients.
         //Loop that runs server functions
-        try {
-            this.wait(); // wait to see if there's an internet connection
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
+            try {
+                this.wait(); // wait to see if there's an internet connection
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
 
         try {
             localAddress = ControlyUtility.localAddress;
@@ -271,7 +273,7 @@ public class CFService extends Thread {
 
     }
 
-    public void pingAllClients() {
+    public void  pingAllClients() {
         LOGGER.info("Connected Clients List:");
         boolean haveActiveClients = false;
         for (CFClient c : clients) {

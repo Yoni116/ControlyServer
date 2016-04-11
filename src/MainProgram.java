@@ -82,7 +82,7 @@ public class MainProgram  {
             e.printStackTrace();
         }
 
-        LOGGER.severe("Starting Controly");
+        LOGGER.severe("Starting Controly V5.9.5");
         String javaArch = System.getProperty("os.arch");
         LOGGER.info("Java Architecture: " + javaArch);
 
