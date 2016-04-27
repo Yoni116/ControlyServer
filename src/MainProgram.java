@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 
 /**
  * Created by yoni on 08/07/2015.
- * Controly Server V3.2
+ * Controly Server V6.0
  */
 public class MainProgram  {
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -82,7 +82,7 @@ public class MainProgram  {
             e.printStackTrace();
         }
 
-        LOGGER.severe("Starting Controly V5.9.5");
+        LOGGER.severe("Starting Controly V6.0");
         String javaArch = System.getProperty("os.arch");
         LOGGER.info("Java Architecture: " + javaArch);
 
@@ -123,10 +123,13 @@ public class MainProgram  {
             JOptionPane.showMessageDialog(null, ep);
             LOGGER.severe("Closing Controly");
         } else {
-            //loading DLL for Windows OS
-            if (System.getProperty("os.name").contains("Windows")) {
+
+
 
                 try {
+                    //loading DLL for Windows OS
+                    if (System.getProperty("os.name").contains("Windows")) {
+
                     if (javaArch.equals("amd64") || javaArch.equals("x86_64")) {
                         System.loadLibrary("keyListener");
                         LOGGER.info("Loading dll for 64bit system");
@@ -135,7 +138,23 @@ public class MainProgram  {
                         LOGGER.info("Loading dll for 32bit system");
                     }
 
-                } catch (UnsatisfiedLinkError e) {
+                }
+                    if(System.getProperty("os.name").contains("Mac")){
+                        System.out.println(MainProgram.class.getResource("MainProgram.class").toString());
+                        String path[] = MainProgram.class.getResource("MainProgram.class").toString().split("/");
+                        String newPath = "/";
+                        //change to length -5 for debugging mac and -2 for jar
+                        for(int i = 1; i<= path.length - 5; i++){
+                            newPath = newPath.concat(path[i]+"/");
+                        }
+                        System.out.println(newPath);
+                        System.load(newPath + "macListener.jnilib");
+
+
+                       // LOGGER.info();
+                    }
+
+            } catch (UnsatisfiedLinkError e) {
                     LOGGER.severe(e.getMessage());
                     e.printStackTrace();
                     JOptionPane.showMessageDialog(null, "keyListener DLL is missing please reinstall Controly");
@@ -143,7 +162,6 @@ public class MainProgram  {
                     System.exit(0);
 
                 }
-            }
 
             LOGGER.info("--------------------------------------------------------------");
             LOGGER.info(System.getenv("COMPUTERNAME"));
