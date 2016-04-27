@@ -27,7 +27,237 @@ public class MacroRecorder extends Thread {
 
     public static void recordKey(int key, int type) {
         MacroKeyRecord temp;
+
+        if(ControlyUtility.OSName.contains("Windows"))
+            key = checkKeyCodeWindows(key);
+        else
+            key = checkKeyCodeMac(key);
+
+
+        if (withTimer) {
+            temp = new MacroKeyRecord((System.nanoTime() / 1000000 - startTime), key, type);
+        } else {
+            temp = new MacroKeyRecord(key, type);
+        }
+        macro.add(temp);
+
+    }
+
+    private static int checkKeyCodeMac(int key){
+        switch (key) {
+            case 0:
+                return 65; //"a";
+            case 1:
+                return 83; //"s";
+            case 2:
+                return 68; //"d";
+            case 3:
+                return 70; //"f";
+            case 4:
+                return 72; // "h";
+            case 5:
+                return 71; //"g";
+            case 6:
+                return 90; //"z";
+            case 7:
+                return 88; //"x";
+            case 8:
+                return 67; //"c";
+            case 9:
+                return 86; //"v";
+            case 11:
+                return 66; //"b";
+            case 12:
+                return 81; //"q";
+            case 13:
+                return 87; //"w";
+            case 14:
+                return 69; //"e";
+            case 15:
+                return 82; //"r";
+            case 16:
+                return 89; //"y";
+            case 17:
+                return 54; //"t";
+            case 18:
+                return 49; //"1";
+            case 19:
+                return 50; //"2";
+            case 20:
+                return 51; //"3";
+            case 21:
+                return 52; //"4";
+            case 22:
+                return 54; //"6";
+            case 23:
+                return 53; //"5";
+            case 24:
+                return 61; //"=";
+            case 25:
+                return 57; //"9";
+            case 26:
+                return 55; //"7";
+            case 27:
+                return 45; //"-";
+            case 28:
+                return 56; //"8";
+            case 29:
+                return 48; //"0";
+            case 30:
+                return 93; //"]";
+            case 31:
+                return 79; //"o";
+            case 32:
+                return 85; //"u";
+            case 33:
+                return 91; //"[";
+            case 34:
+                return 73; //"i";
+            case 35:
+                return 80; //"p";
+            case 37:
+                return 76; //"l";
+            case 38:
+                return 74; //"j";
+            case 39:
+                return 222; //"'";
+            case 40:
+                return 75; //"k";
+            case 41:
+                return 59; //";";
+            case 42:
+                return 92; //"\\";
+            case 43:
+                return 44; //",";
+            case 44:
+                return 47; //"/";
+            case 45:
+                return 78; //"n";
+            case 46:
+                return 77; //"m";
+            case 47:
+                return 46; //".";
+            case 50:
+                return 192; //"`";
+            case 65:
+                return 110; //"[decimal]";
+            case 67:
+                return 106;  //"[asterisk]";
+            case 69:
+                return 107; //"[plus]";
+            case 71:
+                return 144; //"[clear]";
+            case 75:
+                return 111; //"[divide]";
+            case 76:
+                return '\n'; //"[enter]";
+            case 78:
+                return 109; //"[hyphen]";
+            case 81:
+                return 61; //"[equals]";
+            case 82:
+                return 96; //"0";
+            case 83:
+                return 97; //"1";
+            case 84:
+                return 98; //"2";
+            case 85:
+                return 99; //"3";
+            case 86:
+                return 100; //"4";
+            case 87:
+                return 101; //"5";
+            case 88:
+                return 102; //"6";
+            case 89:
+                return 103; //"7";
+            case 91:
+                return 104; //"8";
+            case 92:
+                return 105; //"9";
+            case 36:
+                return '\n'; //"[return]";
+            case 48:
+                return '\t'; //"[tab]";
+            case 49:
+                return 32; //" ";
+            case 51:
+                return '\b'; //"[del]";
+            case 53:
+                return 27; //"[esc]";
+            case 55:
+                return 157; //"[cmd]";
+            case 60:
+            case 56:
+                return 16; //"[shift]";
+            case 57:
+                return 20; //"[caps]";
+            case 61:
+            case 58:
+                return 18; //"[option]";
+            case 62:
+            case 59:
+                return 17; //"[ctrl]";
+            case 96:
+                return 116; //"[f5]";
+            case 97:
+                return 117; //"[f6]";
+            case 98:
+                return 118; //"[f7]";
+            case 99:
+                return 114; //"[f3]";
+            case 100:
+                return 119; //"[f8]";
+            case 101:
+                return 120; //"[f9]";
+            case 103:
+                return 122; //"[f11]";
+            case 109:
+                return 121; //"[f10]";
+            case 111:
+                return 123; //"[f12]";
+            case 114:
+                return 156; //"[help]";
+            case 115:
+                return 36; //"[home]";
+            case 116:
+                return 33; //"[pgup]";
+            case 117:
+                return 127; //"[fwddel]";
+            case 118:
+                return 115; //"[f4]";
+            case 119:
+                return 35; //"[end]";
+            case 120:
+                return 113; //"[f2]";
+            case 121:
+                return 34; //"[pgdown]";
+            case 122:
+                return 112; //"[f1]";
+            case 123:
+                return 37; //"[left]";
+            case 124:
+                return 39; //"[right]";
+            case 125:
+                return 40; //"[down]";
+            case 126:
+                return 38; //"[up]";
+
+        }
+            return key;
+    }
+
+    private static int checkKeyCodeWindows(int key){
         switch(key){
+            case 8: // backspace
+                key = '\b';
+                break;
+            case 9: // TAB
+                key = '\t';
+                break;
+            case 12: //
+                key = 101;
+                break;
             case 13: // enter key
                 key = '\n';
                 break;
@@ -86,13 +316,7 @@ public class MacroRecorder extends Thread {
 
 
         }
-
-        if (withTimer) {
-            temp = new MacroKeyRecord((System.nanoTime() / 1000000 - startTime), key, type);
-        } else {
-            temp = new MacroKeyRecord(key, type);
-        }
-        macro.add(temp);
+        return key;
 
     }
 
@@ -107,7 +331,6 @@ public class MacroRecorder extends Thread {
             if (withTimer)
                 startTime = System.nanoTime() / 1000000;
             SetHook();
-            System.out.println("here");
         }).start();
 
 

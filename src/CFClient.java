@@ -184,11 +184,7 @@ public class CFClient extends Thread {
                             break;
 
                         case "ActivateKeyboard":
-                            boolean tmp = false;
-                            if(System.getProperty("os.name").contains("Windows"))
-                                tmp = GetCapsLockState();
-
-                            returnMsg = "SystemInfo:CapsLockState:" + tmp + ":SystemLang:" + Locale.getDefault() + ":CurrentInput:" + InputContext.getInstance().getLocale().toLanguageTag();
+                            returnMsg = "SystemInfo:CapsLockState:" + GetCapsLockState() + ":SystemLang:" + Locale.getDefault() + ":CurrentInput:" + InputContext.getInstance().getLocale().toLanguageTag();
                             returnMsg = returnMsg.trim();
                             msgBuffer = returnMsg.getBytes();
                             os.write(msgBuffer);

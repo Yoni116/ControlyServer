@@ -28,7 +28,7 @@ public class KeyPress implements Runnable {
         this.command = Integer.parseInt(this.commandString, 16);
         this.container = containerRef;
         this.robot = robot;
-        if(command ==( 16 | 17 | 18 ))
+        if(command ==( 16 | 17 | 18 | 157 ))
             cmdKey = true;
 
     }

@@ -25,7 +25,6 @@ public class ControlyUtility {
 
     public static boolean capsLockState = false;
 
-    public static String osName = System.getProperty("os.name");
 
 
     public static void setInetAddress() {
