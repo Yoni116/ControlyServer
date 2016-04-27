@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 
 /**
  * Created by yoni on 08/07/2015.
- * Controly Server V6.0
+ * Controly Server V6.1
  */
 public class MainProgram  {
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -82,7 +82,7 @@ public class MainProgram  {
             e.printStackTrace();
         }
 
-        LOGGER.severe("Starting Controly V6.0");
+        LOGGER.severe("Starting Controly V6.1");
         String javaArch = System.getProperty("os.arch");
         LOGGER.info("Java Architecture: " + javaArch);
 
