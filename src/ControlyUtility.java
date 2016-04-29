@@ -39,7 +39,7 @@ public class ControlyUtility {
                     while (addresses.hasMoreElements() && !found) {
                         InetAddress current_addr = addresses.nextElement();
                         if (current_addr.isSiteLocalAddress() && current_addr instanceof Inet4Address && !current_addr.isLoopbackAddress()) {
-                            if (!isVmwareMac(current.getHardwareAddress()) && !current.getDisplayName().toLowerCase().contains("virtual")) {
+                            if (!isVmwareMac(current.getHardwareAddress()) && !current.getDisplayName().toLowerCase().contains("virtual") && !current.getDisplayName().toLowerCase().contains("bridge")) {
                                 ControlyUtility.localAddress = current_addr;
                                 found = true;
                                 break;
