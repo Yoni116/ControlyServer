@@ -114,6 +114,8 @@ public class CFMouseMovement implements Runnable {
         Point mousePoint = MouseInfo.getPointerInfo().getLocation();
         x = mousePoint.getX();
         y = mousePoint.getY();
+
+        System.out.println(x+ " "+ y);
 //System.out.println(mousePoint);
         mouse.mouseMove((int) (x + recievedX), (int) (y + recievedY));
 

@@ -143,7 +143,7 @@ public class MainProgram  {
                         String path[] = MainProgram.class.getResource("MainProgram.class").toString().split("/");
                         String newPath = "/";
                         //change to length -5 for debugging mac and -3 for jar
-                        for(int i = 1; i<= path.length - 3; i++){
+                        for(int i = 1; i<= path.length - 5; i++){
                             newPath = newPath.concat(path[i]+"/");
                         }
 
