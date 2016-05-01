@@ -78,7 +78,7 @@ public class MacroRecorder extends Thread {
             case 16:
                 return 89; //"y";
             case 17:
-                return 54; //"t";
+                return 84; //"t";
             case 18:
                 return 49; //"1";
             case 19:
