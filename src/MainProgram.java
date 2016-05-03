@@ -16,6 +16,7 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -27,7 +28,7 @@ import java.util.logging.Logger;
 
 /**
  * Created by yoni on 08/07/2015.
- * Controly Server V6.2
+ * Controly Server V6.3
  */
 public class MainProgram  {
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -40,6 +41,8 @@ public class MainProgram  {
 
 
     public static void main(String[] args) {
+
+
 
         //check if the program is already running
         try {
@@ -82,7 +85,7 @@ public class MainProgram  {
             e.printStackTrace();
         }
 
-        LOGGER.severe("Starting Controly V6.1");
+        LOGGER.severe("Starting Controly "+ ControlyUtility.version);
         String javaArch = System.getProperty("os.arch");
         LOGGER.info("Java Architecture: " + javaArch);
 
@@ -143,7 +146,7 @@ public class MainProgram  {
                         String path[] = MainProgram.class.getResource("MainProgram.class").toString().split("/");
                         String newPath = "/";
                         //change to length -5 for debugging mac and -3 for jar
-                        for(int i = 1; i<= path.length - 5; i++){
+                        for(int i = 1; i<= path.length -3; i++){
                             newPath = newPath.concat(path[i]+"/");
                         }
 

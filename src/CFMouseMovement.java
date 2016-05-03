@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.InputEvent;
+import java.awt.geom.Rectangle2D;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.util.logging.Logger;
@@ -25,7 +26,8 @@ public class CFMouseMovement implements Runnable {
 
     public void run() {
 
-        switch (result) {
+        String[] mouseCommand = result.split(":");
+        switch (mouseCommand[0]) {
             case "leftClick":
                 mouse.mousePress(InputEvent.BUTTON1_MASK);
                 mouse.mouseRelease(InputEvent.BUTTON1_MASK);
@@ -38,35 +40,26 @@ public class CFMouseMovement implements Runnable {
                 mouse.mousePress(InputEvent.BUTTON2_MASK);
                 mouse.mouseRelease(InputEvent.BUTTON2_MASK);
                 break;
+            case "mouseScroll":
+                mouse.mouseWheel(Integer.parseInt(mouseCommand[1]));
             default:
-                mouseMovement(result);
+                mouseMovement(mouseCommand[0]);
                 break;
         }
-//        synchronized (mdc) {
-//            CFMouseDatagramChannel.amount--;
-//            LOGGER.info("amount: " + CFMouseDatagramChannel.amount);
-//        }
+
 
     }
 
 
     private void mouseMovement(String result) {
 
-//        Point mousePoint = MouseInfo.getPointerInfo().getLocation();
-//        x = mousePoint.getX();
-//        y = mousePoint.getY();
-//
-//
+
         String[] pointArray;
 
         pointArray = result.split(",", 2);
 
-        // System.out.println(result);
-
-
         if ((pointArray[0] == null) || (pointArray[1] == null))
             return;
-
 
         double recievedY = Double.parseDouble(pointArray[1]);
         double recievedX = Double.parseDouble(pointArray[0]);
@@ -88,39 +81,49 @@ public class CFMouseMovement implements Runnable {
             distance = 70;
 
 
-//System.out.println("distance is: " + distance);
-
 //calculate the degrees
         double radians = Math.atan2(recievedY, recievedX);
-
-
-//System.out.println("degrees are : " + degree);
-
 
 //calculate new X and Y destination
         double Y = Math.sin(radians) * distance;
         double X = Math.cos(radians) * distance;
 
-//System.out.println("Y = " + Y + " X = " + X);
-
-
         recievedX = Math.round(X);
         recievedY = Math.round(Y);
 
 
-        LOGGER.info("Move Mouse by (" + pointArray[0] + "," + pointArray[1] + ")");
+        LOGGER.info("Move Mouse by (" + recievedX + "," + recievedY + ")");
 
 
         Point mousePoint = MouseInfo.getPointerInfo().getLocation();
         x = mousePoint.getX();
         y = mousePoint.getY();
 
-        System.out.println(x+ " "+ y);
-//System.out.println(mousePoint);
-        mouse.mouseMove((int) (x + recievedX), (int) (y + recievedY));
+        Rectangle2D screenSize = new Rectangle2D.Double();
+        GraphicsEnvironment localGE = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        for (GraphicsDevice gd : localGE.getScreenDevices()) {
+            for (GraphicsConfiguration graphicsConfiguration : gd.getConfigurations()) {
+                screenSize.union(screenSize, graphicsConfiguration.getBounds(), screenSize);
+            }
+        }
+
+        int finalMoveX = (int) (x + recievedX);
+        int finalMoveY = (int) (y + recievedY);
+
+        // trying to block mouse from going over bounds (only happens on Mac osx)
+//        if(finalMoveX < 0)
+//            finalMoveX = 0;
+//        if(finalMoveY < 0)
+//            finalMoveY = 0;
+//        if(finalMoveX > screenSize.getWidth())
+//            finalMoveX = (int)screenSize.getWidth();
+//        if(finalMoveY > screenSize.getHeight())
+//            finalMoveY = (int)screenSize.getWidth();
+
+        LOGGER.info("Move Mouse to (" + finalMoveX + "," + finalMoveY + ")");
+        mouse.mouseMove(finalMoveX, finalMoveY);
 
 
-        //We need a try-catch because lots of errors can be thrown
     }
 
 }

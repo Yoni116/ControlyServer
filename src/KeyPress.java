@@ -28,6 +28,8 @@ public class KeyPress implements Runnable {
         this.command = Integer.parseInt(this.commandString, 16);
         this.container = containerRef;
         this.robot = robot;
+        if(ControlyUtility.OSName.contains("Windows") && command == 157)
+            command = 17;
         if(command ==( 16 | 17 | 18 | 157 ))
             cmdKey = true;
 
@@ -71,6 +73,7 @@ public class KeyPress implements Runnable {
 
     public void reKey() {
         keyPressed = false;
+        timer.cancel();
     }
 
     public synchronized void resetTimer() {

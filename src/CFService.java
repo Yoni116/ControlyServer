@@ -130,6 +130,7 @@ public class CFService extends Thread {
                     keysChannel.getChannel().socket().getLocalPort(),
                     mouseChannel.getChannel().socket().getLocalPort(),this);
 
+
             bcListener.start();
 
         } catch (IOException e1) {
@@ -174,7 +175,7 @@ public class CFService extends Thread {
 
 
     public String getPassword() {
-        return password.get();
+        return password.getValue();
     }
 
     public SimpleStringProperty passwordProperty() {
@@ -291,6 +292,11 @@ public class CFService extends Thread {
         LOGGER.warning("starting to close all clients");
         clients.forEach(CFClient::closeClient);
         LOGGER.warning("finished closing clients");
+    }
+
+    public void checkChannels(){
+        LOGGER.info("Keys Channel is "+ !keysDatagramChannel.socket().isClosed());
+        LOGGER.info("Mouse Channel is "+ !mouseDatagramChannel.socket().isClosed());
     }
 
 

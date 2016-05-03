@@ -1,8 +1,10 @@
 
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -41,6 +43,7 @@ public class ServerInfoController {
         assert minimizeBtn != null : "fx:id=\"minimizeBtn\" was not injected: check your FXML file 'ControlyInfoFXML.fxml'.";
         assert portLabel != null : "fx:id=\"portLabel\" was not injected: check your FXML file 'ControlyInfoFXML.fxml'.";
         assert settingBtn != null : "fx:id=\"settingBtn\" was not injected: check your FXML file 'ControlyInfoFXML.fxml'.";
+
 
 
 

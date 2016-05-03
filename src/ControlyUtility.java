@@ -23,7 +23,9 @@ public class ControlyUtility {
 
     public static InetAddress localAddress = null;
 
-    public static boolean capsLockState = false;
+    public static String version ="V6.3";
+
+ //   public static boolean capsLockState = false;
 
 
 
@@ -76,10 +78,6 @@ public class ControlyUtility {
 //
 //    }
 
-    public static void setCapsLockFalse(){
-        Toolkit.getDefaultToolkit().setLockingKeyState(KeyEvent.VK_CAPS_LOCK,false);
-
-    }
 
     private static boolean isVmwareMac(byte[] mac) {
         byte invalidMacs[][] = {

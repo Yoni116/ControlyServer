@@ -27,7 +27,7 @@ public class CFMouseDatagramChannel extends Thread {
 
     public CFMouseDatagramChannel(DatagramChannel c) {
         channel = c;
-        executor = Executors.newFixedThreadPool(15);
+        executor = Executors.newFixedThreadPool(20);
         try {
             mouse = new Robot();
             mouse.setAutoWaitForIdle(true);
@@ -74,11 +74,12 @@ public class CFMouseDatagramChannel extends Thread {
                 cBuff = coder.decode(buf);
                 String result = cBuff.toString().trim();
 
-                //LOGGER.warning("Received Command: " + result + " From: " + clientAddress);
+                LOGGER.warning("Mouse Received Command: " + result + " From: " + clientAddress);
                 String[] msg = result.split(":");
                 if (msg.length > 1) {
                     long nextTime = Long.parseLong(msg[0]);
-                    //LOGGER.warning("received time: " + nextTime);
+                    LOGGER.warning("Current time: " + time);
+                    LOGGER.warning("Received time: " + nextTime);
                     if (nextTime > time) {
                         time = nextTime;
                         // LOGGER.warning("running time: " + nextTime);

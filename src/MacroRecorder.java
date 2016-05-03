@@ -212,7 +212,7 @@ public class MacroRecorder extends Thread {
                 return 120; //"[f9]";
             case 103:
                 return 122; //"[f11]";
-            case 109:
+            case 109: 
                 return 121; //"[f10]";
             case 111:
                 return 123; //"[f12]";

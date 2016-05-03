@@ -104,10 +104,27 @@ public class CFClient extends Thread {
                     switch (splitMsg[0]) {
 
                         case "ControlyClient":
+                            LOGGER.info("Checking server Channels");
+                            server.checkChannels();
                             this.clientName = splitMsg[1];
+                            //System.out.println(server.getHasPassword() + " "+ server.passwordProperty().getValue());
+                            if(server.getHasPassword()) {
+                                System.out.println(server.getPassword());
+                                System.out.println(splitMsg[2]);
+                                if(splitMsg.length < 3 || !splitMsg[2].equals(server.getPassword().toString())){
+                                    returnMsg = "5000-ERROR:Wrong Password";
+                                    msgBuffer = returnMsg.getBytes();
+                                    os.write(msgBuffer);
+                                    os.flush();
+                                    msgBuffer = null;
+                                    LOGGER.info("Connection was rejected from: " + this.clientName + " address: " + this.ip + " Reason: Wrong Password");
+                                    closeClient();
+                                    break;
+                                }
+                            }
                             new Thread(new NotificationPopup("New Client Connected", this.clientName)).start();
                             server.addClientName(this.clientName);
-                            returnMsg = "1000-OK:" + keyPort + ":" + mousePort +":"+ControlyUtility.OSName;
+                            returnMsg = "1000-OK:" + keyPort + ":" + mousePort + ":" + ControlyUtility.OSName;
                             msgBuffer = returnMsg.getBytes();
                             os.write(msgBuffer);
                             os.flush();

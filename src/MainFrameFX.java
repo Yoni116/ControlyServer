@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
@@ -116,6 +117,21 @@ public class MainFrameFX extends Application implements ActionListener {
 
         np = new NotificationPopup("\nServer Is Running Minimized", "");
         np.start();
+
+        final Delta dragDelta = new Delta();
+        mainScene.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override public void handle(MouseEvent mouseEvent) {
+                // record a delta distance for the drag and drop operation.
+                dragDelta.x = mainStage.getX() - mouseEvent.getScreenX();
+                dragDelta.y = mainStage.getY() - mouseEvent.getScreenY();
+            }
+        });
+        mainScene.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override public void handle(MouseEvent mouseEvent) {
+                mainStage.setX(mouseEvent.getScreenX() + dragDelta.x);
+                mainStage.setY(mouseEvent.getScreenY() + dragDelta.y);
+            }
+        });
 
     }
 
@@ -250,3 +266,4 @@ public class MainFrameFX extends Application implements ActionListener {
 
     }
 }
+class Delta { double x, y; }
