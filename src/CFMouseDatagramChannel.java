@@ -78,8 +78,8 @@ public class CFMouseDatagramChannel extends Thread {
                 String[] msg = result.split(":");
                 if (msg.length > 1) {
                     long nextTime = Long.parseLong(msg[0]);
-                    LOGGER.warning("Current time: " + time);
-                    LOGGER.warning("Received time: " + nextTime);
+ //                   LOGGER.warning("Current time: " + time);
+//                    LOGGER.warning("Received time: " + nextTime);
                     if (nextTime > time) {
                         time = nextTime;
                         // LOGGER.warning("running time: " + nextTime);
