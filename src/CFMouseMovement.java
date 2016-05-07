@@ -26,7 +26,7 @@ public class CFMouseMovement implements Runnable {
 
     public void run() {
 
-        String[] mouseCommand = result.split(":");
+        String[] mouseCommand = result.split(";");
         switch (mouseCommand[0]) {
             case "leftClick":
                 mouse.mousePress(InputEvent.BUTTON1_MASK);

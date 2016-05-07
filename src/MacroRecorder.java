@@ -150,7 +150,7 @@ public class MacroRecorder extends Thread {
             case 75:
                 return 111; //"[divide]";
             case 76:
-                return '\n'; //"[enter]";
+                return 10; //"[enter]";
             case 78:
                 return 109; //"[hyphen]";
             case 81:
@@ -176,13 +176,13 @@ public class MacroRecorder extends Thread {
             case 92:
                 return 105; //"9";
             case 36:
-                return '\n'; //"[return]";
+                return 10; //"[return]";
             case 48:
-                return '\t'; //"[tab]";
+                return 9; //"[tab]";
             case 49:
                 return 32; //" ";
             case 51:
-                return '\b'; //"[del]";
+                return 8; //"[del]";
             case 53:
                 return 27; //"[esc]";
             case 55:
@@ -249,17 +249,13 @@ public class MacroRecorder extends Thread {
 
     private static int checkKeyCodeWindows(int key){
         switch(key){
-            case 8: // backspace
-                key = '\b';
-                break;
-            case 9: // TAB
-                key = '\t';
-                break;
+
+
             case 12: //
                 key = 101;
                 break;
             case 13: // enter key
-                key = '\n';
+                key = 10;
                 break;
             case 44: // print screen key
                 key = 154;

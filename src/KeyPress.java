@@ -24,7 +24,6 @@ public class KeyPress implements Runnable {
     public KeyPress(String hex, ConcurrentHashMap containerRef, Robot robot) {
 
         this.keyPressed = true;
-        this.commandString = hex;
         this.command = Integer.parseInt(this.commandString, 16);
         this.container = containerRef;
         this.robot = robot;
