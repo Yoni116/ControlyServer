@@ -84,9 +84,15 @@ public class MacroExecute extends Thread {
 
             LOGGER.info("Finished Timed Macro");
         }
+
         try {
-            if (client != null)
+            if (client != null){
+                LOGGER.info("preparing to send macro finished: " + macroID + " to client:" + client.toString());
                 client.sentFinishedMacro(macroID);
+            }
+
+            else
+                LOGGER.info("can't find client to send macro finished");
         } catch (Exception e){
             LOGGER.warning("problem sending macro finish msg to client");
             LOGGER.warning(e.getMessage());

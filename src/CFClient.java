@@ -91,133 +91,138 @@ public class CFClient extends Thread {
 
 
             while (isRunning) {
-                this.recvBuf = new byte[512];
+                this.recvBuf = new byte[256];
                 if (is.read(recvBuf) > 0 && isRunning) {
                     receivedMsg = new String(recvBuf);
                     recvBuf = null;
                     receivedMsg = receivedMsg.trim();
                     LOGGER.info("The message: " + receivedMsg);
+                    if(receivedMsg != "") {
 
-                    String[] splitMsg = receivedMsg.split(":");
+                        String[] splitMsg = receivedMsg.split(":");
 
-                    LOGGER.info(splitMsg[0]);
+                        LOGGER.info(splitMsg[0]);
 
 
-                    switch (splitMsg[0]) {
+                        switch (splitMsg[0]) {
 
-                        case "ControlyClient":
-                            LOGGER.info("Checking server Channels");
-                            server.checkChannels();
-                            this.clientName = splitMsg[1];
-                            //System.out.println(server.getHasPassword() + " "+ server.passwordProperty().getValue());
-                            if(server.getHasPassword()) {
-                                System.out.println(server.getPassword());
-                                System.out.println(splitMsg[2]);
-                                if(splitMsg.length < 3 || !splitMsg[2].equals(server.getPassword().toString())){
-                                    returnMsg = "5000-ERROR:Wrong Password";
-                                    msgBuffer = returnMsg.getBytes();
-                                    os.write(msgBuffer);
-                                    os.flush();
-                                    msgBuffer = null;
-                                    LOGGER.info("Connection was rejected from: " + this.clientName + " address: " + this.ip + " Reason: Wrong Password");
-                                    closeClient();
-                                    break;
+                            case "ControlyClient":
+                                LOGGER.info("Checking server Channels");
+                                server.checkChannels();
+                                this.clientName = splitMsg[1];
+                                //System.out.println(server.getHasPassword() + " "+ server.passwordProperty().getValue());
+                                if (server.getHasPassword()) {
+                                    System.out.println(server.getPassword());
+                                    System.out.println(splitMsg[2]);
+                                    if (splitMsg.length < 3 || !splitMsg[2].equals(server.getPassword().toString())) {
+                                        returnMsg = "5000-ERROR:Wrong Password";
+                                        msgBuffer = returnMsg.getBytes();
+                                        os.write(msgBuffer);
+                                        os.flush();
+                                        msgBuffer = null;
+                                        LOGGER.info("Connection was rejected from: " + this.clientName + " address: " + this.ip + " Reason: Wrong Password");
+                                        closeClient();
+                                        break;
+                                    }
                                 }
-                            }
-                            new Thread(new NotificationPopup("New Client Connected", this.clientName)).start();
-                            server.addClientName(this.clientName);
-                            returnMsg = "1000-OK:" + keyPort + ":" + mousePort + ":" + ControlyUtility.OSName;
-                            msgBuffer = returnMsg.getBytes();
-                            os.write(msgBuffer);
-                            os.flush();
-                            msgBuffer = null;
-                            LOGGER.info("Received connection request from client: " + this.clientName + " address: " + this.ip);
-                            server.printClients();
-                            ready = true;
-                            break;
-
-                        case "MacroStart":
-                            LOGGER.info(macroBusy ? "macro busy" : " macro free");
-                            if (!macroBusy) {
-                                macroBusy = true;
-                                returnMsg = "2000-macro record started";
+                                new Thread(new NotificationPopup("New Client Connected", this.clientName)).start();
+                                server.addClientName(this.clientName);
+                                returnMsg = "1000-OK:" + keyPort + ":" + mousePort + ":" + ControlyUtility.OSName;
                                 msgBuffer = returnMsg.getBytes();
                                 os.write(msgBuffer);
                                 os.flush();
                                 msgBuffer = null;
-                                LOGGER.info("Received Macro Start Msg");
+                                LOGGER.info("Received connection request from client: " + this.clientName + " address: " + this.ip);
+                                server.printClients();
+                                ready = true;
+                                break;
 
-                                if (Integer.parseInt(splitMsg[1]) == 0)
-                                    mr = new MacroRecorder(false, this.ip);
-                                else
-                                    mr = new MacroRecorder(true, this.ip);
-                                mr.start();
-                                new Thread(new NotificationPopup("Recording Started", "")).start();
-                            } else {
-                                returnMsg = "2002-cannot record more then one macro at a time";
+                            case "MacroStart":
+                                LOGGER.info(macroBusy ? "macro busy" : " macro free");
+                                if (!macroBusy) {
+                                    macroBusy = true;
+                                    returnMsg = "2000-macro record started";
+                                    msgBuffer = returnMsg.getBytes();
+                                    os.write(msgBuffer);
+                                    os.flush();
+                                    msgBuffer = null;
+                                    LOGGER.info("Received Macro Start Msg");
+
+                                    if (Integer.parseInt(splitMsg[1]) == 0)
+                                        mr = new MacroRecorder(false, this.ip);
+                                    else
+                                        mr = new MacroRecorder(true, this.ip);
+                                    mr.start();
+                                    new Thread(new NotificationPopup("Recording Started", "")).start();
+                                } else {
+                                    returnMsg = "2002-cannot record more then one macro at a time";
+                                    msgBuffer = returnMsg.getBytes();
+                                    os.write(msgBuffer);
+                                    os.flush();
+                                }
+                                break;
+
+                            case "MacroStop":
+                                LOGGER.info("Received Macro Stop Msg");
+                                if(macroBusy) {
+                                    mr.stopRecord();
+                                    new Thread(new NotificationPopup("Recording Finished", "")).start();
+                                    returnMsg = mr.buildMacro();
+                                    if (returnMsg == "")
+                                        returnMsg = "2001-Empty";
+                                    else
+                                        returnMsg = "2001-" + returnMsg;
+                                    mr.finishMacro();
+                                    msgBuffer = returnMsg.getBytes();
+                                    os.write(msgBuffer);
+                                    os.flush();
+                                    msgBuffer = null;
+                                    LOGGER.info(returnMsg);
+                                    macroBusy = false;
+                                }
+                                break;
+
+                            case "Disconnect":
+                                closeClient();
+                                LOGGER.info("Client Disconnected  " + this);
+                                break;
+
+                            case "Suspend":
+                                if (timer != null)
+                                    timer.cancel();
+                                isSuspended = true;
+                                LOGGER.info("Client Suspended " + this);
+                                break;
+
+                            case "UnSuspend":
+                                isSuspended = false;
+                                LOGGER.info("Client UnSuspend " + this);
+                                break;
+
+                            case "Pong":
+                                if (timer != null)
+                                    timer.cancel();
+                                LOGGER.info("Received ping back from client: " + this);
+                                break;
+
+                            case "ActivateKeyboard":
+                                returnMsg = "SystemInfo:CapsLockState:" + GetCapsLockState() + ":SystemLang:" + Locale.getDefault() + ":CurrentInput:" + InputContext.getInstance().getLocale().toLanguageTag();
+                                returnMsg = returnMsg.trim();
                                 msgBuffer = returnMsg.getBytes();
                                 os.write(msgBuffer);
                                 os.flush();
-                            }
-                            break;
-
-                        case "MacroStop":
-                            LOGGER.info("Received Macro Stop Msg");
-                            mr.stopRecord();
-                            new Thread(new NotificationPopup("Recording Finished", "")).start();
-                            returnMsg = mr.buildMacro();
-                            if (returnMsg == "")
-                                returnMsg = "2001-Empty";
-                            else
-                                returnMsg = "2001-" + returnMsg;
-                            mr.finishMacro();
-                            msgBuffer = returnMsg.getBytes();
-                            os.write(msgBuffer);
-                            os.flush();
-                            msgBuffer = null;
-                            LOGGER.info(returnMsg);
-                            macroBusy = false;
-                            break;
-
-                        case "Disconnect":
-                            closeClient();
-                            LOGGER.info("Client Disconnected  " + this);
-                            break;
-
-                        case "Suspend":
-                            if (timer != null)
-                                timer.cancel();
-                            isSuspended = true;
-                            LOGGER.info("Client Suspended " + this);
-                            break;
-
-                        case "UnSuspend":
-                            isSuspended = false;
-                            LOGGER.info("Client UnSuspend " + this);
-                            break;
-
-                        case "Pong":
-                            if (timer != null)
-                                timer.cancel();
-                            LOGGER.info("Received ping back from client: " + this);
-                            break;
-
-                        case "ActivateKeyboard":
-                            returnMsg = "SystemInfo:CapsLockState:" + GetCapsLockState() + ":SystemLang:" + Locale.getDefault() + ":CurrentInput:" + InputContext.getInstance().getLocale().toLanguageTag();
-                            returnMsg = returnMsg.trim();
-                            msgBuffer = returnMsg.getBytes();
-                            os.write(msgBuffer);
-                            os.flush();
-                            msgBuffer = null;
-                            LOGGER.info(returnMsg);
-                            break;
+                                msgBuffer = null;
+                                LOGGER.info(returnMsg);
+                                break;
 
 
-                        default:
-                            LOGGER.warning("Received Wrong Message from client: " + this);
-                            break;
+                            default:
+                                LOGGER.warning("Received Wrong Message from client: " + this);
+                                break;
 
-                    }
+                        }
+                    } else
+                        LOGGER.warning("received empty msg");
                 }
 
             }
@@ -292,7 +297,7 @@ public class CFClient extends Thread {
                         LOGGER.warning(e.getMessage());
                     }
                 }
-            }, 20000);
+            }, 60000);
         }
 
     }

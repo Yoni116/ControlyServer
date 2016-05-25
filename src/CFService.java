@@ -149,7 +149,7 @@ public class CFService extends Thread {
                 pingAllClients();
 
             }
-        }, 0, 60000);
+        }, 0, 90000);
 
 
         while (isRuning) {
