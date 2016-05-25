@@ -23,7 +23,7 @@ public class ControlyUtility {
 
     public static InetAddress localAddress = null;
 
-    public static String version ="V6.4";
+    public static String version ="V6.4.1";
 
  //   public static boolean capsLockState = false;
 

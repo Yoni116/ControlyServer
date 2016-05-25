@@ -241,7 +241,7 @@ public class CFClient extends Thread {
 
     public void sentFinishedMacro(String macroID){
 
-        returnMsg = "2003-Finished Macro "+macroID;
+        returnMsg = "2003-"+macroID;
         msgBuffer = returnMsg.getBytes();
         try {
             os.write(msgBuffer);
