@@ -7,6 +7,7 @@ import java.nio.channels.DatagramChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -98,9 +99,10 @@ public class CFKeysDatagramChannel extends Thread {
 
                         break;
                     case "macro":
-                        LOGGER.info("Received Macro: " + splitedMsg[2] + " in Mode: "+splitedMsg[1] +" From: " + clientAddress);
+                        LOGGER.info("Received Macro: " + splitedMsg[3] + " in Mode: "+splitedMsg[2] +" From: " + clientAddress);
+                        CFClient tempClient = findClient(clientAddress);
                         new Thread(
-                                new MacroExecute(splitedMsg[2], Integer.parseInt(splitedMsg[1]))).start();
+                                new MacroExecute(splitedMsg[3], Integer.parseInt(splitedMsg[2]),splitedMsg[1],tempClient)).start();
                         break;
                 }
 
@@ -129,6 +131,17 @@ public class CFKeysDatagramChannel extends Thread {
         } catch (IOException e) {
             LOGGER.warning("Closing KDC " + e.getMessage());
         }
+    }
+
+    public CFClient findClient(SocketAddress add){
+        String[] address = add.toString().split(":");
+        String newAdd = address[0];
+        for (Iterator<CFClient> it = clients.iterator(); it.hasNext(); ) {
+            CFClient c = it.next();
+            if (c.getIp().equals(newAdd))
+                return c;
+        }
+        return null;
     }
 
 

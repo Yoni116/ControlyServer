@@ -299,5 +299,9 @@ public class CFService extends Thread {
         LOGGER.info("Mouse Channel is "+ !mouseDatagramChannel.socket().isClosed());
     }
 
+    public void notifyClient(SocketAddress add, String msg){
+
+    }
+
 
 }

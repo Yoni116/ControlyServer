@@ -26,7 +26,9 @@ public class MacroKeyPress implements Runnable {
         this.duration = duration;
         this.command = command;
         this.robot = robot;
-        if(command ==( 16 | 17 | 18 ))
+        if(ControlyUtility.OSName.contains("Windows") && command == 157)
+            command = 17;
+        if(command ==( 16 | 17 | 18 | 157))
             cmdKey = true;
 
     }

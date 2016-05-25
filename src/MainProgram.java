@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 
 /**
  * Created by yoni on 08/07/2015.
- * Controly Server V6.3
+ * Controly Server V6.4
  */
 public class MainProgram  {
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);

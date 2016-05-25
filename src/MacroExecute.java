@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.net.SocketAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
@@ -14,11 +15,15 @@ public class MacroExecute extends Thread {
     private int mode;
     private ExecutorService executor;
     private Robot robot;
+    String macroID;
+    CFClient client;
 
-    public MacroExecute(String macro, int mode) {
+    public MacroExecute(String macro, int mode, String macroID, CFClient client) {
 
         this.macroCommand = macro;
         this.mode = mode;
+        this.macroID = macroID;
+        this.client = client;
         executor = Executors.newFixedThreadPool(8);
         try {
             robot = new Robot();
@@ -38,12 +43,15 @@ public class MacroExecute extends Thread {
             robot.setAutoDelay(27);
             for (int i = 0; i < keys.length; i++) {
                 String[] currentKey = keys[i].split(",");
+                int key = Integer.parseInt(currentKey[0]);
+                if(ControlyUtility.OSName.contains("Windows") && key  == 157)
+                    key = 17;
                 if (Integer.parseInt(currentKey[1]) == 0) {
                     LOGGER.info("pressing key: " + currentKey[0]);
-                    robot.keyPress(Integer.parseInt(currentKey[0]));
+                    robot.keyPress(key);
                 } else {
                     LOGGER.info("releasing key: " + currentKey[0]);
-                    robot.keyRelease(Integer.parseInt(currentKey[0]));
+                    robot.keyRelease(key);
                 }
             }
         } else {
@@ -75,6 +83,13 @@ public class MacroExecute extends Thread {
             }
 
             LOGGER.info("Finished Timed Macro");
+        }
+        try {
+            if (client != null)
+                client.sentFinishedMacro(macroID);
+        } catch (Exception e){
+            LOGGER.warning("problem sending macro finish msg to client");
+            LOGGER.warning(e.getMessage());
         }
 
 

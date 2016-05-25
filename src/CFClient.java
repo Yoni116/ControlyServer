@@ -59,6 +59,8 @@ public class CFClient extends Thread {
         return clientName;
     }
 
+    public String getIp() { return  ip; }
+
 
 
     public boolean isSuspended() {
@@ -235,6 +237,22 @@ public class CFClient extends Thread {
             server.removeClientName(this.clientName);
             server.printClients();
         }
+    }
+
+    public void sentFinishedMacro(String macroID){
+
+        returnMsg = "2003-Finished Macro "+macroID;
+        msgBuffer = returnMsg.getBytes();
+        try {
+            os.write(msgBuffer);
+            os.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        msgBuffer = null;
+        LOGGER.info(returnMsg);
+
     }
 
     public void closeClient() {
