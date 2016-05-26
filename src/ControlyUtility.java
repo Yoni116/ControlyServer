@@ -23,7 +23,7 @@ public class ControlyUtility {
 
     public static InetAddress localAddress = null;
 
-    public static String version ="V6.4.1";
+    public static String version ="V6.4.5";
 
  //   public static boolean capsLockState = false;
 
@@ -85,6 +85,7 @@ public class ControlyUtility {
                 {0x00, 0x1C, 0x14},             //VMWare
                 {0x00, 0x0C, 0x29},             //VMWare
                 {0x00, 0x50, 0x56},              //VMWare
+                {0x00, 0x1C, 0x42},
                 {0x08, 0x00, 0x27},
                 {0x10, 0x00, 0x27},
                 {0x00, 0x03, (byte) 0xFF},
