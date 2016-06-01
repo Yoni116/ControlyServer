@@ -49,7 +49,9 @@ public class NotificationPopup extends Thread {
                 tn.setImage(new Image("/NewServerDesign/TrayIcon.png"));
                 tn.setTitle(title);
                 tn.setMessage(msg);
-                tn.showAndDismiss(Duration.seconds(1));
+                tn.showAndDismiss(Duration.seconds(0.2));
+
+
             }
         });
 

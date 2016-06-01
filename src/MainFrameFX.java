@@ -64,12 +64,6 @@ public class MainFrameFX extends Application implements ActionListener {
     public void start(Stage primaryStage) throws Exception{
 
         mainStage = primaryStage;
-//        Stage pStage = new Stage();
-//        pStage.initStyle(StageStyle.UTILITY);
-//        pStage.show();
-//        np = new NotificationPopup("a",3);
-//        np.show(pStage,0,0);
-
 
         LOGGER.info("Frame Size: "+ frameSize);
         Platform.setImplicitExit(false);

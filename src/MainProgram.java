@@ -159,7 +159,7 @@ public class MainProgram  {
             } catch (UnsatisfiedLinkError e) {
                     LOGGER.severe(e.getMessage());
                     e.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "keyListener DLL is missing please reinstall Controly");
+                    JOptionPane.showMessageDialog(null, "keyListener DLL/JNILIB is missing please reinstall Controly");
                     LOGGER.severe("Closing Controly");
                     System.exit(0);
 
