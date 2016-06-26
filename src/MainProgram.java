@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 
 /**
  * Created by yoni on 08/07/2015.
- * Controly Server V6.4.5
+ * Controly Server V6.5
  */
 public class MainProgram  {
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -46,7 +46,7 @@ public class MainProgram  {
 
         //check if the program is already running
         try {
-            f = new File("ControlyRingOnRequest.lock");
+            f = new File(System.getProperty("user.name")+"_ControlyRingOnRequest.lock");
             // Check if the lock exist
             if (f.exists()) {
                 // if exist try to delete it

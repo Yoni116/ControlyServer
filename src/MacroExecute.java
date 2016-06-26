@@ -24,7 +24,7 @@ public class MacroExecute extends Thread {
         this.mode = mode;
         this.macroID = macroID;
         this.client = client;
-        executor = Executors.newFixedThreadPool(8);
+        executor = Executors.newFixedThreadPool(10);
         try {
             robot = new Robot();
             robot.setAutoWaitForIdle(true);

@@ -23,7 +23,9 @@ public class ControlyUtility {
 
     public static InetAddress localAddress = null;
 
-    public static String version ="V6.4.5";
+    public static String version ="V6.5";
+
+    public static String serverID = "";
 
  //   public static boolean capsLockState = false;
 

@@ -27,7 +27,7 @@ public class CFMouseDatagramChannel extends Thread {
 
     public CFMouseDatagramChannel(DatagramChannel c) {
         channel = c;
-        executor = Executors.newFixedThreadPool(20);
+        executor = Executors.newFixedThreadPool(25);
         try {
             mouse = new Robot();
             mouse.setAutoWaitForIdle(true);
