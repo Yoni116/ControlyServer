@@ -13,14 +13,14 @@
 
 <AnchorPane id="AnchorPane" fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="420.0" style="-fx-background-color: #0D0D0D;&#10;-fx-background-radius: 6px;&#10;&#10;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="ServerInfoController">
   <children>
-    <VBox id="VBox" alignment="CENTER" layoutX="119.0" layoutY="76.0" prefHeight="88.0" prefWidth="182.0" spacing="5.0">
+    <VBox id="VBox" alignment="CENTER" layoutX="107.0" layoutY="76.0" prefHeight="124.0" prefWidth="208.0" spacing="5.0">
       <children>
         <Label text="Connected Clients" textFill="#33b6ff" wrapText="true">
           <font>
             <Font size="18.0" />
           </font>
         </Label>
-        <ListView id="clientsList" disable="false" prefHeight="-1.0" prefWidth="-1.0" style="">
+        <ListView fx:id="clientsList" disable="false" prefHeight="-1.0" prefWidth="-1.0" style="">
           <stylesheets>
             <URL value="@NewServerDesign/controlyCSS.css" />
           </stylesheets>
@@ -46,7 +46,7 @@
     </VBox>
     <ImageView fx:id="minimizeBtn" fitHeight="40.0" fitWidth="40.0" onMouseClicked="#minimizeToTray" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
       <image>
-        <Image url="@../../TestFX/src/NewServerDesign/MinimizeButton.png" preserveRatio="true" smooth="true" />
+        <Image url="@NewServerDesign/MinimizeButton.png" preserveRatio="true" smooth="true" />
       </image>
     </ImageView>
     <ImageView fx:id="settingBtn" fitHeight="40.0" fitWidth="40.0" onMouseClicked="#changeToSetting" preserveRatio="false" smooth="true" style="" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">

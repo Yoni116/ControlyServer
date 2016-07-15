@@ -105,13 +105,13 @@ public class MainFrameFX extends Application implements ActionListener {
 
         ssc.setService(service);
 
-        sic.setIpAndPort(service.getMyIp(), service.getPort());
-        sic.setService(service);
 
         tray.add(trayIcon);
 
         np = new NotificationPopup("\nServer Is Running Minimized", "");
         np.start();
+
+
 
         final Delta dragDelta = new Delta();
         mainScene.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -127,7 +127,7 @@ public class MainFrameFX extends Application implements ActionListener {
                 mainStage.setY(mouseEvent.getScreenY() + dragDelta.y);
             }
         });
-
+        sic.setService(service);
     }
 
     //creating the tray icon and setting listeners

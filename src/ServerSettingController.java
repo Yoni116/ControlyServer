@@ -32,6 +32,7 @@ public class ServerSettingController {
     @FXML
     private TextField passwordField;
 
+
     private Stage stage;
     private MainFrameFX mfFX;
     private CFService service;
@@ -67,8 +68,6 @@ public class ServerSettingController {
         this.service = service;
         passwordField.textProperty().bindBidirectional(service.passwordProperty());
         passCheckBox.selectedProperty().bindBidirectional(service.hasPasswordProperty());
-
-
 
     }
 
