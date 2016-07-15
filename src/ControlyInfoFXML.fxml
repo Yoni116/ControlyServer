@@ -11,9 +11,23 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="230.0" prefWidth="420.0" style="-fx-background-color: #0D0D0D;&#10;-fx-background-radius: 6px;&#10;&#10;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="ServerInfoController">
+<AnchorPane id="AnchorPane" fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="420.0" style="-fx-background-color: #0D0D0D;&#10;-fx-background-radius: 6px;&#10;&#10;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="ServerInfoController">
   <children>
-    <VBox id="VBox" alignment="CENTER_LEFT" prefHeight="83.0" prefWidth="196.0" spacing="5.0" AnchorPane.bottomAnchor="73.5" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="210.0" AnchorPane.topAnchor="73.5">
+    <VBox id="VBox" alignment="CENTER" layoutX="119.0" layoutY="76.0" prefHeight="88.0" prefWidth="182.0" spacing="5.0">
+      <children>
+        <Label text="Connected Clients" textFill="#33b6ff" wrapText="true">
+          <font>
+            <Font size="18.0" />
+          </font>
+        </Label>
+        <ListView id="clientsList" disable="false" prefHeight="-1.0" prefWidth="-1.0" style="">
+          <stylesheets>
+            <URL value="@NewServerDesign/controlyCSS.css" />
+          </stylesheets>
+        </ListView>
+      </children>
+    </VBox>
+    <VBox id="VBox" alignment="CENTER_LEFT" prefHeight="83.0" prefWidth="196.0" spacing="5.0" AnchorPane.bottomAnchor="65.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="210.0" AnchorPane.topAnchor="82.0">
       <children>
         <Label fx:id="ipLabel" prefHeight="25.0" prefWidth="117.0" text="IP: 000.000.000.000" textAlignment="CENTER" textFill="#43b7e3" textOverrun="ELLIPSIS">
           <font>

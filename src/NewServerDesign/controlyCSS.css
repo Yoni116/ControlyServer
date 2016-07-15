@@ -1,6 +1,5 @@
 @font-face {
- font-family: Brandon;
- src: url(Brandon_reg.ttf);
+ src: url(Brandon_reg.otf);
 }
 
 #settingBtn{
@@ -38,16 +37,16 @@
 .list-cell {
  -fx-background-color: #0D0D0D;
  -fx-alignment: center;
- -fx-font-family: Brandon;
- -fx-font-size: 13px;
+ -fx-font-family: "Brandon Grotesque Regular";
+ -fx-font-size: 15px;
  -fx-text-fill: #ffffff;
  -fx-font-weight: bold;
 }
 
 
 .label{
- -fx-font-family: Brandon;
- -fx-font-size: 13px;
+ -fx-font-family: "Brandon Grotesque Regular";
+ -fx-font-size: 15px;
  -fx-text-fill: #ffffff;
 }
 

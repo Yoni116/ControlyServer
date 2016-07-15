@@ -82,7 +82,7 @@ public class MainFrameFX extends Application implements ActionListener {
 
         if(frameSize <= 550)
             frameSize = 550;
-        mainScene = new Scene(infoRoot, frameSize, frameSize, javafx.scene.paint.Color.TRANSPARENT);
+        mainScene = new Scene(infoRoot, 420, 200, javafx.scene.paint.Color.TRANSPARENT);
         primaryStage.setScene(mainScene);
         isInfoScene = true;
         primaryStage.initStyle(StageStyle.TRANSPARENT);
@@ -104,8 +104,9 @@ public class MainFrameFX extends Application implements ActionListener {
         currentNetwork.start();
 
         ssc.setService(service);
-        sic.setIpAndPort(service.getMyIp(), service.getPort());
 
+        sic.setIpAndPort(service.getMyIp(), service.getPort());
+        sic.setService(service);
 
         tray.add(trayIcon);
 

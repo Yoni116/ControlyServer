@@ -3,6 +3,7 @@ import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -22,6 +23,9 @@ public class ServerInfoController {
     private ImageView minimizeBtn;
 
     @FXML
+    private ListView clientsList;
+
+    @FXML
     private Label portLabel;
 
     @FXML
@@ -29,6 +33,7 @@ public class ServerInfoController {
 
     private Stage stage;
     private MainFrameFX mfFX;
+    private CFService service;
 
 
     public ServerInfoController() {
@@ -38,6 +43,7 @@ public class ServerInfoController {
 
     @FXML
     void initialize() {
+        assert clientsList != null : "fx:id=\"clientsList\" was not injected: check your FXML file 'ControlySettingFXML.fxml'.";
         assert ipLabel != null : "fx:id=\"ipLabel\" was not injected: check your FXML file 'ControlyInfoFXML.fxml'.";
         assert mainPane != null : "fx:id=\"mainPane\" was not injected: check your FXML file 'ControlyInfoFXML.fxml'.";
         assert minimizeBtn != null : "fx:id=\"minimizeBtn\" was not injected: check your FXML file 'ControlyInfoFXML.fxml'.";
@@ -49,10 +55,16 @@ public class ServerInfoController {
 
     }
 
+    public void setService(CFService service) {
+        this.service = service;
+        clientsList.setItems(service.getListItems());
+    }
 
 
     public void setMfFX(MainFrameFX mfFX) {
         this.mfFX = mfFX;
+        this.ipLabel.setVisible(false);
+        this.portLabel.setVisible(false);
     }
 
     public void setStage(Stage stage) {

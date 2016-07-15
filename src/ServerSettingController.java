@@ -21,8 +21,7 @@ public class ServerSettingController {
     @FXML
     private ImageView arrowBtn;
 
-    @FXML
-    private ListView clientsList;
+
 
     @FXML
     private ImageView minimizeBtn;
@@ -46,7 +45,7 @@ public class ServerSettingController {
     @FXML
     void initialize() {
         assert arrowBtn != null : "fx:id=\"arrowBtn\" was not injected: check your FXML file 'ControlySettingFXML.fxml'.";
-        assert clientsList != null : "fx:id=\"clientsList\" was not injected: check your FXML file 'ControlySettingFXML.fxml'.";
+
         assert minimizeBtn != null : "fx:id=\"minimizeBtn\" was not injected: check your FXML file 'ControlySettingFXML.fxml'.";
         assert passwordField != null : "fx:id=\"passwordField\" was not injected: check your FXML file 'ControlySettingFXML.fxml'.";
 
@@ -69,7 +68,7 @@ public class ServerSettingController {
         passwordField.textProperty().bindBidirectional(service.passwordProperty());
         passCheckBox.selectedProperty().bindBidirectional(service.hasPasswordProperty());
 
-        clientsList.setItems(service.getListItems());
+
 
     }
 
