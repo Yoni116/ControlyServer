@@ -1,6 +1,6 @@
 @font-face {
- font-family: Din;
- src: url(din-regular.woff);
+ font-family: Brandon;
+ src: url(Brandon_reg.ttf);
 }
 
 #settingBtn{
@@ -38,17 +38,16 @@
 .list-cell {
  -fx-background-color: #0D0D0D;
  -fx-alignment: center;
- -fx-font-family: Din;
- -fx-font-size: 22px;
- -fx-text-fill: #43b7e3;
+ -fx-font-family: Brandon;
+ -fx-font-size: 13px;
+ -fx-text-fill: #ffffff;
  -fx-font-weight: bold;
 }
 
 
 .label{
- -fx-font-family: Din;
- -fx-font-size: 22px;
- -fx-text-fill: #43b7e3;
- -fx-effect: dropshadow(three-pass-box, #43b7e3, 20, 0.1, 0, 0);
+ -fx-font-family: Brandon;
+ -fx-font-size: 13px;
+ -fx-text-fill: #ffffff;
 }
 

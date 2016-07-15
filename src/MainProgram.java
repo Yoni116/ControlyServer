@@ -38,12 +38,7 @@ public class MainProgram  {
     private static FileChannel channel;
     private static FileLock lock;
 
-
-
     public static void main(String[] args) {
-
-
-
         //check if the program is already running
         try {
             f = new File(System.getProperty("user.name")+"_ControlyRingOnRequest.lock");
@@ -65,10 +60,6 @@ public class MainProgram  {
             // Add shutdown hook to release lock when application shutdown
             ShutdownHook shutdownHook = new ShutdownHook();
             Runtime.getRuntime().addShutdownHook(shutdownHook);
-
-
-
-
 
         } catch (IOException e) {
             //throw new RuntimeException("Could not start process.", e);
@@ -152,8 +143,6 @@ public class MainProgram  {
 
                         System.load(newPath + "macListener.jnilib");
 
-
-                       // LOGGER.info();
                     }
 
             } catch (UnsatisfiedLinkError e) {
