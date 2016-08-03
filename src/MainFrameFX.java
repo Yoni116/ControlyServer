@@ -176,7 +176,6 @@ public class MainFrameFX extends Application implements ActionListener {
                     try {
 
                         tray.add(trayIcon);
-                        //trayIcon.displayMessage("Server Is Running Minimized", "right click here if you want to close the server", TrayIcon.MessageType.INFO);
                         np = new NotificationPopup("\nServer Is Running Minimized", "");
                         np.start();
                     } catch (AWTException e) {
