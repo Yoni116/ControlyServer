@@ -14,7 +14,7 @@ public class PropertyFile {
 
     private boolean hasPassword = false;
     private String password = "";
-    private String serverID = "";
+    private String serverID = "" + ((int) (Math.random() * 9000) + 1000);
 
     public PropertyFile() {
         prop = new Properties();
@@ -26,13 +26,13 @@ public class PropertyFile {
             loadFromFile();
         }
 
+        ControlyUtility.serverID = serverID;
+
 
     }
 
     private void createNewFile() {
 
-        serverID = "" + ((int) (Math.random() * 9000) + 1000);
-        ControlyUtility.serverID = serverID;
         saveToFile();
 
     }
@@ -42,7 +42,7 @@ public class PropertyFile {
             input = new FileInputStream(yourFile);
             prop.load(input);
 
-            ControlyUtility.serverID = prop.getProperty("ServerID");
+            serverID = prop.getProperty("serverID");
             if (prop.getProperty("hasPassword").equals("YES"))
                 hasPassword = true;
             else
