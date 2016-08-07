@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
@@ -84,14 +85,12 @@ public class ServerSettingController {
     @FXML
     void enablePassword(ActionEvent event) {
 
-//        if(passCheckBox.isSelected()){
-//            passwordField.setEditable(true);
-//        }
-//        else {
-//            passwordField.setEditable(false);
-//        }
-
+        service.changeHasPasswordOnFile(passCheckBox.isSelected());
 
     }
 
+    @FXML
+    public void textChanged(ActionEvent actionEvent) {
+        service.changePasswordOnFile(passwordField.getCharacters().toString());
+    }
 }

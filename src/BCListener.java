@@ -64,9 +64,6 @@ public class BCListener extends Thread {
             socket = new DatagramSocket(0);
             socket.setBroadcast(true);
 
-            String id = ""+((int)(Math.random()*9000)+1000);
-
-            ControlyUtility.serverID = id;
 
             while (serverRunning) {
                 LOGGER.info("Ready to receive broadcast packets on port: " + BC_PORT + " !");

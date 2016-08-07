@@ -43,6 +43,7 @@ public class MainFrameFX extends Application implements ActionListener {
     private MenuItem goToSite;
     private MenuItem closeApp;
     private NotificationPopup np;
+    private PropertyFile pf;
 
     private ServerInfoController sic;
     private ServerSettingController ssc;
@@ -62,7 +63,7 @@ public class MainFrameFX extends Application implements ActionListener {
     //JavaFX start method
     @Override
     public void start(Stage primaryStage) throws Exception{
-
+        pf = new PropertyFile();
         mainStage = primaryStage;
 
         LOGGER.info("Frame Size: "+ frameSize);
@@ -198,7 +199,7 @@ public class MainFrameFX extends Application implements ActionListener {
 
         service = null;
         try {
-            service = new CFService(sc);
+            service = new CFService(sc,pf);
 
         } catch (IOException e) {
             LOGGER.warning(e.getMessage());

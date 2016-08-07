@@ -29,7 +29,7 @@
         </HBox>
         <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0">
           <children>
-            <TextField fx:id="passwordField" alignment="CENTER" disable="true" editable="true" prefWidth="182.0" promptText="Password">
+            <TextField fx:id="passwordField" alignment="CENTER" disable="true" editable="true" onAction="#textChanged" prefWidth="182.0" promptText="Password">
               <HBox.margin>
                 <Insets />
               </HBox.margin>

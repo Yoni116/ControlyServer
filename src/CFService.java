@@ -43,6 +43,7 @@ public class CFService extends Thread {
     private ServerInfoController sc;
     private String myIp;
     private Timer t;
+    private PropertyFile propFile;
 
     private SimpleBooleanProperty hasPassword;
     private SimpleStringProperty password;
@@ -57,9 +58,10 @@ public class CFService extends Thread {
 //    private byte[] recvBuf;
 //    private DatagramPacket returnPacket;
 
-    public CFService(ServerInfoController sc) throws IOException {
-        password = new SimpleStringProperty("");
-        hasPassword = new SimpleBooleanProperty(false);
+    public CFService(ServerInfoController sc, PropertyFile pf) throws IOException {
+        propFile = pf;
+        password = new SimpleStringProperty(pf.getPassword());
+        hasPassword = new SimpleBooleanProperty(pf.isHasPassword());
         this.sc = sc;
         macroBusy = false;
         clients = new HashSet<>();
@@ -299,8 +301,12 @@ public class CFService extends Thread {
         LOGGER.info("Mouse Channel is "+ !mouseDatagramChannel.socket().isClosed());
     }
 
-    public void notifyClient(SocketAddress add, String msg){
+    public void changeHasPasswordOnFile(boolean hasPassword){
+        propFile.setHasPassword(hasPassword);
+    }
 
+    public void changePasswordOnFile(String pass){
+        propFile.setPassword(pass);
     }
 
 
