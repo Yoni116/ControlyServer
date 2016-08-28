@@ -60,7 +60,7 @@ public class CFMouseDatagramChannel extends Thread {
             Point mousePoint = MouseInfo.getPointerInfo().getLocation();
             double x = mousePoint.getX();
             double y = mousePoint.getY();
-            LOGGER.info("mouse pos is x: " + x + " y: " + y);
+          //  LOGGER.info("mouse pos is x: " + x + " y: " + y);
 
             while (isRunning) {
 
@@ -96,6 +96,8 @@ public class CFMouseDatagramChannel extends Thread {
 //
 //                }
                     }
+                    else
+                        LOGGER.info("late packet");
                 } else {
                     Runnable mouseCommand = new CFMouseMovement(msg[0], mouse);
                     executor.submit(mouseCommand);

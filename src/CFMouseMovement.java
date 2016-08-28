@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.InputEvent;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -9,6 +10,8 @@ import java.util.logging.Logger;
 public class CFMouseMovement implements Runnable {
 
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
+    private static Point lastPoint = MouseInfo.getPointerInfo().getLocation();
 
     private double x;
     private double y;
@@ -53,7 +56,7 @@ public class CFMouseMovement implements Runnable {
 
     private void mouseMovement(String result) {
 
-
+   //     System.out.println("HERE");
         String[] pointArray;
 
         pointArray = result.split(",", 2);
@@ -92,36 +95,66 @@ public class CFMouseMovement implements Runnable {
         recievedY = Math.round(Y);
 
 
-        LOGGER.info("Move Mouse by (" + recievedX + "," + recievedY + ")");
-
-
         Point mousePoint = MouseInfo.getPointerInfo().getLocation();
+
+//        try {
+//            mousePoint = MouseInfo.getPointerInfo().getLocation();
+//        }
+//        catch (Exception e){
+//            e.getStackTrace();
+//        }
+//        if(mousePoint ==  null)
+//            mousePoint = lastPoint;
+//
+//        lastPoint = mousePoint;
+
         x = mousePoint.getX();
         y = mousePoint.getY();
 
-        Rectangle2D screenSize = new Rectangle2D.Double();
-        GraphicsEnvironment localGE = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        for (GraphicsDevice gd : localGE.getScreenDevices()) {
-            for (GraphicsConfiguration graphicsConfiguration : gd.getConfigurations()) {
-                screenSize.union(screenSize, graphicsConfiguration.getBounds(), screenSize);
-            }
-        }
+      //  System.out.println("HERE 3");
+   //     LOGGER.info("Mouse at (" + x + "," + y + ")");
+
+   //     LOGGER.info("Move Mouse by (" + recievedX + "," + recievedY + ")");
 
         int finalMoveX = (int) (x + recievedX);
         int finalMoveY = (int) (y + recievedY);
 
-        // trying to block mouse from going over bounds (only happens on Mac osx)
-//        if(finalMoveX < 0)
-//            finalMoveX = 0;
-//        if(finalMoveY < 0)
-//            finalMoveY = 0;
-//        if(finalMoveX > screenSize.getWidth())
-//            finalMoveX = (int)screenSize.getWidth();
-//        if(finalMoveY > screenSize.getHeight())
-//            finalMoveY = (int)screenSize.getWidth();
+     //   LOGGER.info("Move Mouse to (" + finalMoveX + "," + finalMoveY + ")");
 
-        LOGGER.info("Move Mouse to (" + finalMoveX + "," + finalMoveY + ")");
-        mouse.mouseMove(finalMoveX, finalMoveY);
+        //System.out.println(screenSize.contains(finalMoveX,finalMoveY));
+
+//        if(ControlyUtility.OSName.contains("Mac")) {
+//
+//            Rectangle2D screenSize = new Rectangle2D.Double();
+//            GraphicsEnvironment localGE = GraphicsEnvironment.getLocalGraphicsEnvironment();
+//            for (GraphicsDevice gd : localGE.getScreenDevices()) {
+//                for (GraphicsConfiguration graphicsConfiguration : gd.getConfigurations()) {
+//                    screenSize.union(screenSize, graphicsConfiguration.getBounds(), screenSize);
+//                }
+//            }
+//            LOGGER.info(screenSize.toString());
+//
+//            switch(screenSize.outcode(finalMoveX,finalMoveY)){
+//
+//                case (Rectangle2D.OUT_BOTTOM):
+//                    mouse.mouseMove(finalMoveX, (int) (screenSize.getY() + screenSize.getHeight()) - 1);
+//                    break;
+//                case (Rectangle2D.OUT_LEFT):
+//                    mouse.mouseMove((int) screenSize.getX()+1, finalMoveY);
+//                    break;
+//                case (Rectangle2D.OUT_TOP):
+//                    mouse.mouseMove(finalMoveX, (int) screenSize.getY()+1);
+//                    break;
+//                case (Rectangle2D.OUT_RIGHT):
+//                    mouse.mouseMove((int)(screenSize.getX() + screenSize.getWidth()) - 1, finalMoveY);
+//                    break;
+//                default:
+//                    mouse.mouseMove(finalMoveX, finalMoveY);
+//            }
+//        }
+//
+//        else
+            mouse.mouseMove(finalMoveX, finalMoveY);
 
 
     }
