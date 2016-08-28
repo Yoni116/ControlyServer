@@ -10,7 +10,7 @@ public class BrowserOpener {
         try {
             if (osName.startsWith("Mac OS")) {
                 Runtime runtime = Runtime.getRuntime();
-                String[] args = { "osascript", "-e", "open location \"" + url + "\"" };
+                String[] args = { "osascript", "-e", "open location \"" +url + "\"" };
                 Process process = runtime.exec(args);
             }
             else if (osName.startsWith("Windows"))
