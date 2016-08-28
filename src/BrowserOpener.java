@@ -9,10 +9,9 @@ public class BrowserOpener {
         String osName = System.getProperty("os.name");
         try {
             if (osName.startsWith("Mac OS")) {
-                Class fileMgr = Class.forName("com.apple.eio.FileManager");
-                Method openURL = fileMgr.getDeclaredMethod("openURL",
-                        new Class[] {String.class});
-                openURL.invoke(null, new Object[] {url});
+                Runtime runtime = Runtime.getRuntime();
+                String[] args = { "osascript", "-e", "open location \"" + url + "\"" };
+                Process process = runtime.exec(args);
             }
             else if (osName.startsWith("Windows"))
                 Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
