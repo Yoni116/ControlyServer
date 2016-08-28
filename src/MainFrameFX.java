@@ -146,7 +146,7 @@ public class MainFrameFX extends Application implements ActionListener {
 
         // create a popup menu
         showApp = new MenuItem("Show App");
-        terms = new MenuItem("Terms & Conditions");
+        terms = new MenuItem("Terms And Conditions");
         privacy = new MenuItem("Privacy Policy");
         closeApp = new MenuItem("Exit");
 
@@ -158,7 +158,7 @@ public class MainFrameFX extends Application implements ActionListener {
 
         popup.add(showApp);
         popup.add(terms);
-        popup.add(privacy)
+        popup.add(privacy);
         popup.add(closeApp);
 
         //trayIcon.setPopupMenu(popup);
@@ -255,10 +255,12 @@ public class MainFrameFX extends Application implements ActionListener {
             });
         }
 
-        if (e.getSource().equals(goToSite)) {
-            BrowserOpener.openURL("http://www.controly.net");
+        if (e.getSource().equals(terms)) {
+            BrowserOpener.openURL("https://controly.net/wordpress/beta-testing-agreement/");
         }
-
+        if (e.getSource().equals(privacy)) {
+            BrowserOpener.openURL("https://controly.net/wordpress/privacy-policy/");
+        }
         if (e.getSource().equals(closeApp)) {
             System.exit(0);
         }
