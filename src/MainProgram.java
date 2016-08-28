@@ -122,7 +122,7 @@ public class MainProgram  {
 
                 try {
                     //loading DLL for Windows OS
-                    if (System.getProperty("os.name").contains("Windows")) {
+                    if (ControlyUtility.OSName.contains("Windows")) {
 
                     if (javaArch.equals("amd64") || javaArch.equals("x86_64")) {
                         System.loadLibrary("keyListener");
@@ -133,11 +133,11 @@ public class MainProgram  {
                     }
 
                 }
-                    if(System.getProperty("os.name").contains("Mac")){
+                    if(ControlyUtility.OSName.contains("Mac")){
                         String path[] = MainProgram.class.getResource("MainProgram.class").toString().split("/");
                         String newPath = "/";
                         //change to length -5 for debugging mac and -3 for jar
-                        for(int i = 1; i<= path.length -3; i++){
+                        for(int i = 1; i<= path.length -5; i++){
                             newPath = newPath.concat(path[i]+"/");
                         }
 

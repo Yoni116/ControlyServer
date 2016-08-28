@@ -252,7 +252,18 @@ public class MainFrameFX extends Application implements ActionListener {
         }
 
         if (e.getSource().equals(goToSite)) {
-            getHostServices().showDocument("www.controly.net");
+//            if(ControlyUtility.OSName.contains("windows"))
+//                getHostServices().showDocument("www.controly.net");
+//            else {
+//                Runtime rt = Runtime.getRuntime();
+//                String url = "www.controly.net";
+//                try {
+//                    rt.exec( "open " + url);
+//                } catch (IOException e1) {
+//                    LOGGER.warning(""+e1.getMessage());
+//                }
+//            }
+            BrowserOpener.openURL("www.controly.net");
         }
 
         if (e.getSource().equals(closeApp)) {
