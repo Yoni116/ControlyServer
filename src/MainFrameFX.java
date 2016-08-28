@@ -40,7 +40,8 @@ public class MainFrameFX extends Application implements ActionListener {
     private TrayIcon trayIcon;
     private PopupMenu popup;
     private MenuItem showApp;
-    private MenuItem goToSite;
+    private MenuItem terms;
+    private MenuItem privacy;
     private MenuItem closeApp;
     private NotificationPopup np;
     private PropertyFile pf;
@@ -145,16 +146,19 @@ public class MainFrameFX extends Application implements ActionListener {
 
         // create a popup menu
         showApp = new MenuItem("Show App");
-        goToSite = new MenuItem("Read Terms");
+        terms = new MenuItem("Terms & Conditions");
+        privacy = new MenuItem("Privacy Policy");
         closeApp = new MenuItem("Exit");
 
 
         showApp.addActionListener(this);
-        goToSite.addActionListener(this);
+        terms.addActionListener(this);
+        privacy.addActionListener(this);
         closeApp.addActionListener(this);
 
         popup.add(showApp);
-        popup.add(goToSite);
+        popup.add(terms);
+        popup.add(privacy)
         popup.add(closeApp);
 
         //trayIcon.setPopupMenu(popup);
