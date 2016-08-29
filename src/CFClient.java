@@ -153,7 +153,7 @@ public class CFClient extends Thread {
                                     else
                                         mr = new MacroRecorder(true, this.ip);
                                     mr.start();
-                                    new Thread(new NotificationPopup("Recording Started", "")).start();
+                                    //new Thread(new NotificationPopup("Recording Started", "")).start();
                                 } else {
                                     returnMsg = "2002-cannot record more then one macro at a time";
                                     msgBuffer = returnMsg.getBytes();

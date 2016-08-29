@@ -95,18 +95,18 @@ public class CFMouseMovement implements Runnable {
         recievedY = Math.round(Y);
 
 
-        Point mousePoint = MouseInfo.getPointerInfo().getLocation();
+        Point mousePoint = null;
 
-//        try {
-//            mousePoint = MouseInfo.getPointerInfo().getLocation();
-//        }
-//        catch (Exception e){
-//            e.getStackTrace();
-//        }
-//        if(mousePoint ==  null)
-//            mousePoint = lastPoint;
-//
-//        lastPoint = mousePoint;
+        try {
+            mousePoint = MouseInfo.getPointerInfo().getLocation();
+        }
+        catch (Exception e){
+            e.getStackTrace();
+        }
+        if(mousePoint ==  null)
+            mousePoint = lastPoint;
+        else
+            lastPoint = mousePoint;
 
         x = mousePoint.getX();
         y = mousePoint.getY();
@@ -123,37 +123,37 @@ public class CFMouseMovement implements Runnable {
 
         //System.out.println(screenSize.contains(finalMoveX,finalMoveY));
 
-//        if(ControlyUtility.OSName.contains("Mac")) {
-//
-//            Rectangle2D screenSize = new Rectangle2D.Double();
-//            GraphicsEnvironment localGE = GraphicsEnvironment.getLocalGraphicsEnvironment();
-//            for (GraphicsDevice gd : localGE.getScreenDevices()) {
-//                for (GraphicsConfiguration graphicsConfiguration : gd.getConfigurations()) {
-//                    screenSize.union(screenSize, graphicsConfiguration.getBounds(), screenSize);
-//                }
-//            }
-//            LOGGER.info(screenSize.toString());
-//
-//            switch(screenSize.outcode(finalMoveX,finalMoveY)){
-//
-//                case (Rectangle2D.OUT_BOTTOM):
-//                    mouse.mouseMove(finalMoveX, (int) (screenSize.getY() + screenSize.getHeight()) - 1);
-//                    break;
-//                case (Rectangle2D.OUT_LEFT):
-//                    mouse.mouseMove((int) screenSize.getX()+1, finalMoveY);
-//                    break;
-//                case (Rectangle2D.OUT_TOP):
-//                    mouse.mouseMove(finalMoveX, (int) screenSize.getY()+1);
-//                    break;
-//                case (Rectangle2D.OUT_RIGHT):
-//                    mouse.mouseMove((int)(screenSize.getX() + screenSize.getWidth()) - 1, finalMoveY);
-//                    break;
-//                default:
-//                    mouse.mouseMove(finalMoveX, finalMoveY);
-//            }
-//        }
-//
-//        else
+        if(ControlyUtility.OSName.contains("Mac")) {
+
+            Rectangle2D screenSize = new Rectangle2D.Double();
+            GraphicsEnvironment localGE = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            for (GraphicsDevice gd : localGE.getScreenDevices()) {
+                for (GraphicsConfiguration graphicsConfiguration : gd.getConfigurations()) {
+                    screenSize.union(screenSize, graphicsConfiguration.getBounds(), screenSize);
+                }
+            }
+            LOGGER.info(screenSize.toString());
+
+            switch(screenSize.outcode(finalMoveX,finalMoveY)){
+
+                case (Rectangle2D.OUT_BOTTOM):
+                    mouse.mouseMove(finalMoveX, (int) (screenSize.getY() + screenSize.getHeight()) - 1);
+                    break;
+                case (Rectangle2D.OUT_LEFT):
+                    mouse.mouseMove((int) screenSize.getX()+1, finalMoveY);
+                    break;
+                case (Rectangle2D.OUT_TOP):
+                    mouse.mouseMove(finalMoveX, (int) screenSize.getY()+1);
+                    break;
+                case (Rectangle2D.OUT_RIGHT):
+                    mouse.mouseMove((int)(screenSize.getX() + screenSize.getWidth()) - 1, finalMoveY);
+                    break;
+                default:
+                    mouse.mouseMove(finalMoveX, finalMoveY);
+            }
+        }
+
+        else
             mouse.mouseMove(finalMoveX, finalMoveY);
 
 

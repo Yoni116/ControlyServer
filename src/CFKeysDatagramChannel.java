@@ -87,6 +87,7 @@ public class CFKeysDatagramChannel extends Thread {
                                     pressedKeys.get(command).extendDeletion();
                             } else {
                                 LOGGER.info("pressing " + command + " From: " + clientAddress);
+
                                 Runnable key = new KeyPress(command, pressedKeys, robot);
                                 executor.submit(key);
                                 pressedKeys.put(command, (KeyPress) key);
